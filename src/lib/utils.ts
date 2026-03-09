@@ -250,10 +250,12 @@ const processSubgarensRecursively = ({
             sourceConnections: [],
             targetConnections: [],
             cta: {
-              primary: {
-                label: "Visit Website",
-                url: sprout.homepage_url,
-              },
+              primary: sprout.homepage_url
+                ? {
+                    label: "Visit Website",
+                    url: sprout.homepage_url,
+                  }
+                : undefined,
               secondary: sprout.repo_url
                 ? {
                     label: "View Code",
@@ -386,10 +388,12 @@ export const gardenToFlow = ({
           description: sprout.description || "",
           theme: currentGardenTheme,
           cta: {
-            primary: {
-              label: "Visit Website",
-              url: sprout.homepage_url || "",
-            },
+            primary: sprout.homepage_url
+              ? {
+                  label: "Visit Website",
+                  url: sprout.homepage_url,
+                }
+              : undefined,
             secondary: sprout.repo_url
               ? {
                   label: "View Code",
