@@ -14903,6 +14903,23 @@ const getNodePositions = (type) => {
     targetPosition: Position.Top
   })).otherwise(() => ({}));
 };
+const HEX_CELL_WIDTH = 200;
+const HEX_CELL_HEIGHT = 200;
+const hexLayout = (nodes) => {
+  const sprouts = nodes.filter((node) => node.type === NODE_TYPES.SPROUT);
+  const columns = Math.max(1, Math.ceil(Math.sqrt(sprouts.length)));
+  return sprouts.map((node, index) => {
+    const row = Math.floor(index / columns);
+    const col = index % columns;
+    const x = col * HEX_CELL_WIDTH + row % 2 * (HEX_CELL_WIDTH / 2);
+    const y = row * HEX_CELL_HEIGHT * 0.75;
+    return {
+      ...node,
+      position: { x, y },
+      data: { ...node.data, hex: true }
+    };
+  });
+};
 const trackNodeConnections = (nodes, edges) => {
   const nodesWithConnections = nodes.map((node) => {
     return {
@@ -22366,10 +22383,51 @@ const GardenNode = ({ data }) => {
   );
 };
 
+const HEX_CLIP = "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
 const SproutNode = ({ data }) => {
   const hasTopTargets = data.targetConnections && data.targetConnections.length > 0;
   const hasBottomSources = data.sourceConnections && data.sourceConnections.length > 0;
   const primaryColor = data.theme?.primary_color || "var(--garden-garden)";
+  if (data.hex) {
+    return /* @__PURE__ */ jsxs("div", { className: "garden:relative", children: [
+      hasTopTargets && /* @__PURE__ */ jsx(
+        Handle,
+        {
+          id: "top",
+          type: "target",
+          position: Position.Top,
+          isConnectable: false
+        }
+      ),
+      hasBottomSources && /* @__PURE__ */ jsx(
+        Handle,
+        {
+          id: "bottom",
+          type: "source",
+          position: Position.Bottom,
+          isConnectable: false
+        }
+      ),
+      /* @__PURE__ */ jsxs(
+        "div",
+        {
+          className: "garden:flex garden:h-40 garden:w-44 garden:cursor-pointer garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:border-2 garden:bg-card garden:p-4 garden:text-center garden:transition-transform garden:hover:scale-105",
+          style: { clipPath: HEX_CLIP, borderColor: primaryColor },
+          children: [
+            isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+              "img",
+              {
+                src: data.image,
+                alt: data.label,
+                className: "garden:h-12 garden:w-12 garden:object-contain"
+              }
+            ) : /* @__PURE__ */ jsx("span", { className: "garden:select-none garden:text-4xl", children: data.image || data.logo || "🌱" }),
+            /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs", children: data.label })
+          ]
+        }
+      )
+    ] });
+  }
   return (
     // NB: relative positioning is important for `Handle` placement because it uses `absolute` positioning internally
     /* @__PURE__ */ jsxs("div", { className: "garden:relative garden:cursor-pointer garden:rounded-md garden:border-2 garden:border-border garden:bg-card garden:shadow-lg garden:hover:scale-105 garden:hover:shadow-xl", children: [
@@ -25129,6 +25187,7 @@ const GardenFlow = ({
   fitViewPadding,
   edgeType,
   animateEdges,
+  layout = "tree",
   showRelations = true,
   relationColors,
   showPoweredBy = true,
@@ -25177,6 +25236,12 @@ const GardenFlow = ({
   );
   const onLayout = useCallback(
     async (nodes2, edges2) => {
+      if (layout === "hex") {
+        setNodes(hexLayout(nodes2));
+        setEdges(edges2.filter(isRelationEdge));
+        requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+        return;
+      }
       await autoLayoutElements(nodes2, edges2).then(
         ({ nodes: layoutedNodes, edges: layoutedEdges }) => {
           setNodes(layoutedNodes);
@@ -25185,7 +25250,7 @@ const GardenFlow = ({
         }
       );
     },
-    [fitViewPadding, setEdges, setNodes, fitView]
+    [layout, fitViewPadding, setEdges, setNodes, fitView]
   );
   const handleNodeClick = useCallback(
     (_, node) => {
@@ -25243,7 +25308,7 @@ const GardenFlow = ({
   };
   useLayoutEffect(() => {
     onLayout(initialNodes, initialEdges);
-  }, []);
+  }, [layout]);
   const wrapperRef = useRef(null);
   useEffect(() => {
     const el = wrapperRef.current;

@@ -109,6 +109,31 @@ const getNodePositions = (
     .otherwise(() => ({}));
 };
 
+// Honeycomb / "beehive" layout: pack the product (sprout) nodes into an
+// offset hex grid. Hierarchy nodes are dropped in this mode so the products
+// read as a beehive, with their typed connections drawn between them.
+const HEX_CELL_WIDTH = 200;
+const HEX_CELL_HEIGHT = 200;
+
+export const hexLayout = (nodes: Node[]): Node[] => {
+  const sprouts = nodes.filter((node) => node.type === NODE_TYPES.SPROUT);
+  const columns = Math.max(1, Math.ceil(Math.sqrt(sprouts.length)));
+
+  return sprouts.map((node, index) => {
+    const row = Math.floor(index / columns);
+    const col = index % columns;
+    // offset every other row by half a cell, and overlap rows so the cells
+    // tessellate like a honeycomb
+    const x = col * HEX_CELL_WIDTH + (row % 2) * (HEX_CELL_WIDTH / 2);
+    const y = row * HEX_CELL_HEIGHT * 0.75;
+    return {
+      ...node,
+      position: { x, y },
+      data: { ...node.data, hex: true },
+    };
+  });
+};
+
 // Track connections between nodes
 const trackNodeConnections = (nodes: Node[], edges: Edge[]): Node[] => {
   // Initialize connection tracking objects for each node

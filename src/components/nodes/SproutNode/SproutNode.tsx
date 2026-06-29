@@ -5,6 +5,10 @@ import { isImageUrl } from "../../../lib/utils";
 
 import type { NodeProps } from "..";
 
+// Pointy-top hexagon clip used by the honeycomb / "beehive" layout.
+const HEX_CLIP =
+  "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
+
 const SproutNode = ({ data }: NodeProps) => {
   // check if there are any connections
   const hasTopTargets =
@@ -14,6 +18,49 @@ const SproutNode = ({ data }: NodeProps) => {
 
   // Use theme colors from garden data if available
   const primaryColor = data.theme?.primary_color || "var(--garden-garden)";
+
+  // Beehive mode: render the product as a hexagonal cell (icon + name).
+  if (data.hex) {
+    return (
+      <div className="garden:relative">
+        {hasTopTargets && (
+          <Handle
+            id="top"
+            type="target"
+            position={Position.Top}
+            isConnectable={false}
+          />
+        )}
+        {hasBottomSources && (
+          <Handle
+            id="bottom"
+            type="source"
+            position={Position.Bottom}
+            isConnectable={false}
+          />
+        )}
+        <div
+          className="garden:flex garden:h-40 garden:w-44 garden:cursor-pointer garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:border-2 garden:bg-card garden:p-4 garden:text-center garden:transition-transform garden:hover:scale-105"
+          style={{ clipPath: HEX_CLIP, borderColor: primaryColor }}
+        >
+          {isImageUrl(data.image) ? (
+            <img
+              src={data.image}
+              alt={data.label}
+              className="garden:h-12 garden:w-12 garden:object-contain"
+            />
+          ) : (
+            <span className="garden:select-none garden:text-4xl">
+              {data.image || data.logo || "🌱"}
+            </span>
+          )}
+          <h3 className="garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs">
+            {data.label}
+          </h3>
+        </div>
+      </div>
+    );
+  }
 
   return (
     // NB: relative positioning is important for `Handle` placement because it uses `absolute` positioning internally

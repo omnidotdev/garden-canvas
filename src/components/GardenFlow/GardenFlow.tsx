@@ -30,6 +30,7 @@ import {
   cn,
   findGardenByName,
   gardenToFlow,
+  hexLayout,
   isImageUrl,
   relationColor,
 } from "../../lib/utils";
@@ -128,6 +129,7 @@ const GardenFlow = ({
   fitViewPadding,
   edgeType,
   animateEdges,
+  layout = "tree",
   showRelations = true,
   relationColors,
   showPoweredBy = true,
@@ -187,6 +189,13 @@ const GardenFlow = ({
 
   const onLayout = useCallback(
     async (nodes: Node[], edges: Edge[]) => {
+      if (layout === "hex") {
+        // honeycomb of products; keep only the typed connection edges
+        setNodes(hexLayout(nodes));
+        setEdges(edges.filter(isRelationEdge));
+        requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+        return;
+      }
       await autoLayoutElements(nodes, edges).then(
         ({ nodes: layoutedNodes, edges: layoutedEdges }) => {
           setNodes(layoutedNodes as Node[]);
@@ -195,7 +204,7 @@ const GardenFlow = ({
         },
       );
     },
-    [fitViewPadding, setEdges, setNodes, fitView],
+    [layout, fitViewPadding, setEdges, setNodes, fitView],
   );
 
   const handleNodeClick = useCallback(
@@ -261,10 +270,11 @@ const GardenFlow = ({
     onLayout(updatedNodes, updatedEdges);
   };
 
-  // biome-ignore lint/correctness/useExhaustiveDependencies: only run once on mount
+  // Lay out on mount and re-lay-out when the layout mode (tree/hex) changes
+  // biome-ignore lint/correctness/useExhaustiveDependencies: initial node/edge set is a stable mount snapshot
   useLayoutEffect(() => {
     onLayout(initialNodes, initialEdges);
-  }, []);
+  }, [layout]);
 
   // Auto-fit the graph to the container whenever it resizes, so the whole
   // ecosystem always stays framed (window resize, sidebar toggles, etc.).

@@ -28,6 +28,13 @@ export interface GardenVisualizationProps {
     /** Edge type (cosmetic). */
     edgeType?: "default" | "straight" | "step" | "smoothstep" | "simplebezier";
     /**
+     * Layout mode. `"tree"` is the default hierarchical layout; `"hex"` is a
+     * honeycomb / "beehive" arrangement of the products (sprouts) as hexagons,
+     * with their typed connections drawn between them.
+     * @default "tree"
+     */
+    layout?: "tree" | "hex";
+    /**
      * Whether to enable edge animations.
      * @default true
      */

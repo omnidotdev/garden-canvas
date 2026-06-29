@@ -9,6 +9,6 @@ interface GardenFlowProps extends GardenVisualizationProps {
     /** Initial graph edges. */
     initialEdges: Edge[];
 }
-declare const GardenFlow: ({ schema, initialNodes, initialEdges, className, expandSubgardens, showControls, showMinimap, fitViewPadding, edgeType, animateEdges, showRelations, relationColors, showPoweredBy, miniMapOptions, controlOptions, }: GardenFlowProps) => import("react/jsx-runtime").JSX.Element;
+declare const GardenFlow: ({ schema, initialNodes, initialEdges, className, expandSubgardens, showControls, showMinimap, fitViewPadding, edgeType, animateEdges, layout, showRelations, relationColors, showPoweredBy, miniMapOptions, controlOptions, }: GardenFlowProps) => import("react/jsx-runtime").JSX.Element;
 export default GardenFlow;
 //# sourceMappingURL=GardenFlow.d.ts.map

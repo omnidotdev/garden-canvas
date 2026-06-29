@@ -19,6 +19,7 @@ interface FlowOptions {
 /** Resolve the color for a relation type, honoring caller overrides. */
 export declare const relationColor: (relation: string, overrides?: Record<string, string>) => string;
 export declare const findGardenByName: (schema: GardenSchema, name: string) => GardenSchema | null;
+export declare const hexLayout: (nodes: Node[]) => Node[];
 interface GardenToFlowOptions {
     schema: GardenSchema;
     garden: GardenSchema;
