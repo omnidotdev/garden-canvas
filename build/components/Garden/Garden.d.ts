@@ -10,6 +10,6 @@ export interface GardenProps extends GardenVisualizationProps {
     /** Initial garden name to display. Defaults to first available garden. */
     initialGardenName?: string;
 }
-declare const Garden: ({ schema, initialGardenName, expandSubgardens, showControls, showMinimap, fitViewPadding, edgeType, animateEdges, showRelations, relationColors, showPoweredBy, ...rest }: GardenProps) => import("react/jsx-runtime").JSX.Element;
+declare const Garden: ({ schema, initialGardenName, expandSubgardens, showControls, showMinimap, fitViewPadding, edgeType, animateEdges, layout, showRelations, relationColors, showPoweredBy, ...rest }: GardenProps) => import("react/jsx-runtime").JSX.Element;
 export default Garden;
 //# sourceMappingURL=Garden.d.ts.map

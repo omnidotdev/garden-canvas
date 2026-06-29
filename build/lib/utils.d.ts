@@ -2,6 +2,13 @@ import { Edge, Node } from '@xyflow/react';
 import { ClassValue } from 'clsx';
 import { GardenSchema } from '../generated/garden.types';
 export declare function cn(...inputs: ClassValue[]): string;
+/** Whether an edge is a typed cross-sprout relation edge (vs. hierarchy). */
+export declare const isRelationEdge: (edge: Edge) => boolean;
+/** Hierarchical (tree) auto-layout via ELK. */
+export declare const autoLayoutElements: (nodes: Node[], edges: Edge[]) => Promise<{
+    nodes: Node[];
+    edges: Edge[];
+}>;
 /** Whether a logo/image value is a real image source vs. an emoji/glyph. */
 export declare const isImageUrl: (src?: string) => boolean;
 interface FlowOptions {

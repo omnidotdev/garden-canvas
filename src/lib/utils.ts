@@ -1,5 +1,6 @@
 import { MarkerType, Position } from "@xyflow/react";
 import { clsx } from "clsx";
+import ELK from "elkjs/lib/elk.bundled.js";
 import { twMerge } from "tailwind-merge";
 import { match } from "ts-pattern";
 
@@ -13,6 +14,62 @@ import type {
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
+
+/** Whether an edge is a typed cross-sprout relation edge (vs. hierarchy). */
+export const isRelationEdge = (edge: Edge): boolean =>
+  (edge.data as { kind?: string } | undefined)?.kind === "relation";
+
+const elk = new ELK();
+
+const calculateNodeHeight = (node: Node): number =>
+  node.type === "garden" ? 150 : 200;
+
+/** Hierarchical (tree) auto-layout via ELK. */
+export const autoLayoutElements = async (
+  nodes: Node[],
+  edges: Edge[],
+): Promise<{ nodes: Node[]; edges: Edge[] }> => {
+  const graph = {
+    id: "elk-root",
+    layoutOptions: {
+      "elk.algorithm": "mrtree",
+      "elk.direction": "DOWN",
+      "elk.spacing.nodeNode": "200",
+      "elk.layered.spacing.nodeNodeBetweenLayers": "200",
+      "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
+    },
+    children: nodes.map((node) => ({
+      ...node,
+      id: node.id,
+      width: 250,
+      height: calculateNodeHeight(node),
+      layoutOptions: {
+        "elk.position": node.type === "garden" ? "ROOT" : "DEFAULT",
+      },
+    })),
+    edges: edges.map((edge) => ({
+      ...edge,
+      id: edge.id,
+      sources: [edge.source],
+      targets: [edge.target],
+      layoutOptions: {
+        "elk.layered.edge.thickness": "2",
+        "elk.edgeRouting": "ORTHOGONAL",
+      },
+    })),
+  };
+
+  return elk
+    .layout(graph)
+    .then((updatedGraph) => ({
+      nodes: (updatedGraph.children?.map((node) => ({
+        ...node,
+        position: { x: node.x, y: node.y },
+      })) ?? []) as Node[],
+      edges: (updatedGraph.edges ?? []) as unknown as Edge[],
+    }))
+    .catch(() => ({ nodes: nodes || [], edges: edges || [] }));
+};
 
 /** Whether a logo/image value is a real image source vs. an emoji/glyph. */
 export const isImageUrl = (src?: string): boolean =>

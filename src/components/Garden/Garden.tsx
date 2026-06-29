@@ -1,6 +1,7 @@
 import { ReactFlowProvider } from "@xyflow/react";
 
 import { Convert } from "../../generated/garden.types";
+import { getLayout } from "../../lib/plugins/layout";
 import { findGardenByName, gardenToFlow } from "../../lib/utils";
 import { GardenFlow } from "../GardenFlow";
 
@@ -8,6 +9,7 @@ import type { GardenSchema } from "../../generated/garden.types";
 import type { GardenVisualizationProps } from "../../lib/types/garden.types";
 
 import "../../lib/garden.css";
+import "../../lib/plugins/builtin";
 
 type JsonPrimitive = string | number | boolean | null;
 type JsonValue = JsonPrimitive | JsonValue[] | { [key: string]: JsonValue };
@@ -28,6 +30,7 @@ const Garden = ({
   fitViewPadding = 0.2,
   edgeType = "smoothstep",
   animateEdges = true,
+  layout = "tree",
   showRelations = true,
   relationColors,
   showPoweredBy = true,
@@ -51,12 +54,36 @@ const Garden = ({
     },
   });
 
+  // A renderer-style layout (e.g. the 3D plugin) fully replaces the canvas.
+  const Renderer = getLayout(layout)?.Renderer;
+  if (Renderer) {
+    return (
+      <Renderer
+        schema={convertedSchema}
+        nodes={initialNodes}
+        edges={initialEdges}
+        layout={layout}
+        showControls={showControls}
+        showMinimap={showMinimap}
+        fitViewPadding={fitViewPadding}
+        edgeType={edgeType}
+        animateEdges={animateEdges}
+        showRelations={showRelations}
+        relationColors={relationColors}
+        expandSubgardens={expandSubgardens}
+        showPoweredBy={showPoweredBy}
+        {...rest}
+      />
+    );
+  }
+
   return (
     <ReactFlowProvider>
       <GardenFlow
         schema={convertedSchema}
         initialNodes={initialNodes}
         initialEdges={initialEdges}
+        layout={layout}
         showControls={showControls}
         showMinimap={showMinimap}
         fitViewPadding={fitViewPadding}

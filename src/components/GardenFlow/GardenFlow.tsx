@@ -10,7 +10,6 @@ import {
   useNodesState,
   useReactFlow,
 } from "@xyflow/react";
-import ELK from "elkjs/lib/elk.bundled.js";
 import {
   ExternalLinkIcon,
   FlowerIcon,
@@ -26,12 +25,13 @@ import {
   useState,
 } from "react";
 
+import { getLayout } from "../../lib/plugins/layout";
 import {
   cn,
   findGardenByName,
   gardenToFlow,
-  hexLayout,
   isImageUrl,
+  isRelationEdge,
   relationColor,
 } from "../../lib/utils";
 import { customNodes } from "../nodes";
@@ -51,63 +51,6 @@ import type { MouseEvent, ReactNode } from "react";
 import type { GardenSchema, Theme } from "../../generated/garden.types";
 import type { GardenVisualizationProps } from "../../lib/types/garden.types";
 import type { NodeData } from "../nodes";
-
-const elk = new ELK();
-
-const isRelationEdge = (edge: Edge): boolean =>
-  (edge.data as { kind?: string } | undefined)?.kind === "relation";
-
-const calculateNodeHeight = (node: Node): number => {
-  if (node.type === "garden") return 150;
-
-  return 200;
-};
-
-const autoLayoutElements = async (nodes: Node[], edges: Edge[]) => {
-  const graph = {
-    id: "elk-root",
-    layoutOptions: {
-      "elk.algorithm": "mrtree",
-      "elk.direction": "DOWN",
-      "elk.spacing.nodeNode": "200",
-      "elk.layered.spacing.nodeNodeBetweenLayers": "200",
-      "elk.layered.nodePlacement.strategy": "NETWORK_SIMPLEX",
-    },
-    children: nodes.map((node) => ({
-      ...node,
-      id: node.id,
-      width: 250,
-      height: calculateNodeHeight(node),
-      layoutOptions: {
-        "elk.position": node.type === "garden" ? "ROOT" : "DEFAULT",
-      },
-    })),
-    edges: edges.map((edge) => ({
-      ...edge,
-      id: edge.id,
-      sources: [edge.source],
-      targets: [edge.target],
-      layoutOptions: {
-        "elk.layered.edge.thickness": "2",
-        "elk.edgeRouting": "ORTHOGONAL",
-      },
-    })),
-  };
-
-  return elk
-    .layout(graph)
-    .then((updatedGraph) => ({
-      nodes: updatedGraph.children?.map((node) => ({
-        ...node,
-        position: { x: node.x, y: node.y },
-      })),
-      edges: updatedGraph.edges,
-    }))
-    .catch(() => ({
-      nodes: nodes || [],
-      edges: edges || [],
-    }));
-};
 
 interface GardenFlowProps extends GardenVisualizationProps {
   /** Garden schema to visualize. */
@@ -189,20 +132,15 @@ const GardenFlow = ({
 
   const onLayout = useCallback(
     async (nodes: Node[], edges: Edge[]) => {
-      if (layout === "hex") {
-        // honeycomb of products; keep only the typed connection edges
-        setNodes(hexLayout(nodes));
-        setEdges(edges.filter(isRelationEdge));
-        requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
-        return;
-      }
-      await autoLayoutElements(nodes, edges).then(
-        ({ nodes: layoutedNodes, edges: layoutedEdges }) => {
-          setNodes(layoutedNodes as Node[]);
-          setEdges(layoutedEdges as Edge[]);
-          fitView({ padding: fitViewPadding });
-        },
-      );
+      // resolve the layout plugin by name (falls back to the tree layout)
+      const plugin = getLayout(layout) ?? getLayout("tree");
+      const result = (await plugin?.position?.(nodes, edges)) ?? {
+        nodes,
+        edges,
+      };
+      setNodes(result.nodes as Node[]);
+      setEdges(result.edges as Edge[]);
+      requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
     },
     [layout, fitViewPadding, setEdges, setNodes, fitView],
   );
