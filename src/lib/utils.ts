@@ -5,7 +5,10 @@ import { match } from "ts-pattern";
 
 import type { Edge, Node } from "@xyflow/react";
 import type { ClassValue } from "clsx";
-import type { GardenSchema } from "../generated/garden.types";
+import type {
+  Edge as GardenEdge,
+  GardenSchema,
+} from "../generated/garden.types";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -15,7 +18,30 @@ interface FlowOptions {
   expandSubgardens?: boolean;
   edgeType?: "default" | "straight" | "step" | "smoothstep" | "simplebezier";
   animateEdges?: boolean;
+  /**
+   * Whether to render typed cross-sprout relation edges (from `garden.edges`).
+   * @default true
+   */
+  showRelations?: boolean;
+  /** Override the color used for a relation type (slug -> CSS color). */
+  relationColors?: Record<string, string>;
 }
+
+// Stable hue from a relation slug so each relation type gets a consistent color
+// without a hardcoded palette (the library is product-agnostic).
+const hashHue = (value: string): number => {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash * 31 + value.charCodeAt(i)) % 360;
+  }
+  return hash;
+};
+
+/** Resolve the color for a relation type, honoring caller overrides. */
+export const relationColor = (
+  relation: string,
+  overrides?: Record<string, string>,
+): string => overrides?.[relation] ?? `hsl(${hashHue(relation)} 70% 60%)`;
 
 const NODE_TYPES = {
   GARDEN: "garden",
@@ -306,6 +332,79 @@ const processSubgarensRecursively = ({
   }
 };
 
+// Build typed cross-sprout edges from `garden.edges` / `schema.edges`. These
+// cut across the containment hierarchy (e.g. "blink integrates crystal"), so
+// they only render between sprouts that are currently visible. Endpoints are
+// matched by sprout name.
+const addRelationEdges = (
+  schema: GardenSchema,
+  garden: GardenSchema,
+  nodes: Node[],
+  edges: Edge[],
+  options: FlowOptions,
+) => {
+  if (options.showRelations === false) return;
+
+  const sproutIdByName = new Map<string, string>();
+  for (const node of nodes) {
+    if (node.type === NODE_TYPES.SPROUT) {
+      sproutIdByName.set(String(node.data.label), node.id);
+    }
+  }
+  if (!sproutIdByName.size) return;
+
+  const candidates: GardenEdge[] = [
+    ...((schema.edges ?? []) as GardenEdge[]),
+    ...((garden.edges ?? []) as GardenEdge[]),
+  ];
+  if (!candidates.length) return;
+
+  const seen = new Set<string>();
+  for (const edge of candidates) {
+    if (!edge?.source || !edge?.target) continue;
+
+    const sourceId = sproutIdByName.get(edge.source);
+    const targetId = sproutIdByName.get(edge.target);
+    // both endpoints must be visible sprouts
+    if (!sourceId || !targetId) continue;
+
+    const relations = Array.isArray(edge.relations) ? edge.relations : [];
+    const dedupeKey = `${sourceId}->${targetId}:${relations.join(",")}`;
+    if (seen.has(dedupeKey)) continue;
+    seen.add(dedupeKey);
+
+    const color = relationColor(
+      relations[0] ?? "related",
+      options.relationColors,
+    );
+    const label =
+      edge.label ?? (relations.length ? relations.join(", ") : undefined);
+
+    edges.push({
+      id: `relation-${dedupeKey}`,
+      source: sourceId,
+      target: targetId,
+      type: "default",
+      animated: options.animateEdges !== false,
+      label: label ?? undefined,
+      data: {
+        kind: "relation",
+        relations,
+        description: edge.description ?? undefined,
+        status: edge.status ?? undefined,
+      },
+      style: { stroke: color, strokeWidth: 1.5, opacity: 0.75 },
+      labelStyle: { fill: color, fontSize: 10, fontWeight: 600 },
+      labelBgStyle: { fill: "var(--garden-background)", fillOpacity: 0.85 },
+      labelBgPadding: [4, 2],
+      labelBgBorderRadius: 4,
+      markerEnd: { type: MarkerType.ArrowClosed, color },
+      interactionWidth: 6,
+      zIndex: 0,
+    });
+  }
+};
+
 interface GardenToFlowOptions {
   schema: GardenSchema;
   garden: GardenSchema;
@@ -555,6 +654,9 @@ export const gardenToFlow = ({
       });
     }
   }
+
+  // Add typed cross-sprout relation edges (cut across the hierarchy)
+  addRelationEdges(schema, garden, nodes, edges, options);
 
   // Process connections to ensure nodes know about their connections
   const nodesWithConnections = trackNodeConnections(nodes, edges);

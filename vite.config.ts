@@ -22,14 +22,16 @@ export default defineConfig({
     rollupOptions: {
       external: ["react", "react-dom", "react/jsx-runtime"],
       output: {
-        entryFileNames: "[name].js",
+        // Single bundle (not per-module): keeps the extracted stylesheet's
+        // path self-consistent so it emits as build/garden.css (matching the
+        // `./styles.css` export) instead of a dangling per-module CSS import.
+        entryFileNames: "index.js",
+        assetFileNames: (asset) =>
+          (asset.names ?? []).some((name) => name.endsWith(".css"))
+            ? "garden.css"
+            : "[name][extname]",
         format: "es",
-        preserveModules: true,
-        preserveModulesRoot: "src",
         exports: "named",
-        globals: {
-          tailwindcss: "tailwindcss",
-        },
         banner: `"use client";`,
       },
     },

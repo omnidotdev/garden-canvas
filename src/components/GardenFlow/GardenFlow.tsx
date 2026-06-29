@@ -19,7 +19,12 @@ import {
 } from "lucide-react";
 import { useCallback, useLayoutEffect, useMemo, useState } from "react";
 
-import { cn, findGardenByName, gardenToFlow } from "../../lib/utils";
+import {
+  cn,
+  findGardenByName,
+  gardenToFlow,
+  relationColor,
+} from "../../lib/utils";
 import { customNodes } from "../nodes";
 import { Button } from "../ui/button";
 import {
@@ -39,6 +44,9 @@ import type { GardenVisualizationProps } from "../../lib/types/garden.types";
 import type { NodeData } from "../nodes";
 
 const elk = new ELK();
+
+const isRelationEdge = (edge: Edge): boolean =>
+  (edge.data as { kind?: string } | undefined)?.kind === "relation";
 
 const calculateNodeHeight = (node: Node): number => {
   if (node.type === "garden") return 150;
@@ -112,6 +120,8 @@ const GardenFlow = ({
   fitViewPadding,
   edgeType,
   animateEdges,
+  showRelations = true,
+  relationColors,
   showPoweredBy = true,
   miniMapOptions,
   controlOptions,
@@ -120,10 +130,47 @@ const GardenFlow = ({
     useState(expandSubgardens);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
   const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
+  const [hiddenRelations, setHiddenRelations] = useState<Set<string>>(
+    new Set(),
+  );
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
   const { fitView } = useReactFlow();
+
+  // Relation types present in the current graph (for the legend/filter)
+  const relationTypes = useMemo(() => {
+    const set = new Set<string>();
+    for (const edge of edges) {
+      if (!isRelationEdge(edge)) continue;
+      const rels = (edge.data as { relations?: string[] }).relations ?? [];
+      for (const rel of rels) set.add(rel);
+    }
+    return [...set].sort();
+  }, [edges]);
+
+  const toggleRelation = useCallback((relation: string) => {
+    setHiddenRelations((prev) => {
+      const next = new Set(prev);
+      if (next.has(relation)) next.delete(relation);
+      else next.add(relation);
+      return next;
+    });
+  }, []);
+
+  // Hierarchy edges always show; a relation edge shows if at least one of its
+  // relation types is not filtered out (and relations are enabled at all).
+  const visibleEdges = useMemo(
+    () =>
+      edges.filter((edge) => {
+        if (!isRelationEdge(edge)) return true;
+        if (!showRelations) return false;
+        const rels = (edge.data as { relations?: string[] }).relations ?? [];
+        if (!rels.length) return true;
+        return rels.some((rel) => !hiddenRelations.has(rel));
+      }),
+    [edges, hiddenRelations, showRelations],
+  );
 
   const currentGarden = useMemo(
     () => nodes.find((node) => node?.type === "garden"),
@@ -161,6 +208,8 @@ const GardenFlow = ({
               expandSubgardens: isSubgardensExpanded,
               edgeType,
               animateEdges,
+              showRelations,
+              relationColors,
             },
           });
 
@@ -168,7 +217,15 @@ const GardenFlow = ({
         }
       }
     },
-    [edgeType, isSubgardensExpanded, onLayout, schema, animateEdges],
+    [
+      edgeType,
+      isSubgardensExpanded,
+      onLayout,
+      schema,
+      animateEdges,
+      showRelations,
+      relationColors,
+    ],
   );
 
   const handleToggleExpandedSubgardens = (expand: boolean) => {
@@ -188,6 +245,8 @@ const GardenFlow = ({
         expandSubgardens: expand,
         edgeType,
         animateEdges,
+        showRelations,
+        relationColors,
       },
     });
 
@@ -217,17 +276,22 @@ const GardenFlow = ({
             cursor: node.type === "garden" ? "grab" : "pointer",
           },
         }))}
-        edges={edges.map((edge) => ({
-          ...edge,
-          // Apply customized edge type and animation
-          type: edgeType,
-          animated: animateEdges,
-          style: {
-            strokeWidth: 2,
-            stroke: "var(--garden-ring)",
-          },
-          markerEnd: edge.markerEnd || { type: MarkerType.ArrowClosed },
-        }))}
+        edges={visibleEdges.map((edge) =>
+          // Relation edges keep their own typed color/label; only hierarchy
+          // edges take the cosmetic edgeType + uniform stroke.
+          isRelationEdge(edge)
+            ? edge
+            : {
+                ...edge,
+                type: edgeType,
+                animated: animateEdges,
+                style: {
+                  strokeWidth: 2,
+                  stroke: "var(--garden-ring)",
+                },
+                markerEnd: edge.markerEnd || { type: MarkerType.ArrowClosed },
+              },
+        )}
         onNodesChange={onNodesChange}
         onEdgesChange={onEdgesChange}
         onNodeClick={handleNodeClick}
@@ -255,6 +319,40 @@ const GardenFlow = ({
 
         {showMinimap && (
           <MiniMap nodeStrokeWidth={3} zoomable pannable {...miniMapOptions} />
+        )}
+
+        {showRelations && relationTypes.length > 0 && (
+          <Panel position="top-left">
+            <div className="garden:flex garden:max-w-[220px] garden:flex-col garden:gap-1 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:p-2 garden:shadow-sm garden:backdrop-blur-sm">
+              <span className="garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide">
+                Connections
+              </span>
+              <div className="garden:flex garden:flex-wrap garden:gap-1">
+                {relationTypes.map((relation) => {
+                  const hidden = hiddenRelations.has(relation);
+                  const color = relationColor(relation, relationColors);
+                  return (
+                    <button
+                      key={relation}
+                      type="button"
+                      onClick={() => toggleRelation(relation)}
+                      title={hidden ? `Show ${relation}` : `Hide ${relation}`}
+                      className={cn(
+                        "garden:flex garden:items-center garden:gap-1.5 garden:rounded garden:border garden:border-border garden:px-1.5 garden:py-0.5 garden:text-xs garden:transition-opacity",
+                        hidden ? "garden:opacity-40" : "garden:opacity-100",
+                      )}
+                    >
+                      <span
+                        className="garden:h-2 garden:w-2 garden:rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                      {relation}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          </Panel>
         )}
 
         {currentGarden && (

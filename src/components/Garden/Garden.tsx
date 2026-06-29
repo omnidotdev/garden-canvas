@@ -28,6 +28,8 @@ const Garden = ({
   fitViewPadding = 0.2,
   edgeType = "smoothstep",
   animateEdges = true,
+  showRelations = true,
+  relationColors,
   showPoweredBy = true,
   ...rest
 }: GardenProps) => {
@@ -44,6 +46,8 @@ const Garden = ({
       expandSubgardens,
       edgeType,
       animateEdges,
+      showRelations,
+      relationColors,
     },
   });
 
@@ -58,6 +62,8 @@ const Garden = ({
         fitViewPadding={fitViewPadding}
         edgeType={edgeType}
         animateEdges={animateEdges}
+        showRelations={showRelations}
+        relationColors={relationColors}
         expandSubgardens={expandSubgardens}
         showPoweredBy={showPoweredBy}
         {...rest}

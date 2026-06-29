@@ -34,6 +34,14 @@ export interface GardenVisualizationProps {
    */
   animateEdges?: boolean;
   /**
+   * Whether to render typed cross-sprout relation edges (from `garden.edges`),
+   * with a filterable legend.
+   * @default true
+   */
+  showRelations?: boolean;
+  /** Override the color for a relation type (slug -> CSS color). */
+  relationColors?: Record<string, string>;
+  /**
    * Whether to show "Powered by Garden" badge.
    * @default true
    */

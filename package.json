@@ -1,6 +1,6 @@
 {
   "name": "@omnidotdev/garden",
-  "version": "0.1.4",
+  "version": "0.2.0",
   "type": "module",
   "module": "build/index.js",
   "types": "build/index.d.ts",
@@ -13,8 +13,8 @@
     "check": "biome check --diagnostic-level=error src",
     "format": "biome format --write src",
     "lint": "biome lint --diagnostic-level=error src",
-    "generate": "bunx quicktype@23.2.4 -s schema ${GARDEN_SCHEMA_PATH:-../garden-cli/garden.schema.json} -o src/generated/garden.types.ts",
-    "generate:ci": "curl -sL https://manifold.omni.dev/@omni/schemas/garden.schema.json -o /tmp/garden.schema.json && bunx quicktype@23.2.4 -s schema /tmp/garden.schema.json -o src/generated/garden.types.ts",
+    "generate": "bunx quicktype@23.2.4 -s schema -t GardenSchema ${GARDEN_SCHEMA_PATH:-../garden-cli/garden.schema.json} -o src/generated/garden.types.ts",
+    "generate:ci": "curl -sL https://manifold.omni.dev/@omni/schemas/garden.schema.json -o /tmp/garden.schema.json && bunx quicktype@23.2.4 -s schema -t GardenSchema /tmp/garden.schema.json -o src/generated/garden.types.ts",
     "knip": "knip-bun --cache --tags=-knipignore",
     "changeset": "changeset",
     "release": "bun run build && changeset publish",

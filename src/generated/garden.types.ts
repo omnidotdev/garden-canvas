@@ -10,6 +10,7 @@
 export interface GardenSchema {
     created_at?:   null | string;
     description?:  null | string;
+    edges?:        Edge[] | null;
     maintainers?:  Maintainer[] | null;
     name:          string;
     sprouts?:      Sprout[] | null;
@@ -21,6 +22,16 @@ export interface GardenSchema {
     [property: string]: any;
 }
 
+export interface Edge {
+    description?: null | string;
+    label?:       null | string;
+    relations?:   string[] | null;
+    source:       string;
+    status?:      null | string;
+    target:       string;
+    [property: string]: any;
+}
+
 export interface Maintainer {
     email?: null | string;
     name:   string;
@@ -29,19 +40,20 @@ export interface Maintainer {
 }
 
 export interface Sprout {
-    description?:  null | string;
-    homepage_url?: null | string;
-    logo?:         null | string;
-    name:          string;
-    project_url?:  null | string;
-    repo_url?:     null | string;
-    twitter?:      null | string;
+    description?: null | string;
+    homepage_url: string;
+    logo?:        null | string;
+    name:         string;
+    project_url?: null | string;
+    repo_url?:    null | string;
+    twitter?:     null | string;
     [property: string]: any;
 }
 
 export interface Garden {
     created_at?:   null | string;
     description?:  null | string;
+    edges?:        Edge[] | null;
     maintainers?:  Maintainer[] | null;
     name:          string;
     sprouts?:      Sprout[] | null;
@@ -229,6 +241,7 @@ const typeMap: any = {
     "GardenSchema": o([
         { json: "created_at", js: "created_at", typ: u(undefined, u(null, "")) },
         { json: "description", js: "description", typ: u(undefined, u(null, "")) },
+        { json: "edges", js: "edges", typ: u(undefined, u(a(r("Edge")), null)) },
         { json: "maintainers", js: "maintainers", typ: u(undefined, u(a(r("Maintainer")), null)) },
         { json: "name", js: "name", typ: "" },
         { json: "sprouts", js: "sprouts", typ: u(undefined, u(a(r("Sprout")), null)) },
@@ -238,6 +251,14 @@ const typeMap: any = {
         { json: "updated_at", js: "updated_at", typ: u(undefined, u(null, "")) },
         { json: "version", js: "version", typ: u(undefined, u(null, "")) },
     ], "any"),
+    "Edge": o([
+        { json: "description", js: "description", typ: u(undefined, u(null, "")) },
+        { json: "label", js: "label", typ: u(undefined, u(null, "")) },
+        { json: "relations", js: "relations", typ: u(undefined, u(a(""), null)) },
+        { json: "source", js: "source", typ: "" },
+        { json: "status", js: "status", typ: u(undefined, u(null, "")) },
+        { json: "target", js: "target", typ: "" },
+    ], "any"),
     "Maintainer": o([
         { json: "email", js: "email", typ: u(undefined, u(null, "")) },
         { json: "name", js: "name", typ: "" },
@@ -245,7 +266,7 @@ const typeMap: any = {
     ], "any"),
     "Sprout": o([
         { json: "description", js: "description", typ: u(undefined, u(null, "")) },
-        { json: "homepage_url", js: "homepage_url", typ: u(undefined, u(null, "")) },
+        { json: "homepage_url", js: "homepage_url", typ: "" },
         { json: "logo", js: "logo", typ: u(undefined, u(null, "")) },
         { json: "name", js: "name", typ: "" },
         { json: "project_url", js: "project_url", typ: u(undefined, u(null, "")) },
@@ -255,6 +276,7 @@ const typeMap: any = {
     "Garden": o([
         { json: "created_at", js: "created_at", typ: u(undefined, u(null, "")) },
         { json: "description", js: "description", typ: u(undefined, u(null, "")) },
+        { json: "edges", js: "edges", typ: u(undefined, u(a(r("Edge")), null)) },
         { json: "maintainers", js: "maintainers", typ: u(undefined, u(a(r("Maintainer")), null)) },
         { json: "name", js: "name", typ: "" },
         { json: "sprouts", js: "sprouts", typ: u(undefined, u(a(r("Sprout")), null)) },

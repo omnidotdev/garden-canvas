@@ -1,5 +1,16 @@
 # @omnidotdev/garden
 
+## 0.2.0
+
+### Minor Changes
+
+- Add typed cross-sprout relation edges. Gardens can now declare an `edges` array
+  (`{ source, target, relations, label?, description?, status? }`) describing
+  connections that cut across the containment hierarchy. In the expanded view,
+  these render as colored, labeled edges between sprouts, with a filterable
+  legend grouped by relation type. New `showRelations` and `relationColors` props
+  on `<Garden>` control rendering and per-relation colors.
+
 ## 0.1.4
 
 ### Patch Changes
