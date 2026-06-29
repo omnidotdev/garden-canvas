@@ -1,4 +1,7 @@
 node_modules
-build
+# build/ is committed so the package can be consumed as a git dependency
+# (mirrors @omnidotdev/providers); only the heavy sourcemaps are ignored
+build/**/*.map
+build/**/*.tsbuildinfo
 .turbo
 .zed
