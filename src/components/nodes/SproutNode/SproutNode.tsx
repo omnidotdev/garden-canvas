@@ -1,6 +1,8 @@
 import { Handle, Position } from "@xyflow/react";
 import { ExternalLinkIcon, GitBranchIcon } from "lucide-react";
 
+import { isImageUrl } from "../../../lib/utils";
+
 import type { NodeProps } from "..";
 
 const SproutNode = ({ data }: NodeProps) => {
@@ -35,11 +37,21 @@ const SproutNode = ({ data }: NodeProps) => {
       )}
 
       <div className="garden:relative">
-        <img
-          src={data.image}
-          alt={data.label}
-          className="garden:h-28 garden:w-full garden:object-contain garden:p-5"
-        />
+        {isImageUrl(data.image) ? (
+          <img
+            src={data.image}
+            alt={data.label}
+            className="garden:h-28 garden:w-full garden:object-contain garden:p-5"
+          />
+        ) : (
+          <div
+            role="img"
+            aria-label={data.label}
+            className="garden:flex garden:h-28 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-6xl"
+          >
+            {data.image || data.logo || "🌱"}
+          </div>
+        )}
         <div className="garden:bg-muted/60 garden:pt-4 garden:dark:bg-muted/20">
           <div className="garden:px-4">
             <h3 className="garden:font-medium garden:text-foreground">

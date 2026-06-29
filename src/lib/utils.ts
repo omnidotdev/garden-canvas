@@ -14,6 +14,11 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+/** Whether a logo/image value is a real image source vs. an emoji/glyph. */
+export const isImageUrl = (src?: string): boolean =>
+  !!src &&
+  (/^https?:\/\//.test(src) || src.startsWith("/") || src.startsWith("data:"));
+
 interface FlowOptions {
   expandSubgardens?: boolean;
   edgeType?: "default" | "straight" | "step" | "smoothstep" | "simplebezier";

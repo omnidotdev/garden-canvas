@@ -17,12 +17,20 @@ import {
   Layers2Icon,
   LayersIcon,
 } from "lucide-react";
-import { useCallback, useLayoutEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 import {
   cn,
   findGardenByName,
   gardenToFlow,
+  isImageUrl,
   relationColor,
 } from "../../lib/utils";
 import { customNodes } from "../nodes";
@@ -258,8 +266,29 @@ const GardenFlow = ({
     onLayout(initialNodes, initialEdges);
   }, []);
 
+  // Auto-fit the graph to the container whenever it resizes, so the whole
+  // ecosystem always stays framed (window resize, sidebar toggles, etc.).
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+
+    let frame = 0;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+    });
+    observer.observe(el);
+
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [fitView, fitViewPadding]);
+
   return (
     <div
+      ref={wrapperRef}
       className={cn(
         "garden:h-full garden:w-full garden:rounded-lg garden:border garden:border-border",
         className,
@@ -460,13 +489,18 @@ const GardenFlow = ({
             )}
           </DialogHeader>
 
-          {selectedSprout?.image && (
-            <img
-              src={selectedSprout.image}
-              alt={selectedSprout.label}
-              className="garden:h-64 garden:w-full garden:object-contain p-3"
-            />
-          )}
+          {selectedSprout?.image &&
+            (isImageUrl(selectedSprout.image) ? (
+              <img
+                src={selectedSprout.image}
+                alt={selectedSprout.label}
+                className="garden:h-64 garden:w-full garden:object-contain p-3"
+              />
+            ) : (
+              <div className="garden:flex garden:h-40 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-8xl">
+                {selectedSprout.image}
+              </div>
+            ))}
 
           {selectedSprout?.version && (
             <div className="garden:mt-2 garden:text-muted-foreground garden:text-sm">

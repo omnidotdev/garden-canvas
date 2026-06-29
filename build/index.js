@@ -14856,6 +14856,7 @@ const t=Symbol.for("@ts-pattern/matcher"),e=Symbol.for("@ts-pattern/isVariadic")
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
+const isImageUrl = (src) => !!src && (/^https?:\/\//.test(src) || src.startsWith("/") || src.startsWith("data:"));
 const hashHue = (value) => {
   let hash = 0;
   for (let i = 0; i < value.length; i++) {
@@ -22391,12 +22392,20 @@ const SproutNode = ({ data }) => {
         }
       ),
       /* @__PURE__ */ jsxs("div", { className: "garden:relative", children: [
-        /* @__PURE__ */ jsx(
+        isImageUrl(data.image) ? /* @__PURE__ */ jsx(
           "img",
           {
             src: data.image,
             alt: data.label,
             className: "garden:h-28 garden:w-full garden:object-contain garden:p-5"
+          }
+        ) : /* @__PURE__ */ jsx(
+          "div",
+          {
+            role: "img",
+            "aria-label": data.label,
+            className: "garden:flex garden:h-28 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-6xl",
+            children: data.image || data.logo || "🌱"
           }
         ),
         /* @__PURE__ */ jsxs("div", { className: "garden:bg-muted/60 garden:pt-4 garden:dark:bg-muted/20", children: [
@@ -25235,9 +25244,25 @@ const GardenFlow = ({
   useLayoutEffect(() => {
     onLayout(initialNodes, initialEdges);
   }, []);
+  const wrapperRef = useRef(null);
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+    let frame = 0;
+    const observer = new ResizeObserver(() => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+    });
+    observer.observe(el);
+    return () => {
+      observer.disconnect();
+      cancelAnimationFrame(frame);
+    };
+  }, [fitView, fitViewPadding]);
   return /* @__PURE__ */ jsxs(
     "div",
     {
+      ref: wrapperRef,
       className: cn(
         "garden:h-full garden:w-full garden:rounded-lg garden:border garden:border-border",
         className
@@ -25400,14 +25425,14 @@ const GardenFlow = ({
                 /* @__PURE__ */ jsx(DialogTitle, { className: "garden:text-xl", children: selectedSprout?.label }),
                 selectedSprout?.description && /* @__PURE__ */ jsx(DialogDescription, { className: "garden:text-base", children: selectedSprout.description })
               ] }),
-              selectedSprout?.image && /* @__PURE__ */ jsx(
+              selectedSprout?.image && (isImageUrl(selectedSprout.image) ? /* @__PURE__ */ jsx(
                 "img",
                 {
                   src: selectedSprout.image,
                   alt: selectedSprout.label,
                   className: "garden:h-64 garden:w-full garden:object-contain p-3"
                 }
-              ),
+              ) : /* @__PURE__ */ jsx("div", { className: "garden:flex garden:h-40 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-8xl", children: selectedSprout.image })),
               selectedSprout?.version && /* @__PURE__ */ jsxs("div", { className: "garden:mt-2 garden:text-muted-foreground garden:text-sm", children: [
                 "Version: ",
                 selectedSprout.version
