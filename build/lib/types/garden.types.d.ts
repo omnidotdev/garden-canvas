@@ -28,12 +28,13 @@ export interface GardenVisualizationProps {
     /** Edge type (cosmetic). */
     edgeType?: "default" | "straight" | "step" | "smoothstep" | "simplebezier";
     /**
-     * Layout mode. `"tree"` is the default hierarchical layout; `"hex"` is a
-     * honeycomb / "beehive" arrangement of the products (sprouts) as hexagons,
-     * with their typed connections drawn between them.
+     * Layout plugin name. Built-ins: `"tree"` (hierarchical, default), `"hex"`
+     * (honeycomb / "beehive"), and `"3d"` (from `@omnidotdev/garden/3d`). Any
+     * registered plugin name is accepted, so the type stays open for the
+     * ecosystem.
      * @default "tree"
      */
-    layout?: "tree" | "hex";
+    layout?: "tree" | "hex" | "3d" | (string & {});
     /**
      * Whether to enable edge animations.
      * @default true
