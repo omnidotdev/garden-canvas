@@ -23,7 +23,12 @@ export default defineConfig({
       formats: ["es"],
     },
     rollupOptions: {
-      external: ["react", "react-dom", "react/jsx-runtime"],
+      // Externalize react and react-dom INCLUDING their subpaths (e.g.
+      // react-dom/client, react/jsx-runtime). Bundling react-dom/client bakes
+      // this package's build-time React version into the chunk, tripping
+      // React's exact-version reconciler check (#527) against the consumer's
+      // React. The consumer always provides these (peerDependencies).
+      external: [/^react(\/|$)/, /^react-dom(\/|$)/],
       output: {
         // Per-entry bundles (index.js, 3d.js). Keep the extracted stylesheet's
         // path self-consistent so it emits as build/garden.css (matching the
