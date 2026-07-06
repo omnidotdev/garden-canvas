@@ -39,24 +39,32 @@ const SproutNode = ({ data }: NodeProps) => {
             isConnectable={false}
           />
         )}
+        {/* A clip-path clips the element's border away, so the outline is
+            drawn as a colored outer hexagon showing through a slightly inset
+            inner hexagon (the padding is the visible border width). */}
         <div
-          className="garden:flex garden:h-40 garden:w-44 garden:cursor-pointer garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:border-2 garden:bg-card garden:p-4 garden:text-center garden:transition-transform garden:hover:scale-105"
-          style={{ clipPath: HEX_CLIP, borderColor: primaryColor }}
+          className="garden:h-40 garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105"
+          style={{ clipPath: HEX_CLIP, backgroundColor: primaryColor }}
         >
-          {isImageUrl(data.image) ? (
-            <img
-              src={data.image}
-              alt={data.label}
-              className="garden:h-12 garden:w-12 garden:object-contain"
-            />
-          ) : (
-            <span className="garden:select-none garden:text-4xl">
-              {data.image || data.logo || "🌱"}
-            </span>
-          )}
-          <h3 className="garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs">
-            {data.label}
-          </h3>
+          <div
+            className="garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:bg-card garden:p-4 garden:text-center"
+            style={{ clipPath: HEX_CLIP }}
+          >
+            {isImageUrl(data.image) ? (
+              <img
+                src={data.image}
+                alt={data.label}
+                className="garden:h-12 garden:w-12 garden:object-contain"
+              />
+            ) : (
+              <span className="garden:select-none garden:text-4xl">
+                {data.image || data.logo || "🌱"}
+              </span>
+            )}
+            <h3 className="garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs">
+              {data.label}
+            </h3>
+          </div>
         </div>
       </div>
     );
@@ -114,10 +122,7 @@ const SproutNode = ({ data }: NodeProps) => {
             {data.cta?.primary && (
               <button
                 type="button"
-                className="garden:flex garden:w-full garden:cursor-pointer garden:items-center garden:justify-center garden:rounded-md garden:px-3 garden:py-1 garden:font-medium garden:text-background garden:text-sm garden:hover:opacity-90"
-                style={{
-                  backgroundColor: primaryColor,
-                }}
+                className="garden:flex garden:w-full garden:cursor-pointer garden:items-center garden:justify-center garden:rounded-md garden:bg-primary garden:px-3 garden:py-1 garden:font-medium garden:text-primary-foreground garden:text-sm garden:hover:bg-primary/90"
                 onClick={(e) => {
                   // prevent needlessly opening the dialog
                   e.stopPropagation();

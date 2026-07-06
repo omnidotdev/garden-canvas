@@ -1,10 +1,13 @@
 import { Html, Line, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { useMemo } from "react";
+import { ExternalLinkIcon, FlowerIcon } from "lucide-react";
+import { useMemo, useState } from "react";
 
 import { isImageUrl, relationColor } from "../../lib/utils";
+import { SproutDialog } from "../SproutDialog";
 
 import type { GardenRendererProps } from "../../lib/plugins/layout";
+import type { NodeData } from "../nodes";
 
 type Vec3 = [number, number, number];
 
@@ -42,7 +45,16 @@ type SproutData = {
  * Lives in the `@omnidotdev/garden/3d` entry so Three.js stays out of the base
  * bundle.
  */
-const Garden3D = ({ nodes, edges, relationColors }: GardenRendererProps) => {
+const Garden3D = ({
+  schema,
+  nodes,
+  edges,
+  relationColors,
+  showPoweredBy = true,
+}: GardenRendererProps) => {
+  const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
+  const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
+
   const sprouts = useMemo(
     () => nodes.filter((node) => node.type === "sprout"),
     [nodes],
@@ -67,7 +79,29 @@ const Garden3D = ({ nodes, edges, relationColors }: GardenRendererProps) => {
   );
 
   return (
-    <div className="garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background">
+    <div className="garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background">
+      {/* Persistent garden-name badge, mirroring the 2D views. */}
+      <div className="garden:absolute garden:top-3 garden:right-3 garden:z-10 garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm">
+        <FlowerIcon className="garden:h-4 garden:w-4" />
+        {schema.name}
+        {schema.icon && (
+          <span className="garden:ml-1">{schema.icon as string}</span>
+        )}
+      </div>
+
+      {showPoweredBy && (
+        <a
+          href="https://garden.omni.dev"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="garden:absolute garden:right-3 garden:bottom-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100"
+        >
+          <FlowerIcon className="garden:h-3 garden:w-3" />
+          Powered by Garden
+          <ExternalLinkIcon className="garden:h-3 garden:w-3" />
+        </a>
+      )}
+
       <Canvas camera={{ position: [0, 0, 18], fov: 50 }}>
         <ambientLight intensity={0.9} />
         <pointLight position={[12, 12, 12]} intensity={1.2} />
@@ -115,14 +149,17 @@ const Garden3D = ({ nodes, edges, relationColors }: GardenRendererProps) => {
               <Html
                 center
                 distanceFactor={11}
+                // Keep the in-scene labels beneath overlays like the teaser
+                // dialog (Radix uses z-50), so they never bleed over a modal.
+                zIndexRange={[30, 0]}
                 style={{ pointerEvents: "auto" }}
               >
                 <button
                   type="button"
-                  onClick={() =>
-                    data.homepage_url &&
-                    window.open(data.homepage_url, "_blank", "noopener")
-                  }
+                  onClick={() => {
+                    setSelectedSprout(node.data as unknown as NodeData);
+                    setIsSproutDialogOpen(true);
+                  }}
                   style={{
                     display: "flex",
                     flexDirection: "column",
@@ -130,7 +167,7 @@ const Garden3D = ({ nodes, edges, relationColors }: GardenRendererProps) => {
                     gap: 2,
                     width: 110,
                     padding: "6px 8px",
-                    cursor: data.homepage_url ? "pointer" : "default",
+                    cursor: "pointer",
                     borderRadius: 10,
                     border: `1px solid ${color}`,
                     background: "rgba(10,10,12,0.78)",
@@ -158,6 +195,17 @@ const Garden3D = ({ nodes, edges, relationColors }: GardenRendererProps) => {
           );
         })}
       </Canvas>
+
+      <SproutDialog
+        sprout={selectedSprout}
+        open={isSproutDialogOpen}
+        onOpenChange={(open) => {
+          setIsSproutDialogOpen(open);
+          if (!open) {
+            setTimeout(() => setSelectedSprout(null), 200);
+          }
+        }}
+      />
     </div>
   );
 };

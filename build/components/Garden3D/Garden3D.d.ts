@@ -5,6 +5,6 @@ import { GardenRendererProps } from '../../lib/plugins/layout';
  * Lives in the `@omnidotdev/garden/3d` entry so Three.js stays out of the base
  * bundle.
  */
-declare const Garden3D: ({ nodes, edges, relationColors }: GardenRendererProps) => import("react/jsx-runtime").JSX.Element;
+declare const Garden3D: ({ schema, nodes, edges, relationColors, showPoweredBy, }: GardenRendererProps) => import("react/jsx-runtime").JSX.Element;
 export default Garden3D;
 //# sourceMappingURL=Garden3D.d.ts.map
