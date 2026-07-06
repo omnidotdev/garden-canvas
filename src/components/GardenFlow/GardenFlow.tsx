@@ -30,21 +30,11 @@ import {
   cn,
   findGardenByName,
   gardenToFlow,
-  isImageUrl,
   isRelationEdge,
   relationColor,
 } from "../../lib/utils";
 import { customNodes } from "../nodes";
-import { Button } from "../ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "../ui/dialog";
+import { SproutDialog } from "../SproutDialog";
 
 import type { ConnectionLineType, Edge, Node } from "@xyflow/react";
 import type { MouseEvent, ReactNode } from "react";
@@ -332,26 +322,29 @@ const GardenFlow = ({
           </Panel>
         )}
 
-        {currentGarden && (
+        {/* The garden-name badge must persist across every layout. The hex
+            layout drops the garden node, so fall back to the schema. */}
+        {(currentGarden?.data?.label ?? schema.name) && (
           <Panel position="top-right">
             <div
-              className="garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm"
+              className="garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm"
               style={{
                 color:
-                  (currentGarden.data?.theme as Theme)?.primary_color ??
-                  undefined,
+                  ((currentGarden?.data?.theme ?? schema.theme) as Theme)
+                    ?.primary_color ?? undefined,
                 borderColor:
-                  (currentGarden.data?.theme as Theme)?.secondary_color ??
-                  undefined,
+                  ((currentGarden?.data?.theme ?? schema.theme) as Theme)
+                    ?.secondary_color ?? undefined,
               }}
             >
               <FlowerIcon className="garden:h-4 garden:w-4" />
 
-              {(currentGarden.data?.label as ReactNode) ?? "Garden"}
+              {((currentGarden?.data?.label ?? schema.name) as ReactNode) ??
+                "Garden"}
 
-              {(currentGarden.data?.icon as string) && (
+              {((currentGarden?.data?.icon ?? schema.icon) as string) && (
                 <span className="garden:ml-1">
-                  {currentGarden.data.icon as string}
+                  {(currentGarden?.data?.icon ?? schema.icon) as string}
                 </span>
               )}
             </div>
@@ -413,7 +406,8 @@ const GardenFlow = ({
         )}
       </ReactFlow>
 
-      <Dialog
+      <SproutDialog
+        sprout={selectedSprout}
         open={isSproutDialogOpen}
         onOpenChange={(open) => {
           setIsSproutDialogOpen(open);
@@ -424,69 +418,7 @@ const GardenFlow = ({
             }, 200);
           }
         }}
-      >
-        <DialogContent className="garden:sm:max-w-[500px]">
-          <DialogHeader>
-            <DialogTitle className="garden:text-xl">
-              {selectedSprout?.label}
-            </DialogTitle>
-            {selectedSprout?.description && (
-              <DialogDescription className="garden:text-base">
-                {selectedSprout.description}
-              </DialogDescription>
-            )}
-          </DialogHeader>
-
-          {selectedSprout?.image &&
-            (isImageUrl(selectedSprout.image) ? (
-              <img
-                src={selectedSprout.image}
-                alt={selectedSprout.label}
-                className="garden:h-64 garden:w-full garden:object-contain p-3"
-              />
-            ) : (
-              <div className="garden:flex garden:h-40 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-8xl">
-                {selectedSprout.image}
-              </div>
-            ))}
-
-          {selectedSprout?.version && (
-            <div className="garden:mt-2 garden:text-muted-foreground garden:text-sm">
-              Version: {selectedSprout.version}
-            </div>
-          )}
-
-          <DialogFooter className="garden:flex garden:flex-col garden:gap-2 garden:sm:flex-row garden:sm:justify-between garden:sm:gap-0">
-            <div className="garden:flex garden:gap-2">
-              {selectedSprout?.cta?.primary && (
-                <Button
-                  variant="default"
-                  onClick={() =>
-                    window.open(selectedSprout.cta?.primary.url, "_blank")
-                  }
-                >
-                  {selectedSprout.cta.primary.label || "View"}
-                </Button>
-              )}
-
-              {selectedSprout?.cta?.secondary && (
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    window.open(selectedSprout.cta?.secondary?.url, "_blank")
-                  }
-                >
-                  {selectedSprout.cta.secondary.label || "Source"}
-                </Button>
-              )}
-            </div>
-
-            <DialogClose asChild>
-              <Button variant="secondary">Close</Button>
-            </DialogClose>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+      />
     </div>
   );
 };

@@ -2,7 +2,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, useRef, useEffect, useMemo } from 'react';
-import { u as useSyncExternalStoreExports, ao as getDefaultExportFromCjs, am as relationColor, ag as isImageUrl, ac as registerLayout } from './layout-Cr4NJNA6.js';
+import { u as useSyncExternalStoreExports, as as getDefaultExportFromCjs, ap as Flower, ai as ExternalLink, an as relationColor, ah as isImageUrl, aq as SproutDialog, ac as registerLayout } from './SproutDialog-C0INQs6q.js';
 import * as ReactDOM from 'react-dom/client';
 
 function _extends() {
@@ -96806,7 +96806,15 @@ const spherePositions = (count, radius) => {
   }
   return points;
 };
-const Garden3D = ({ nodes, edges, relationColors }) => {
+const Garden3D = ({
+  schema,
+  nodes,
+  edges,
+  relationColors,
+  showPoweredBy = true
+}) => {
+  const [selectedSprout, setSelectedSprout] = useState(null);
+  const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
   const sprouts = useMemo(
     () => nodes.filter((node) => node.type === "sprout"),
     [nodes]
@@ -96826,99 +96834,137 @@ const Garden3D = ({ nodes, edges, relationColors }) => {
     ),
     [edges]
   );
-  return /* @__PURE__ */ jsx("div", { className: "garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background", children: /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
-    /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
-    /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
-    /* @__PURE__ */ jsx(
-      OrbitControls,
+  return /* @__PURE__ */ jsxs("div", { className: "garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background", children: [
+    /* @__PURE__ */ jsxs("div", { className: "garden:absolute garden:top-3 garden:right-3 garden:z-10 garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm", children: [
+      /* @__PURE__ */ jsx(Flower, { className: "garden:h-4 garden:w-4" }),
+      schema.name,
+      schema.icon && /* @__PURE__ */ jsx("span", { className: "garden:ml-1", children: schema.icon })
+    ] }),
+    showPoweredBy && /* @__PURE__ */ jsxs(
+      "a",
       {
-        enablePan: true,
-        enableZoom: true,
-        enableRotate: true,
-        autoRotate: true,
-        autoRotateSpeed: 0.4
+        href: "https://garden.omni.dev",
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: "garden:absolute garden:right-3 garden:bottom-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100",
+        children: [
+          /* @__PURE__ */ jsx(Flower, { className: "garden:h-3 garden:w-3" }),
+          "Powered by Garden",
+          /* @__PURE__ */ jsx(ExternalLink, { className: "garden:h-3 garden:w-3" })
+        ]
       }
     ),
-    relationEdges.map((edge, i) => {
-      const a = posById.get(edge.source);
-      const b = posById.get(edge.target);
-      if (!a || !b) return null;
-      const relation = edge.data?.relations?.[0] ?? "related";
-      return /* @__PURE__ */ jsx(
-        Line,
+    /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
+      /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
+      /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
+      /* @__PURE__ */ jsx(
+        OrbitControls,
         {
-          points: [a, b],
-          color: relationColor(relation, relationColors),
-          lineWidth: 1,
-          transparent: true,
-          opacity: 0.55
-        },
-        edge.id ?? `rel-${i}`
-      );
-    }),
-    sprouts.map((node, i) => {
-      const data = node.data;
-      const color = data.theme?.primary_color ?? "#14b8a6";
-      const icon = data.image || data.logo || "🌱";
-      return /* @__PURE__ */ jsxs("group", { position: positions[i], children: [
-        /* @__PURE__ */ jsxs("mesh", { children: [
-          /* @__PURE__ */ jsx("sphereGeometry", { args: [0.22, 24, 24] }),
-          /* @__PURE__ */ jsx(
-            "meshStandardMaterial",
-            {
-              color,
-              emissive: color,
-              emissiveIntensity: 0.25
-            }
-          )
-        ] }),
-        /* @__PURE__ */ jsx(
-          Html,
+          enablePan: true,
+          enableZoom: true,
+          enableRotate: true,
+          autoRotate: true,
+          autoRotateSpeed: 0.4
+        }
+      ),
+      relationEdges.map((edge, i) => {
+        const a = posById.get(edge.source);
+        const b = posById.get(edge.target);
+        if (!a || !b) return null;
+        const relation = edge.data?.relations?.[0] ?? "related";
+        return /* @__PURE__ */ jsx(
+          Line,
           {
-            center: true,
-            distanceFactor: 11,
-            style: { pointerEvents: "auto" },
-            children: /* @__PURE__ */ jsxs(
-              "button",
+            points: [a, b],
+            color: relationColor(relation, relationColors),
+            lineWidth: 1,
+            transparent: true,
+            opacity: 0.55
+          },
+          edge.id ?? `rel-${i}`
+        );
+      }),
+      sprouts.map((node, i) => {
+        const data = node.data;
+        const color = data.theme?.primary_color ?? "#14b8a6";
+        const icon = data.image || data.logo || "🌱";
+        return /* @__PURE__ */ jsxs("group", { position: positions[i], children: [
+          /* @__PURE__ */ jsxs("mesh", { children: [
+            /* @__PURE__ */ jsx("sphereGeometry", { args: [0.22, 24, 24] }),
+            /* @__PURE__ */ jsx(
+              "meshStandardMaterial",
               {
-                type: "button",
-                onClick: () => data.homepage_url && window.open(data.homepage_url, "_blank", "noopener"),
-                style: {
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  gap: 2,
-                  width: 110,
-                  padding: "6px 8px",
-                  cursor: data.homepage_url ? "pointer" : "default",
-                  borderRadius: 10,
-                  border: `1px solid ${color}`,
-                  background: "rgba(10,10,12,0.78)",
-                  color: "#fff",
-                  fontSize: 11,
-                  textAlign: "center",
-                  backdropFilter: "blur(4px)"
-                },
-                children: [
-                  isImageUrl(data.image) ? /* @__PURE__ */ jsx(
-                    "img",
-                    {
-                      src: data.image,
-                      alt: data.label,
-                      width: 28,
-                      height: 28,
-                      style: { objectFit: "contain" }
-                    }
-                  ) : /* @__PURE__ */ jsx("span", { style: { fontSize: 24, lineHeight: 1 }, children: icon }),
-                  /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label })
-                ]
+                color,
+                emissive: color,
+                emissiveIntensity: 0.25
               }
             )
+          ] }),
+          /* @__PURE__ */ jsx(
+            Html,
+            {
+              center: true,
+              distanceFactor: 11,
+              zIndexRange: [30, 0],
+              style: { pointerEvents: "auto" },
+              children: /* @__PURE__ */ jsxs(
+                "button",
+                {
+                  type: "button",
+                  onClick: () => {
+                    setSelectedSprout(node.data);
+                    setIsSproutDialogOpen(true);
+                  },
+                  style: {
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    gap: 2,
+                    width: 110,
+                    padding: "6px 8px",
+                    cursor: "pointer",
+                    borderRadius: 10,
+                    border: `1px solid ${color}`,
+                    background: "rgba(10,10,12,0.78)",
+                    color: "#fff",
+                    fontSize: 11,
+                    textAlign: "center",
+                    backdropFilter: "blur(4px)"
+                  },
+                  children: [
+                    isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+                      "img",
+                      {
+                        src: data.image,
+                        alt: data.label,
+                        width: 28,
+                        height: 28,
+                        style: { objectFit: "contain" }
+                      }
+                    ) : /* @__PURE__ */ jsx("span", { style: { fontSize: 24, lineHeight: 1 }, children: icon }),
+                    /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label })
+                  ]
+                }
+              )
+            }
+          )
+        ] }, node.id);
+      })
+    ] }),
+    /* @__PURE__ */ jsx(
+      SproutDialog,
+      {
+        sprout: selectedSprout,
+        open: isSproutDialogOpen,
+        onOpenChange: (open) => {
+          setIsSproutDialogOpen(open);
+          if (!open) {
+            setTimeout(() => setSelectedSprout(null), 200);
           }
-        )
-      ] }, node.id);
-    })
-  ] }) });
+        }
+      }
+    )
+  ] });
 };
 
 const garden3d = {

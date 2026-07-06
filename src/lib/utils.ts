@@ -358,6 +358,11 @@ const processSubgarensRecursively = ({
             image: sprout.logo,
             repo_url: sprout.repo_url,
             description: sprout.description,
+            tagline: sprout.tagline,
+            license: sprout.license,
+            release_date: sprout.release_date,
+            self_hostable: sprout.self_hostable,
+            docs_url: sprout.docs_url,
             theme: gardenTheme,
             level: level, // Track the nesting level for styling
             sourceConnections: [],
@@ -572,6 +577,11 @@ export const gardenToFlow = ({
             "https://images.pexels.com/photos/546819/pexels-photo-546819.jpeg",
           repo_url: sprout.repo_url || "",
           description: sprout.description || "",
+          tagline: sprout.tagline,
+          license: sprout.license,
+          release_date: sprout.release_date,
+          self_hostable: sprout.self_hostable,
+          docs_url: sprout.docs_url,
           theme: currentGardenTheme,
           cta: {
             primary: sprout.homepage_url
