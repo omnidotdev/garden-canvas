@@ -173,12 +173,21 @@ const getNodePositions = (
 //
 // Cells are pointy-top hexagons rendered at 176 x 203 (see SproutNode), so
 // horizontal neighbours sit one cell-width apart, each ring drops to
-// three-quarter height, and odd rows inset half a cell (the r/2 term) for an
-// edge-to-edge tessellation. Spiralling out from the centre keeps the hive
-// balanced and mirror-symmetric for any count; an offset row grid, by
-// contrast, leans like a parallelogram once its rows are shifted to interlock.
+// three-quarter height, and odd rows inset half a cell (the r/2 term). Spiralling
+// out from the centre keeps the hive balanced and mirror-symmetric for any count;
+// an offset row grid, by contrast, leans like a parallelogram once its rows are
+// shifted to interlock.
+//
+// The lattice pitch is the cell size scaled up by a small seam so tessellating
+// neighbours leave a gap instead of butting edge to edge. Butted cells stack
+// each other's border ring into a double-thick shared edge (while the hive's
+// outer edges stay single); the seam keeps every visible border a single width.
 const HEX_CELL_WIDTH = 176;
 const HEX_CELL_HEIGHT = 203;
+// Seam between adjacent cells, in flow px; scales the lattice uniformly so the
+// gap reads the same on every side of every hexagon.
+const HEX_GAP = 12;
+const HEX_PITCH_SCALE = (HEX_CELL_WIDTH + HEX_GAP) / HEX_CELL_WIDTH;
 
 // Axial (q, r) steps around a pointy-top hex, walked in order to trace each
 // ring of the spiral.
@@ -219,8 +228,8 @@ export const hexLayout = (nodes: Node[]): Node[] => {
     return {
       ...node,
       position: {
-        x: (q + r / 2) * HEX_CELL_WIDTH,
-        y: r * HEX_CELL_HEIGHT * 0.75,
+        x: (q + r / 2) * HEX_CELL_WIDTH * HEX_PITCH_SCALE,
+        y: r * HEX_CELL_HEIGHT * 0.75 * HEX_PITCH_SCALE,
       },
       data: { ...node.data, hex: true },
     };

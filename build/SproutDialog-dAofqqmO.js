@@ -17076,6 +17076,8 @@ const getNodePositions = (type) => {
 };
 const HEX_CELL_WIDTH = 176;
 const HEX_CELL_HEIGHT = 203;
+const HEX_GAP = 12;
+const HEX_PITCH_SCALE = (HEX_CELL_WIDTH + HEX_GAP) / HEX_CELL_WIDTH;
 const HEX_DIRECTIONS = [
   [1, 0],
   [1, -1],
@@ -17107,8 +17109,8 @@ const hexLayout = (nodes) => {
     return {
       ...node,
       position: {
-        x: (q + r / 2) * HEX_CELL_WIDTH,
-        y: r * HEX_CELL_HEIGHT * 0.75
+        x: (q + r / 2) * HEX_CELL_WIDTH * HEX_PITCH_SCALE,
+        y: r * HEX_CELL_HEIGHT * 0.75 * HEX_PITCH_SCALE
       },
       data: { ...node.data, hex: true }
     };
@@ -20404,4 +20406,4 @@ const SproutDialog = ({ sprout, open, onOpenChange }) => {
 };
 
 export { calculateNodePosition as $, updateConnectionLookup as A, fitViewport as B, getNodeDimensions as C, ConnectionMode as D, createMarkerIds as E, getSmoothStepPath as F, getBezierPath as G, getEdgePosition as H, getElevatedEdgeZIndex as I, getMarkerId as J, getInternalNodesBounds as K, defaultAriaLabelConfig as L, MarkerType as M, devWarn as N, infiniteExtent as O, Position as P, PanOnScrollMode as Q, ResizeControlVariant as R, SelectionMode as S, ConnectionLineType as T, isMacOs as U, getBoundsOfRects as V, XYResizer as W, XYMinimap as X, XYPanZoom as Y, XYDrag as Z, snapPosition as _, getOverlappingArea as a, getNodesInside as a0, isInputDOMNode as a1, elementSelectionKeys as a2, isNumeric as a3, getStraightPath as a4, isEdgeVisible as a5, getConnectionStatus as a6, mergeAriaLabelConfig as a7, getEventPosition as a8, areSetsEqual as a9, getBezierEdgeCenter as aa, getDimensions as ab, registerLayout as ac, autoLayoutElements as ad, isRelationEdge as ae, hexLayout as af, createLucideIcon as ag, isImageUrl as ah, ExternalLink as ai, GitBranch as aj, getLayout as ak, findGardenByName as al, gardenToFlow as am, relationColor as an, cn as ao, Flower as ap, SproutDialog as aq, listLayouts as ar, getDefaultExportFromCjs as as, getElementsToRemove as b, getViewportForBounds as c, errorMessages as d, evaluateAbsolutePosition as e, isNodeBase as f, getNodesBounds as g, isEdgeBase as h, isRectObject as i, getHostForElement as j, XYHandle as k, isMouseEvent as l, addEdge as m, nodeToRect as n, nodeHasDimensions as o, pointToRendererPoint as p, initialConnection as q, rendererPointToPoint as r, panBy as s, adoptUserNodes as t, useSyncExternalStoreExports as u, getHandlePosition as v, withResolvers as w, handleExpandParent as x, updateNodeInternals as y, updateAbsolutePositions as z };
-//# sourceMappingURL=SproutDialog-C-yAogRm.js.map
+//# sourceMappingURL=SproutDialog-dAofqqmO.js.map
