@@ -42,8 +42,11 @@ const SproutNode = ({ data }: NodeProps) => {
         {/* A clip-path clips the element's border away, so the outline is
             drawn as a colored outer hexagon showing through a slightly inset
             inner hexagon (the padding is the visible border width). */}
+        {/* Regular pointy-top hexagon: for the HEX_CLIP polygon the box must be
+            taller than wide by 2/√3 (~1.1547), otherwise the cell looks
+            horizontally stretched. 176 x 203 keeps every side equal. */}
         <div
-          className="garden:h-40 garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105"
+          className="garden:h-[203px] garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105"
           style={{ clipPath: HEX_CLIP, backgroundColor: primaryColor }}
         >
           <div
@@ -64,6 +67,15 @@ const SproutNode = ({ data }: NodeProps) => {
             <h3 className="garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs">
               {data.label}
             </h3>
+            {/* Compact teaser mirroring the tree/3D cards. Prefer the punchy
+                tagline; fall back to the description. Width is capped inside
+                the hexagon's safe band so text never runs into the sloped
+                corners. */}
+            {(data.tagline || data.description) && (
+              <p className="garden:line-clamp-2 garden:max-w-[8rem] garden:text-[10px] garden:text-foreground/60 garden:leading-tight">
+                {data.tagline || data.description}
+              </p>
+            )}
           </div>
         </div>
       </div>

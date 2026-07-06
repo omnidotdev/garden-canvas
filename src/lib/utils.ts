@@ -166,26 +166,62 @@ const getNodePositions = (
     .otherwise(() => ({}));
 };
 
-// Honeycomb / "beehive" layout: pack the product (sprout) nodes into an
-// offset hex grid. Hierarchy nodes are dropped in this mode so the products
-// read as a beehive, with their typed connections drawn between them.
-const HEX_CELL_WIDTH = 200;
-const HEX_CELL_HEIGHT = 200;
+// Honeycomb / "beehive" layout: pack the product (sprout) nodes into a hex
+// cluster that grows in rings from a centre cell. Hierarchy nodes are dropped
+// in this mode so the products read as a beehive, with their typed connections
+// drawn between them.
+//
+// Cells are pointy-top hexagons rendered at 176 x 203 (see SproutNode), so
+// horizontal neighbours sit one cell-width apart, each ring drops to
+// three-quarter height, and odd rows inset half a cell (the r/2 term) for an
+// edge-to-edge tessellation. Spiralling out from the centre keeps the hive
+// balanced and mirror-symmetric for any count; an offset row grid, by
+// contrast, leans like a parallelogram once its rows are shifted to interlock.
+const HEX_CELL_WIDTH = 176;
+const HEX_CELL_HEIGHT = 203;
+
+// Axial (q, r) steps around a pointy-top hex, walked in order to trace each
+// ring of the spiral.
+const HEX_DIRECTIONS: [number, number][] = [
+  [1, 0],
+  [1, -1],
+  [0, -1],
+  [-1, 0],
+  [-1, 1],
+  [0, 1],
+];
+
+// Axial coordinates for `count` cells packed as a centred spiral: the origin,
+// then each surrounding ring walked edge by edge until the count is filled.
+const hexSpiral = (count: number): [number, number][] => {
+  const cells: [number, number][] = [[0, 0]];
+  for (let ring = 1; cells.length < count; ring++) {
+    // step out to the ring's starting cell, then walk its six sides
+    let [q, r] = [HEX_DIRECTIONS[4][0] * ring, HEX_DIRECTIONS[4][1] * ring];
+    for (let side = 0; side < 6; side++) {
+      for (let step = 0; step < ring; step++) {
+        if (cells.length >= count) return cells;
+        cells.push([q, r]);
+        q += HEX_DIRECTIONS[side][0];
+        r += HEX_DIRECTIONS[side][1];
+      }
+    }
+  }
+  return cells;
+};
 
 export const hexLayout = (nodes: Node[]): Node[] => {
   const sprouts = nodes.filter((node) => node.type === NODE_TYPES.SPROUT);
-  const columns = Math.max(1, Math.ceil(Math.sqrt(sprouts.length)));
+  const coords = hexSpiral(sprouts.length);
 
   return sprouts.map((node, index) => {
-    const row = Math.floor(index / columns);
-    const col = index % columns;
-    // offset every other row by half a cell, and overlap rows so the cells
-    // tessellate like a honeycomb
-    const x = col * HEX_CELL_WIDTH + (row % 2) * (HEX_CELL_WIDTH / 2);
-    const y = row * HEX_CELL_HEIGHT * 0.75;
+    const [q, r] = coords[index];
     return {
       ...node,
-      position: { x, y },
+      position: {
+        x: (q + r / 2) * HEX_CELL_WIDTH,
+        y: r * HEX_CELL_HEIGHT * 0.75,
+      },
       data: { ...node.data, hex: true },
     };
   });

@@ -1,6 +1,6 @@
 "use client";
-import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as ExternalLink, aj as GitBranch, ak as getLayout, al as findGardenByName, am as gardenToFlow, an as relationColor, ao as cn, ap as Flower, aq as SproutDialog } from './SproutDialog-C0INQs6q.js';
-export { ar as listLayouts } from './SproutDialog-C0INQs6q.js';
+import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as ExternalLink, aj as GitBranch, ak as getLayout, al as findGardenByName, am as gardenToFlow, an as relationColor, ao as cn, ap as Flower, aq as SproutDialog } from './SproutDialog-C-yAogRm.js';
+export { ar as listLayouts } from './SproutDialog-C-yAogRm.js';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React__default, { useState, createContext, useCallback, useMemo, memo, forwardRef, useContext, useRef, useEffect, useLayoutEffect } from 'react';
 import 'react-dom';
@@ -4361,7 +4361,10 @@ registerLayout({
   label: "Beehive",
   position: (nodes, edges) => ({
     nodes: hexLayout(nodes),
-    edges: edges.filter(isRelationEdge)
+    // Beehive cells tessellate and overlap, so lift the relation edges (and
+    // their labels) above the nodes; at the default z-index the packed cells
+    // bury the labels.
+    edges: edges.filter(isRelationEdge).map((edge) => ({ ...edge, zIndex: 1e3 }))
   })
 });
 
@@ -4760,7 +4763,7 @@ const SproutNode = ({ data }) => {
       /* @__PURE__ */ jsx(
         "div",
         {
-          className: "garden:h-40 garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105",
+          className: "garden:h-[203px] garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105",
           style: { clipPath: HEX_CLIP, backgroundColor: primaryColor },
           children: /* @__PURE__ */ jsxs(
             "div",
@@ -4776,7 +4779,8 @@ const SproutNode = ({ data }) => {
                     className: "garden:h-12 garden:w-12 garden:object-contain"
                   }
                 ) : /* @__PURE__ */ jsx("span", { className: "garden:select-none garden:text-4xl", children: data.image || data.logo || "🌱" }),
-                /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs", children: data.label })
+                /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs", children: data.label }),
+                (data.tagline || data.description) && /* @__PURE__ */ jsx("p", { className: "garden:line-clamp-2 garden:max-w-[8rem] garden:text-[10px] garden:text-foreground/60 garden:leading-tight", children: data.tagline || data.description })
               ]
             }
           )

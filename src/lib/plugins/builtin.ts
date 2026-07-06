@@ -18,6 +18,11 @@ registerLayout({
   label: "Beehive",
   position: (nodes, edges) => ({
     nodes: hexLayout(nodes),
-    edges: edges.filter(isRelationEdge),
+    // Beehive cells tessellate and overlap, so lift the relation edges (and
+    // their labels) above the nodes; at the default z-index the packed cells
+    // bury the labels.
+    edges: edges
+      .filter(isRelationEdge)
+      .map((edge) => ({ ...edge, zIndex: 1000 })),
   }),
 });

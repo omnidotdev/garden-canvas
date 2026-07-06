@@ -33,6 +33,7 @@ const spherePositions = (count: number, radius: number): Vec3[] => {
 
 type SproutData = {
   label?: string;
+  description?: string;
   image?: string;
   logo?: string;
   homepage_url?: string;
@@ -105,13 +106,9 @@ const Garden3D = ({
       <Canvas camera={{ position: [0, 0, 18], fov: 50 }}>
         <ambientLight intensity={0.9} />
         <pointLight position={[12, 12, 12]} intensity={1.2} />
-        <OrbitControls
-          enablePan
-          enableZoom
-          enableRotate
-          autoRotate
-          autoRotateSpeed={0.4}
-        />
+        {/* Manual orbit only; auto-rotation moves click targets and reads as
+            distracting, so the scene stays still until the user drags. */}
+        <OrbitControls enablePan enableZoom enableRotate />
 
         {relationEdges.map((edge, i) => {
           const a = posById.get(edge.source);
@@ -149,9 +146,10 @@ const Garden3D = ({
               <Html
                 center
                 distanceFactor={11}
-                // Keep the in-scene labels beneath overlays like the teaser
-                // dialog (Radix uses z-50), so they never bleed over a modal.
-                zIndexRange={[30, 0]}
+                // Keep the in-scene labels beneath page chrome (view toggles,
+                // badges) and overlays like the teaser dialog, so they never
+                // cover the surrounding UI.
+                zIndexRange={[9, 0]}
                 style={{ pointerEvents: "auto" }}
               >
                 <button
@@ -164,9 +162,9 @@ const Garden3D = ({
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 2,
-                    width: 110,
-                    padding: "6px 8px",
+                    gap: 3,
+                    width: 150,
+                    padding: "8px 10px",
                     cursor: "pointer",
                     borderRadius: 10,
                     border: `1px solid ${color}`,
@@ -189,6 +187,21 @@ const Garden3D = ({
                     <span style={{ fontSize: 24, lineHeight: 1 }}>{icon}</span>
                   )}
                   <span style={{ fontWeight: 600 }}>{data.label}</span>
+                  {data.description && (
+                    <span
+                      style={{
+                        fontSize: 9,
+                        lineHeight: 1.3,
+                        opacity: 0.75,
+                        display: "-webkit-box",
+                        WebkitLineClamp: 2,
+                        WebkitBoxOrient: "vertical",
+                        overflow: "hidden",
+                      }}
+                    >
+                      {data.description}
+                    </span>
+                  )}
                 </button>
               </Html>
             </group>

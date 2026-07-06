@@ -2,7 +2,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, useRef, useEffect, useMemo } from 'react';
-import { u as useSyncExternalStoreExports, as as getDefaultExportFromCjs, ap as Flower, ai as ExternalLink, an as relationColor, ah as isImageUrl, aq as SproutDialog, ac as registerLayout } from './SproutDialog-C0INQs6q.js';
+import { u as useSyncExternalStoreExports, as as getDefaultExportFromCjs, ap as Flower, ai as ExternalLink, an as relationColor, ah as isImageUrl, aq as SproutDialog, ac as registerLayout } from './SproutDialog-C-yAogRm.js';
 import * as ReactDOM from 'react-dom/client';
 
 function _extends() {
@@ -96857,16 +96857,7 @@ const Garden3D = ({
     /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
       /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
       /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
-      /* @__PURE__ */ jsx(
-        OrbitControls,
-        {
-          enablePan: true,
-          enableZoom: true,
-          enableRotate: true,
-          autoRotate: true,
-          autoRotateSpeed: 0.4
-        }
-      ),
+      /* @__PURE__ */ jsx(OrbitControls, { enablePan: true, enableZoom: true, enableRotate: true }),
       relationEdges.map((edge, i) => {
         const a = posById.get(edge.source);
         const b = posById.get(edge.target);
@@ -96905,7 +96896,7 @@ const Garden3D = ({
             {
               center: true,
               distanceFactor: 11,
-              zIndexRange: [30, 0],
+              zIndexRange: [9, 0],
               style: { pointerEvents: "auto" },
               children: /* @__PURE__ */ jsxs(
                 "button",
@@ -96919,9 +96910,9 @@ const Garden3D = ({
                     display: "flex",
                     flexDirection: "column",
                     alignItems: "center",
-                    gap: 2,
-                    width: 110,
-                    padding: "6px 8px",
+                    gap: 3,
+                    width: 150,
+                    padding: "8px 10px",
                     cursor: "pointer",
                     borderRadius: 10,
                     border: `1px solid ${color}`,
@@ -96942,7 +96933,22 @@ const Garden3D = ({
                         style: { objectFit: "contain" }
                       }
                     ) : /* @__PURE__ */ jsx("span", { style: { fontSize: 24, lineHeight: 1 }, children: icon }),
-                    /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label })
+                    /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label }),
+                    data.description && /* @__PURE__ */ jsx(
+                      "span",
+                      {
+                        style: {
+                          fontSize: 9,
+                          lineHeight: 1.3,
+                          opacity: 0.75,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden"
+                        },
+                        children: data.description
+                      }
+                    )
                   ]
                 }
               )
