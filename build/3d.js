@@ -96790,6 +96790,8 @@ const OrbitControls = /* @__PURE__ */React.forwardRef(({
 });
 
 const RADIUS = 6;
+const CAMERA_POSITION = [0, 0, 18];
+const distanceToCameraSq = ([x, y, z]) => (x - CAMERA_POSITION[0]) ** 2 + (y - CAMERA_POSITION[1]) ** 2 + (z - CAMERA_POSITION[2]) ** 2;
 const spherePositions = (count, radius) => {
   if (count === 1) return [[0, 0, 0]];
   const points = [];
@@ -96834,143 +96836,150 @@ const Garden3D = ({
     ),
     [edges]
   );
-  return /* @__PURE__ */ jsxs("div", { className: "garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background", children: [
-    /* @__PURE__ */ jsxs("div", { className: "garden:absolute garden:top-3 garden:right-3 garden:z-10 garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm", children: [
-      /* @__PURE__ */ jsx(Flower, { className: "garden:h-4 garden:w-4" }),
-      schema.name,
-      schema.icon && /* @__PURE__ */ jsx("span", { className: "garden:ml-1", children: schema.icon })
-    ] }),
-    showPoweredBy && /* @__PURE__ */ jsxs(
-      "a",
-      {
-        href: "https://garden.omni.dev",
-        target: "_blank",
-        rel: "noopener noreferrer",
-        className: "garden:absolute garden:right-3 garden:bottom-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100",
-        children: [
-          /* @__PURE__ */ jsx(Flower, { className: "garden:h-3 garden:w-3" }),
-          "Powered by Garden",
-          /* @__PURE__ */ jsx(ExternalLink, { className: "garden:h-3 garden:w-3" })
-        ]
-      }
-    ),
-    /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
-      /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
-      /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
-      /* @__PURE__ */ jsx(OrbitControls, { enablePan: true, enableZoom: true, enableRotate: true }),
-      relationEdges.map((edge, i) => {
-        const a = posById.get(edge.source);
-        const b = posById.get(edge.target);
-        if (!a || !b) return null;
-        const relation = edge.data?.relations?.[0] ?? "related";
-        return /* @__PURE__ */ jsx(
-          Line,
+  return /* @__PURE__ */ jsxs(
+    "div",
+    {
+      style: { isolation: "isolate" },
+      className: "garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background",
+      children: [
+        /* @__PURE__ */ jsxs("div", { className: "garden:absolute garden:top-3 garden:right-3 garden:z-10 garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm", children: [
+          /* @__PURE__ */ jsx(Flower, { className: "garden:h-4 garden:w-4" }),
+          schema.name,
+          schema.icon && /* @__PURE__ */ jsx("span", { className: "garden:ml-1", children: schema.icon })
+        ] }),
+        showPoweredBy && /* @__PURE__ */ jsxs(
+          "a",
           {
-            points: [a, b],
-            color: relationColor(relation, relationColors),
-            lineWidth: 1,
-            transparent: true,
-            opacity: 0.55
-          },
-          edge.id ?? `rel-${i}`
-        );
-      }),
-      sprouts.map((node, i) => {
-        const data = node.data;
-        const color = data.theme?.primary_color ?? "#14b8a6";
-        const icon = data.image || data.logo || "🌱";
-        return /* @__PURE__ */ jsxs("group", { position: positions[i], children: [
-          /* @__PURE__ */ jsxs("mesh", { children: [
-            /* @__PURE__ */ jsx("sphereGeometry", { args: [0.22, 24, 24] }),
-            /* @__PURE__ */ jsx(
-              "meshStandardMaterial",
+            href: "https://garden.omni.dev",
+            target: "_blank",
+            rel: "noopener noreferrer",
+            className: "garden:absolute garden:right-3 garden:bottom-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100",
+            children: [
+              /* @__PURE__ */ jsx(Flower, { className: "garden:h-3 garden:w-3" }),
+              "Powered by Garden",
+              /* @__PURE__ */ jsx(ExternalLink, { className: "garden:h-3 garden:w-3" })
+            ]
+          }
+        ),
+        /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
+          /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
+          /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
+          /* @__PURE__ */ jsx(OrbitControls, { enablePan: true, enableZoom: true, enableRotate: true }),
+          relationEdges.map((edge, i) => {
+            const a = posById.get(edge.source);
+            const b = posById.get(edge.target);
+            if (!a || !b) return null;
+            const relation = edge.data?.relations?.[0] ?? "related";
+            return /* @__PURE__ */ jsx(
+              Line,
               {
-                color,
-                emissive: color,
-                emissiveIntensity: 0.25
-              }
-            )
-          ] }),
-          /* @__PURE__ */ jsx(
-            Html,
-            {
-              center: true,
-              distanceFactor: 11,
-              zIndexRange: [9, 0],
-              style: { pointerEvents: "auto" },
-              children: /* @__PURE__ */ jsxs(
-                "button",
+                points: [a, b],
+                color: relationColor(relation, relationColors),
+                lineWidth: 1,
+                transparent: true,
+                opacity: 0.55
+              },
+              edge.id ?? `rel-${i}`
+            );
+          }),
+          sprouts.map((node, i) => ({ node, pos: positions[i] })).sort((a, b) => distanceToCameraSq(b.pos) - distanceToCameraSq(a.pos)).map(({ node, pos }) => {
+            const data = node.data;
+            const color = data.theme?.primary_color ?? "#14b8a6";
+            const icon = data.image || data.logo || "🌱";
+            return /* @__PURE__ */ jsxs("group", { position: pos, children: [
+              /* @__PURE__ */ jsxs("mesh", { children: [
+                /* @__PURE__ */ jsx("sphereGeometry", { args: [0.22, 24, 24] }),
+                /* @__PURE__ */ jsx(
+                  "meshStandardMaterial",
+                  {
+                    color,
+                    emissive: color,
+                    emissiveIntensity: 0.25
+                  }
+                )
+              ] }),
+              /* @__PURE__ */ jsx(
+                Html,
                 {
-                  type: "button",
-                  onClick: () => {
-                    setSelectedSprout(node.data);
-                    setIsSproutDialogOpen(true);
-                  },
-                  style: {
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 3,
-                    width: 150,
-                    padding: "8px 10px",
-                    cursor: "pointer",
-                    borderRadius: 10,
-                    border: `1px solid ${color}`,
-                    background: "rgba(10,10,12,0.78)",
-                    color: "#fff",
-                    fontSize: 11,
-                    textAlign: "center",
-                    backdropFilter: "blur(4px)"
-                  },
-                  children: [
-                    isImageUrl(data.image) ? /* @__PURE__ */ jsx(
-                      "img",
-                      {
-                        src: data.image,
-                        alt: data.label,
-                        width: 28,
-                        height: 28,
-                        style: { objectFit: "contain" }
-                      }
-                    ) : /* @__PURE__ */ jsx("span", { style: { fontSize: 24, lineHeight: 1 }, children: icon }),
-                    /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label }),
-                    data.description && /* @__PURE__ */ jsx(
-                      "span",
-                      {
-                        style: {
-                          fontSize: 9,
-                          lineHeight: 1.3,
-                          opacity: 0.75,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden"
-                        },
-                        children: data.description
-                      }
-                    )
-                  ]
+                  center: true,
+                  distanceFactor: 11,
+                  zIndexRange: [16777271, 0],
+                  style: { pointerEvents: "auto" },
+                  children: /* @__PURE__ */ jsxs(
+                    "button",
+                    {
+                      type: "button",
+                      onClick: () => {
+                        setSelectedSprout(node.data);
+                        setIsSproutDialogOpen(true);
+                      },
+                      style: {
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        gap: 3,
+                        width: 150,
+                        padding: "8px 10px",
+                        cursor: "pointer",
+                        borderRadius: 10,
+                        border: `1px solid ${color}`,
+                        background: "rgba(10,10,12,0.78)",
+                        color: "#fff",
+                        fontSize: 11,
+                        textAlign: "center",
+                        backdropFilter: "blur(4px)"
+                      },
+                      children: [
+                        isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+                          "img",
+                          {
+                            src: data.image,
+                            alt: data.label,
+                            width: 28,
+                            height: 28,
+                            style: { objectFit: "contain" }
+                          }
+                        ) : /* @__PURE__ */ jsx("span", { style: { fontSize: 24, lineHeight: 1 }, children: icon }),
+                        /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label }),
+                        data.description && /* @__PURE__ */ jsx(
+                          "span",
+                          {
+                            style: {
+                              fontSize: 9,
+                              lineHeight: 1.3,
+                              opacity: 0.75,
+                              display: "-webkit-box",
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: "vertical",
+                              overflow: "hidden"
+                            },
+                            children: data.description
+                          }
+                        )
+                      ]
+                    }
+                  )
                 }
               )
+            ] }, node.id);
+          })
+        ] }),
+        /* @__PURE__ */ jsx(
+          SproutDialog,
+          {
+            sprout: selectedSprout,
+            open: isSproutDialogOpen,
+            onOpenChange: (open) => {
+              setIsSproutDialogOpen(open);
+              if (!open) {
+                setTimeout(() => setSelectedSprout(null), 200);
+              }
             }
-          )
-        ] }, node.id);
-      })
-    ] }),
-    /* @__PURE__ */ jsx(
-      SproutDialog,
-      {
-        sprout: selectedSprout,
-        open: isSproutDialogOpen,
-        onOpenChange: (open) => {
-          setIsSproutDialogOpen(open);
-          if (!open) {
-            setTimeout(() => setSelectedSprout(null), 200);
           }
-        }
-      }
-    )
-  ] });
+        )
+      ]
+    }
+  );
 };
 
 const garden3d = {

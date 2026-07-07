@@ -12,6 +12,13 @@ import type { NodeData } from "../nodes";
 type Vec3 = [number, number, number];
 
 const RADIUS = 6;
+const CAMERA_POSITION: Vec3 = [0, 0, 18];
+
+/** Squared distance from a point to the (static) camera, for depth sorting. */
+const distanceToCameraSq = ([x, y, z]: Vec3): number =>
+  (x - CAMERA_POSITION[0]) ** 2 +
+  (y - CAMERA_POSITION[1]) ** 2 +
+  (z - CAMERA_POSITION[2]) ** 2;
 
 /** Even point distribution on a sphere (Fibonacci sphere). */
 const spherePositions = (count: number, radius: number): Vec3[] => {
@@ -80,7 +87,13 @@ const Garden3D = ({
   );
 
   return (
-    <div className="garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background">
+    <div
+      // `isolation: isolate` gives the in-scene HTML labels their own stacking
+      // context, so their depth-sorted z-indices stay contained beneath page
+      // chrome and the teaser dialog without flattening the depth ordering.
+      style={{ isolation: "isolate" }}
+      className="garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background"
+    >
       {/* Persistent garden-name badge, mirroring the 2D views. */}
       <div className="garden:absolute garden:top-3 garden:right-3 garden:z-10 garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm">
         <FlowerIcon className="garden:h-4 garden:w-4" />
@@ -129,84 +142,97 @@ const Garden3D = ({
           );
         })}
 
-        {sprouts.map((node, i) => {
-          const data = node.data as SproutData;
-          const color = data.theme?.primary_color ?? "#14b8a6";
-          const icon = data.image || data.logo || "🌱";
-          return (
-            <group key={node.id} position={positions[i]}>
-              <mesh>
-                <sphereGeometry args={[0.22, 24, 24]} />
-                <meshStandardMaterial
-                  color={color}
-                  emissive={color}
-                  emissiveIntensity={0.25}
-                />
-              </mesh>
-              <Html
-                center
-                distanceFactor={11}
-                // Keep the in-scene labels beneath page chrome (view toggles,
-                // badges) and overlays like the teaser dialog, so they never
-                // cover the surrounding UI.
-                zIndexRange={[9, 0]}
-                style={{ pointerEvents: "auto" }}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setSelectedSprout(node.data as unknown as NodeData);
-                    setIsSproutDialogOpen(true);
-                  }}
-                  style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    gap: 3,
-                    width: 150,
-                    padding: "8px 10px",
-                    cursor: "pointer",
-                    borderRadius: 10,
-                    border: `1px solid ${color}`,
-                    background: "rgba(10,10,12,0.78)",
-                    color: "#fff",
-                    fontSize: 11,
-                    textAlign: "center",
-                    backdropFilter: "blur(4px)",
-                  }}
+        {sprouts
+          .map((node, i) => ({ node, pos: positions[i] }))
+          // Paint farthest-from-camera first so nearer labels stack on top in
+          // the static view. drei's <Html> only rewrites its depth z-index once
+          // the camera moves, so on the initial (non-rotating) scene DOM order
+          // is what decides stacking; without this, background nodes bleed in
+          // front. Once the user orbits, drei's zIndexRange takes over.
+          .sort((a, b) => distanceToCameraSq(b.pos) - distanceToCameraSq(a.pos))
+          .map(({ node, pos }) => {
+            const data = node.data as SproutData;
+            const color = data.theme?.primary_color ?? "#14b8a6";
+            const icon = data.image || data.logo || "🌱";
+            return (
+              <group key={node.id} position={pos}>
+                <mesh>
+                  <sphereGeometry args={[0.22, 24, 24]} />
+                  <meshStandardMaterial
+                    color={color}
+                    emissive={color}
+                    emissiveIntensity={0.25}
+                  />
+                </mesh>
+                <Html
+                  center
+                  distanceFactor={11}
+                  // Wide zIndexRange so labels are z-ordered by distance to the
+                  // camera (near nodes cover far ones). A compressed range
+                  // collapsed every label onto a single z-index, letting
+                  // background nodes bleed in front; omitting it disables z-index
+                  // entirely. The wrapper's `isolate` keeps this (high) range
+                  // beneath page chrome and the teaser dialog.
+                  zIndexRange={[16777271, 0]}
+                  style={{ pointerEvents: "auto" }}
                 >
-                  {isImageUrl(data.image) ? (
-                    <img
-                      src={data.image}
-                      alt={data.label}
-                      width={28}
-                      height={28}
-                      style={{ objectFit: "contain" }}
-                    />
-                  ) : (
-                    <span style={{ fontSize: 24, lineHeight: 1 }}>{icon}</span>
-                  )}
-                  <span style={{ fontWeight: 600 }}>{data.label}</span>
-                  {data.description && (
-                    <span
-                      style={{
-                        fontSize: 9,
-                        lineHeight: 1.3,
-                        opacity: 0.75,
-                        display: "-webkit-box",
-                        WebkitLineClamp: 2,
-                        WebkitBoxOrient: "vertical",
-                        overflow: "hidden",
-                      }}
-                    >
-                      {data.description}
-                    </span>
-                  )}
-                </button>
-              </Html>
-            </group>
-          );
-        })}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedSprout(node.data as unknown as NodeData);
+                      setIsSproutDialogOpen(true);
+                    }}
+                    style={{
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 3,
+                      width: 150,
+                      padding: "8px 10px",
+                      cursor: "pointer",
+                      borderRadius: 10,
+                      border: `1px solid ${color}`,
+                      background: "rgba(10,10,12,0.78)",
+                      color: "#fff",
+                      fontSize: 11,
+                      textAlign: "center",
+                      backdropFilter: "blur(4px)",
+                    }}
+                  >
+                    {isImageUrl(data.image) ? (
+                      <img
+                        src={data.image}
+                        alt={data.label}
+                        width={28}
+                        height={28}
+                        style={{ objectFit: "contain" }}
+                      />
+                    ) : (
+                      <span style={{ fontSize: 24, lineHeight: 1 }}>
+                        {icon}
+                      </span>
+                    )}
+                    <span style={{ fontWeight: 600 }}>{data.label}</span>
+                    {data.description && (
+                      <span
+                        style={{
+                          fontSize: 9,
+                          lineHeight: 1.3,
+                          opacity: 0.75,
+                          display: "-webkit-box",
+                          WebkitLineClamp: 2,
+                          WebkitBoxOrient: "vertical",
+                          overflow: "hidden",
+                        }}
+                      >
+                        {data.description}
+                      </span>
+                    )}
+                  </button>
+                </Html>
+              </group>
+            );
+          })}
       </Canvas>
 
       <SproutDialog
