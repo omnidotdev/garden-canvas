@@ -46,6 +46,14 @@ export interface GardenVisualizationProps {
      * @default true
      */
     showRelations?: boolean;
+    /**
+     * Whether typed connections are currently shown. Typed edges are hidden by
+     * default; pass this together with `onShowEdgesChange` to control the toggle
+     * from outside (e.g. URL state). Omit both for the built-in internal toggle.
+     */
+    showEdges?: boolean;
+    /** Called when the user toggles typed connections on or off. */
+    onShowEdgesChange?: (show: boolean) => void;
     /** Override the color for a relation type (slug -> CSS color). */
     relationColors?: Record<string, string>;
     /**

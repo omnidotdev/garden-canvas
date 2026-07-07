@@ -5005,6 +5005,8 @@ const GardenFlow = ({
   animateEdges,
   layout = "tree",
   showRelations = true,
+  showEdges: controlledShowEdges,
+  onShowEdgesChange,
   relationColors,
   showPoweredBy = true,
   miniMapOptions,
@@ -5016,7 +5018,15 @@ const GardenFlow = ({
   const [hiddenRelations, setHiddenRelations] = useState(
     /* @__PURE__ */ new Set()
   );
-  const [showEdges, setShowEdges] = useState(false);
+  const [internalShowEdges, setInternalShowEdges] = useState(false);
+  const showEdges = controlledShowEdges ?? internalShowEdges;
+  const setShowEdges = useCallback(
+    (next) => {
+      onShowEdgesChange?.(next);
+      if (controlledShowEdges === void 0) setInternalShowEdges(next);
+    },
+    [onShowEdgesChange, controlledShowEdges]
+  );
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { fitView } = useReactFlow();
@@ -5207,7 +5217,7 @@ const GardenFlow = ({
                   "button",
                   {
                     type: "button",
-                    onClick: () => setShowEdges((shown) => !shown),
+                    onClick: () => setShowEdges(!showEdges),
                     title: showEdges ? "Hide connections" : "Show connections",
                     className: "garden:flex garden:items-center garden:gap-1.5 garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:transition-colors garden:hover:text-foreground",
                     children: [

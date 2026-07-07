@@ -1,7 +1,7 @@
 "use client";
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
-import React__default, { useState, useRef, useEffect, useMemo } from 'react';
+import React__default, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { u as useSyncExternalStoreExports, au as getDefaultExportFromCjs, ar as Flower, an as Eye, ao as EyeOff, ai as ExternalLink, ap as relationColor, ah as isImageUrl, as as SproutDialog, ac as registerLayout } from './SproutDialog-J7-nFX0A.js';
 import * as ReactDOM from 'react-dom/client';
 
@@ -96813,11 +96813,21 @@ const Garden3D = ({
   nodes,
   edges,
   relationColors,
+  showEdges: controlledShowEdges,
+  onShowEdgesChange,
   showPoweredBy = true
 }) => {
   const [selectedSprout, setSelectedSprout] = useState(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
-  const [showEdges, setShowEdges] = useState(false);
+  const [internalShowEdges, setInternalShowEdges] = useState(false);
+  const showEdges = controlledShowEdges ?? internalShowEdges;
+  const setShowEdges = useCallback(
+    (next) => {
+      onShowEdgesChange?.(next);
+      if (controlledShowEdges === void 0) setInternalShowEdges(next);
+    },
+    [onShowEdgesChange, controlledShowEdges]
+  );
   const sprouts = useMemo(
     () => nodes.filter((node) => node.type === "sprout"),
     [nodes]
@@ -96852,7 +96862,7 @@ const Garden3D = ({
           "button",
           {
             type: "button",
-            onClick: () => setShowEdges((shown) => !shown),
+            onClick: () => setShowEdges(!showEdges),
             title: showEdges ? "Hide connections" : "Show connections",
             className: "garden:absolute garden:top-3 garden:left-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground",
             children: [
