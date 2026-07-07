@@ -5124,15 +5124,18 @@ const GardenFlow = ({
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el || typeof ResizeObserver === "undefined") return;
-    let frame = 0;
+    let timeout;
     const observer = new ResizeObserver(() => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+      clearTimeout(timeout);
+      timeout = setTimeout(
+        () => fitView({ padding: fitViewPadding, duration: 200 }),
+        150
+      );
     });
     observer.observe(el);
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(frame);
+      clearTimeout(timeout);
     };
   }, [fitView, fitViewPadding]);
   return /* @__PURE__ */ jsxs(

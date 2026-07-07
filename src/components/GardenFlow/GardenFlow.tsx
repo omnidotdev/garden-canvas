@@ -205,22 +205,28 @@ const GardenFlow = ({
   }, [layout]);
 
   // Auto-fit the graph to the container whenever it resizes, so the whole
-  // ecosystem always stays framed (window resize, sidebar toggles, etc.).
+  // ecosystem always stays framed (window resize, sidebar toggles, etc.). The
+  // ResizeObserver catches container resizes, not just window ones. Wait for
+  // the resize to settle, then animate the graph back into frame; re-fitting on
+  // every intermediate frame would restart the animation and read as jank.
   const wrapperRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const el = wrapperRef.current;
     if (!el || typeof ResizeObserver === "undefined") return;
 
-    let frame = 0;
+    let timeout: ReturnType<typeof setTimeout>;
     const observer = new ResizeObserver(() => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+      clearTimeout(timeout);
+      timeout = setTimeout(
+        () => fitView({ padding: fitViewPadding, duration: 200 }),
+        150,
+      );
     });
     observer.observe(el);
 
     return () => {
       observer.disconnect();
-      cancelAnimationFrame(frame);
+      clearTimeout(timeout);
     };
   }, [fitView, fitViewPadding]);
 
