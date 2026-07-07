@@ -66,6 +66,8 @@ const GardenFlow = ({
   animateEdges,
   layout = "tree",
   showRelations = true,
+  showEdges: controlledShowEdges,
+  onShowEdgesChange,
   relationColors,
   showPoweredBy = true,
   miniMapOptions,
@@ -79,8 +81,17 @@ const GardenFlow = ({
     new Set(),
   );
   // Typed connections read as clutter over the packed layouts, so they start
-  // hidden and the user reveals them from the Connections panel.
-  const [showEdges, setShowEdges] = useState(false);
+  // hidden and the user reveals them. Controlled when `showEdges` is provided
+  // (e.g. bound to URL state), otherwise tracked internally.
+  const [internalShowEdges, setInternalShowEdges] = useState(false);
+  const showEdges = controlledShowEdges ?? internalShowEdges;
+  const setShowEdges = useCallback(
+    (next: boolean) => {
+      onShowEdgesChange?.(next);
+      if (controlledShowEdges === undefined) setInternalShowEdges(next);
+    },
+    [onShowEdgesChange, controlledShowEdges],
+  );
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -304,7 +315,7 @@ const GardenFlow = ({
             <div className="garden:flex garden:max-w-[220px] garden:flex-col garden:gap-1 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:p-2 garden:shadow-sm garden:backdrop-blur-sm">
               <button
                 type="button"
-                onClick={() => setShowEdges((shown) => !shown)}
+                onClick={() => setShowEdges(!showEdges)}
                 title={showEdges ? "Hide connections" : "Show connections"}
                 className="garden:flex garden:items-center garden:gap-1.5 garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:transition-colors garden:hover:text-foreground"
               >

@@ -6,7 +6,7 @@ import {
   EyeOffIcon,
   FlowerIcon,
 } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 
 import { isImageUrl, relationColor } from "../../lib/utils";
 import { SproutDialog } from "../SproutDialog";
@@ -63,13 +63,24 @@ const Garden3D = ({
   nodes,
   edges,
   relationColors,
+  showEdges: controlledShowEdges,
+  onShowEdgesChange,
   showPoweredBy = true,
 }: GardenRendererProps) => {
   const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
   // Typed connections start hidden (they read as clutter over the sphere) and
-  // the user reveals them from the Connections toggle, mirroring the 2D views.
-  const [showEdges, setShowEdges] = useState(false);
+  // the user reveals them, mirroring the 2D views. Controlled when `showEdges`
+  // is provided (e.g. bound to URL state), otherwise tracked internally.
+  const [internalShowEdges, setInternalShowEdges] = useState(false);
+  const showEdges = controlledShowEdges ?? internalShowEdges;
+  const setShowEdges = useCallback(
+    (next: boolean) => {
+      onShowEdgesChange?.(next);
+      if (controlledShowEdges === undefined) setInternalShowEdges(next);
+    },
+    [onShowEdgesChange, controlledShowEdges],
+  );
 
   const sprouts = useMemo(
     () => nodes.filter((node) => node.type === "sprout"),
@@ -116,7 +127,7 @@ const Garden3D = ({
       {relationEdges.length > 0 && (
         <button
           type="button"
-          onClick={() => setShowEdges((shown) => !shown)}
+          onClick={() => setShowEdges(!showEdges)}
           title={showEdges ? "Hide connections" : "Show connections"}
           className="garden:absolute garden:top-3 garden:left-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground"
         >
