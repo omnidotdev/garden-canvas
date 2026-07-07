@@ -17688,7 +17688,7 @@ const createLucideIcon = (iconName, iconNode) => {
  */
 
 
-const __iconNode$7 = [
+const __iconNode$9 = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -17698,7 +17698,38 @@ const __iconNode$7 = [
     }
   ]
 ];
-const BookOpen = createLucideIcon("book-open", __iconNode$7);
+const BookOpen = createLucideIcon("book-open", __iconNode$9);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$8 = [
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }]
+];
+const Calendar = createLucideIcon("calendar", __iconNode$8);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$7 = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+];
+const ExternalLink = createLucideIcon("external-link", __iconNode$7);
 
 /**
  * @license lucide-react v0.562.0 - ISC
@@ -17709,12 +17740,24 @@ const BookOpen = createLucideIcon("book-open", __iconNode$7);
 
 
 const __iconNode$6 = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }]
+  [
+    "path",
+    {
+      d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",
+      key: "ct8e1f"
+    }
+  ],
+  ["path", { d: "M14.084 14.158a3 3 0 0 1-4.242-4.242", key: "151rxh" }],
+  [
+    "path",
+    {
+      d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",
+      key: "13bj9a"
+    }
+  ],
+  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
 ];
-const Calendar = createLucideIcon("calendar", __iconNode$6);
+const EyeOff = createLucideIcon("eye-off", __iconNode$6);
 
 /**
  * @license lucide-react v0.562.0 - ISC
@@ -17725,11 +17768,16 @@ const Calendar = createLucideIcon("calendar", __iconNode$6);
 
 
 const __iconNode$5 = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+  [
+    "path",
+    {
+      d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",
+      key: "1nclc0"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
 ];
-const ExternalLink = createLucideIcon("external-link", __iconNode$5);
+const Eye = createLucideIcon("eye", __iconNode$5);
 
 /**
  * @license lucide-react v0.562.0 - ISC
@@ -20405,5 +20453,5 @@ const SproutDialog = ({ sprout, open, onOpenChange }) => {
   ] }) });
 };
 
-export { calculateNodePosition as $, updateConnectionLookup as A, fitViewport as B, getNodeDimensions as C, ConnectionMode as D, createMarkerIds as E, getSmoothStepPath as F, getBezierPath as G, getEdgePosition as H, getElevatedEdgeZIndex as I, getMarkerId as J, getInternalNodesBounds as K, defaultAriaLabelConfig as L, MarkerType as M, devWarn as N, infiniteExtent as O, Position as P, PanOnScrollMode as Q, ResizeControlVariant as R, SelectionMode as S, ConnectionLineType as T, isMacOs as U, getBoundsOfRects as V, XYResizer as W, XYMinimap as X, XYPanZoom as Y, XYDrag as Z, snapPosition as _, getOverlappingArea as a, getNodesInside as a0, isInputDOMNode as a1, elementSelectionKeys as a2, isNumeric as a3, getStraightPath as a4, isEdgeVisible as a5, getConnectionStatus as a6, mergeAriaLabelConfig as a7, getEventPosition as a8, areSetsEqual as a9, getBezierEdgeCenter as aa, getDimensions as ab, registerLayout as ac, autoLayoutElements as ad, isRelationEdge as ae, hexLayout as af, createLucideIcon as ag, isImageUrl as ah, ExternalLink as ai, GitBranch as aj, getLayout as ak, findGardenByName as al, gardenToFlow as am, relationColor as an, cn as ao, Flower as ap, SproutDialog as aq, listLayouts as ar, getDefaultExportFromCjs as as, getElementsToRemove as b, getViewportForBounds as c, errorMessages as d, evaluateAbsolutePosition as e, isNodeBase as f, getNodesBounds as g, isEdgeBase as h, isRectObject as i, getHostForElement as j, XYHandle as k, isMouseEvent as l, addEdge as m, nodeToRect as n, nodeHasDimensions as o, pointToRendererPoint as p, initialConnection as q, rendererPointToPoint as r, panBy as s, adoptUserNodes as t, useSyncExternalStoreExports as u, getHandlePosition as v, withResolvers as w, handleExpandParent as x, updateNodeInternals as y, updateAbsolutePositions as z };
-//# sourceMappingURL=SproutDialog-dAofqqmO.js.map
+export { calculateNodePosition as $, updateConnectionLookup as A, fitViewport as B, getNodeDimensions as C, ConnectionMode as D, createMarkerIds as E, getSmoothStepPath as F, getBezierPath as G, getEdgePosition as H, getElevatedEdgeZIndex as I, getMarkerId as J, getInternalNodesBounds as K, defaultAriaLabelConfig as L, MarkerType as M, devWarn as N, infiniteExtent as O, Position as P, PanOnScrollMode as Q, ResizeControlVariant as R, SelectionMode as S, ConnectionLineType as T, isMacOs as U, getBoundsOfRects as V, XYResizer as W, XYMinimap as X, XYPanZoom as Y, XYDrag as Z, snapPosition as _, getOverlappingArea as a, getNodesInside as a0, isInputDOMNode as a1, elementSelectionKeys as a2, isNumeric as a3, getStraightPath as a4, isEdgeVisible as a5, getConnectionStatus as a6, mergeAriaLabelConfig as a7, getEventPosition as a8, areSetsEqual as a9, getBezierEdgeCenter as aa, getDimensions as ab, registerLayout as ac, autoLayoutElements as ad, isRelationEdge as ae, hexLayout as af, createLucideIcon as ag, isImageUrl as ah, ExternalLink as ai, GitBranch as aj, getLayout as ak, findGardenByName as al, gardenToFlow as am, Eye as an, EyeOff as ao, relationColor as ap, cn as aq, Flower as ar, SproutDialog as as, listLayouts as at, getDefaultExportFromCjs as au, getElementsToRemove as b, getViewportForBounds as c, errorMessages as d, evaluateAbsolutePosition as e, isNodeBase as f, getNodesBounds as g, isEdgeBase as h, isRectObject as i, getHostForElement as j, XYHandle as k, isMouseEvent as l, addEdge as m, nodeToRect as n, nodeHasDimensions as o, pointToRendererPoint as p, initialConnection as q, rendererPointToPoint as r, panBy as s, adoptUserNodes as t, useSyncExternalStoreExports as u, getHandlePosition as v, withResolvers as w, handleExpandParent as x, updateNodeInternals as y, updateAbsolutePositions as z };
+//# sourceMappingURL=SproutDialog-J7-nFX0A.js.map

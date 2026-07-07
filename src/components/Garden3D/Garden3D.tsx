@@ -1,6 +1,11 @@
 import { Html, Line, OrbitControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
-import { ExternalLinkIcon, FlowerIcon } from "lucide-react";
+import {
+  ExternalLinkIcon,
+  EyeIcon,
+  EyeOffIcon,
+  FlowerIcon,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { isImageUrl, relationColor } from "../../lib/utils";
@@ -62,6 +67,9 @@ const Garden3D = ({
 }: GardenRendererProps) => {
   const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
+  // Typed connections start hidden (they read as clutter over the sphere) and
+  // the user reveals them from the Connections toggle, mirroring the 2D views.
+  const [showEdges, setShowEdges] = useState(false);
 
   const sprouts = useMemo(
     () => nodes.filter((node) => node.type === "sprout"),
@@ -103,6 +111,24 @@ const Garden3D = ({
         )}
       </div>
 
+      {/* Connections toggle, mirroring the 2D Connections panel; typed edges
+          start hidden and reveal on click. */}
+      {relationEdges.length > 0 && (
+        <button
+          type="button"
+          onClick={() => setShowEdges((shown) => !shown)}
+          title={showEdges ? "Hide connections" : "Show connections"}
+          className="garden:absolute garden:top-3 garden:left-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground"
+        >
+          {showEdges ? (
+            <EyeIcon className="garden:h-3 garden:w-3" />
+          ) : (
+            <EyeOffIcon className="garden:h-3 garden:w-3" />
+          )}
+          Connections
+        </button>
+      )}
+
       {showPoweredBy && (
         <a
           href="https://garden.omni.dev"
@@ -123,24 +149,25 @@ const Garden3D = ({
             distracting, so the scene stays still until the user drags. */}
         <OrbitControls enablePan enableZoom enableRotate />
 
-        {relationEdges.map((edge, i) => {
-          const a = posById.get(edge.source);
-          const b = posById.get(edge.target);
-          if (!a || !b) return null;
-          const relation =
-            (edge.data as { relations?: string[] } | undefined)
-              ?.relations?.[0] ?? "related";
-          return (
-            <Line
-              key={edge.id ?? `rel-${i}`}
-              points={[a, b]}
-              color={relationColor(relation, relationColors)}
-              lineWidth={1}
-              transparent
-              opacity={0.55}
-            />
-          );
-        })}
+        {showEdges &&
+          relationEdges.map((edge, i) => {
+            const a = posById.get(edge.source);
+            const b = posById.get(edge.target);
+            if (!a || !b) return null;
+            const relation =
+              (edge.data as { relations?: string[] } | undefined)
+                ?.relations?.[0] ?? "related";
+            return (
+              <Line
+                key={edge.id ?? `rel-${i}`}
+                points={[a, b]}
+                color={relationColor(relation, relationColors)}
+                lineWidth={1}
+                transparent
+                opacity={0.55}
+              />
+            );
+          })}
 
         {sprouts
           .map((node, i) => ({ node, pos: positions[i] }))

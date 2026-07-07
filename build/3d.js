@@ -2,7 +2,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, useRef, useEffect, useMemo } from 'react';
-import { u as useSyncExternalStoreExports, as as getDefaultExportFromCjs, ap as Flower, ai as ExternalLink, an as relationColor, ah as isImageUrl, aq as SproutDialog, ac as registerLayout } from './SproutDialog-dAofqqmO.js';
+import { u as useSyncExternalStoreExports, au as getDefaultExportFromCjs, ar as Flower, an as Eye, ao as EyeOff, ai as ExternalLink, ap as relationColor, ah as isImageUrl, as as SproutDialog, ac as registerLayout } from './SproutDialog-J7-nFX0A.js';
 import * as ReactDOM from 'react-dom/client';
 
 function _extends() {
@@ -96817,6 +96817,7 @@ const Garden3D = ({
 }) => {
   const [selectedSprout, setSelectedSprout] = useState(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
+  const [showEdges, setShowEdges] = useState(false);
   const sprouts = useMemo(
     () => nodes.filter((node) => node.type === "sprout"),
     [nodes]
@@ -96847,6 +96848,19 @@ const Garden3D = ({
           schema.name,
           schema.icon && /* @__PURE__ */ jsx("span", { className: "garden:ml-1", children: schema.icon })
         ] }),
+        relationEdges.length > 0 && /* @__PURE__ */ jsxs(
+          "button",
+          {
+            type: "button",
+            onClick: () => setShowEdges((shown) => !shown),
+            title: showEdges ? "Hide connections" : "Show connections",
+            className: "garden:absolute garden:top-3 garden:left-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground",
+            children: [
+              showEdges ? /* @__PURE__ */ jsx(Eye, { className: "garden:h-3 garden:w-3" }) : /* @__PURE__ */ jsx(EyeOff, { className: "garden:h-3 garden:w-3" }),
+              "Connections"
+            ]
+          }
+        ),
         showPoweredBy && /* @__PURE__ */ jsxs(
           "a",
           {
@@ -96865,7 +96879,7 @@ const Garden3D = ({
           /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
           /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
           /* @__PURE__ */ jsx(OrbitControls, { enablePan: true, enableZoom: true, enableRotate: true }),
-          relationEdges.map((edge, i) => {
+          showEdges && relationEdges.map((edge, i) => {
             const a = posById.get(edge.source);
             const b = posById.get(edge.target);
             if (!a || !b) return null;

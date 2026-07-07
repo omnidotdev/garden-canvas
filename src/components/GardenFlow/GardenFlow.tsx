@@ -12,6 +12,8 @@ import {
 } from "@xyflow/react";
 import {
   ExternalLinkIcon,
+  EyeIcon,
+  EyeOffIcon,
   FlowerIcon,
   Layers2Icon,
   LayersIcon,
@@ -76,6 +78,9 @@ const GardenFlow = ({
   const [hiddenRelations, setHiddenRelations] = useState<Set<string>>(
     new Set(),
   );
+  // Typed connections read as clutter over the packed layouts, so they start
+  // hidden and the user reveals them from the Connections panel.
+  const [showEdges, setShowEdges] = useState(false);
 
   const [nodes, setNodes, onNodesChange] = useNodesState<Node>([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState<Edge>([]);
@@ -107,12 +112,12 @@ const GardenFlow = ({
     () =>
       edges.filter((edge) => {
         if (!isRelationEdge(edge)) return true;
-        if (!showRelations) return false;
+        if (!showRelations || !showEdges) return false;
         const rels = (edge.data as { relations?: string[] }).relations ?? [];
         if (!rels.length) return true;
         return rels.some((rel) => !hiddenRelations.has(rel));
       }),
-    [edges, hiddenRelations, showRelations],
+    [edges, hiddenRelations, showRelations, showEdges],
   );
 
   const currentGarden = useMemo(
@@ -297,33 +302,45 @@ const GardenFlow = ({
         {showRelations && relationTypes.length > 0 && (
           <Panel position="top-left">
             <div className="garden:flex garden:max-w-[220px] garden:flex-col garden:gap-1 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:p-2 garden:shadow-sm garden:backdrop-blur-sm">
-              <span className="garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide">
+              <button
+                type="button"
+                onClick={() => setShowEdges((shown) => !shown)}
+                title={showEdges ? "Hide connections" : "Show connections"}
+                className="garden:flex garden:items-center garden:gap-1.5 garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:transition-colors garden:hover:text-foreground"
+              >
+                {showEdges ? (
+                  <EyeIcon className="garden:h-3 garden:w-3" />
+                ) : (
+                  <EyeOffIcon className="garden:h-3 garden:w-3" />
+                )}
                 Connections
-              </span>
-              <div className="garden:flex garden:flex-wrap garden:gap-1">
-                {relationTypes.map((relation) => {
-                  const hidden = hiddenRelations.has(relation);
-                  const color = relationColor(relation, relationColors);
-                  return (
-                    <button
-                      key={relation}
-                      type="button"
-                      onClick={() => toggleRelation(relation)}
-                      title={hidden ? `Show ${relation}` : `Hide ${relation}`}
-                      className={cn(
-                        "garden:flex garden:items-center garden:gap-1.5 garden:rounded garden:border garden:border-border garden:px-1.5 garden:py-0.5 garden:text-xs garden:transition-opacity",
-                        hidden ? "garden:opacity-40" : "garden:opacity-100",
-                      )}
-                    >
-                      <span
-                        className="garden:h-2 garden:w-2 garden:rounded-full"
-                        style={{ backgroundColor: color }}
-                      />
-                      {relation}
-                    </button>
-                  );
-                })}
-              </div>
+              </button>
+              {showEdges && (
+                <div className="garden:flex garden:flex-wrap garden:gap-1">
+                  {relationTypes.map((relation) => {
+                    const hidden = hiddenRelations.has(relation);
+                    const color = relationColor(relation, relationColors);
+                    return (
+                      <button
+                        key={relation}
+                        type="button"
+                        onClick={() => toggleRelation(relation)}
+                        title={hidden ? `Show ${relation}` : `Hide ${relation}`}
+                        className={cn(
+                          "garden:flex garden:items-center garden:gap-1.5 garden:rounded garden:border garden:border-border garden:px-1.5 garden:py-0.5 garden:text-xs garden:transition-opacity",
+                          hidden ? "garden:opacity-40" : "garden:opacity-100",
+                        )}
+                      >
+                        <span
+                          className="garden:h-2 garden:w-2 garden:rounded-full"
+                          style={{ backgroundColor: color }}
+                        />
+                        {relation}
+                      </button>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </Panel>
         )}

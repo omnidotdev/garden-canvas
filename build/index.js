@@ -1,6 +1,6 @@
 "use client";
-import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as ExternalLink, aj as GitBranch, ak as getLayout, al as findGardenByName, am as gardenToFlow, an as relationColor, ao as cn, ap as Flower, aq as SproutDialog } from './SproutDialog-dAofqqmO.js';
-export { ar as listLayouts } from './SproutDialog-dAofqqmO.js';
+import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as ExternalLink, aj as GitBranch, ak as getLayout, al as findGardenByName, am as gardenToFlow, an as Eye, ao as EyeOff, ap as relationColor, aq as cn, ar as Flower, as as SproutDialog } from './SproutDialog-J7-nFX0A.js';
+export { at as listLayouts } from './SproutDialog-J7-nFX0A.js';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React__default, { useState, createContext, useCallback, useMemo, memo, forwardRef, useContext, useRef, useEffect, useLayoutEffect } from 'react';
 import 'react-dom';
@@ -5016,6 +5016,7 @@ const GardenFlow = ({
   const [hiddenRelations, setHiddenRelations] = useState(
     /* @__PURE__ */ new Set()
   );
+  const [showEdges, setShowEdges] = useState(false);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const { fitView } = useReactFlow();
@@ -5039,12 +5040,12 @@ const GardenFlow = ({
   const visibleEdges = useMemo(
     () => edges.filter((edge) => {
       if (!isRelationEdge(edge)) return true;
-      if (!showRelations) return false;
+      if (!showRelations || !showEdges) return false;
       const rels = edge.data.relations ?? [];
       if (!rels.length) return true;
       return rels.some((rel) => !hiddenRelations.has(rel));
     }),
-    [edges, hiddenRelations, showRelations]
+    [edges, hiddenRelations, showRelations, showEdges]
   );
   const currentGarden = useMemo(
     () => nodes.find((node) => node?.type === "garden"),
@@ -5202,8 +5203,20 @@ const GardenFlow = ({
               /* @__PURE__ */ jsx(Background, {}),
               showMinimap && /* @__PURE__ */ jsx(MiniMap, { nodeStrokeWidth: 3, zoomable: true, pannable: true, ...miniMapOptions }),
               showRelations && relationTypes.length > 0 && /* @__PURE__ */ jsx(Panel, { position: "top-left", children: /* @__PURE__ */ jsxs("div", { className: "garden:flex garden:max-w-[220px] garden:flex-col garden:gap-1 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:p-2 garden:shadow-sm garden:backdrop-blur-sm", children: [
-                /* @__PURE__ */ jsx("span", { className: "garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide", children: "Connections" }),
-                /* @__PURE__ */ jsx("div", { className: "garden:flex garden:flex-wrap garden:gap-1", children: relationTypes.map((relation) => {
+                /* @__PURE__ */ jsxs(
+                  "button",
+                  {
+                    type: "button",
+                    onClick: () => setShowEdges((shown) => !shown),
+                    title: showEdges ? "Hide connections" : "Show connections",
+                    className: "garden:flex garden:items-center garden:gap-1.5 garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:transition-colors garden:hover:text-foreground",
+                    children: [
+                      showEdges ? /* @__PURE__ */ jsx(Eye, { className: "garden:h-3 garden:w-3" }) : /* @__PURE__ */ jsx(EyeOff, { className: "garden:h-3 garden:w-3" }),
+                      "Connections"
+                    ]
+                  }
+                ),
+                showEdges && /* @__PURE__ */ jsx("div", { className: "garden:flex garden:flex-wrap garden:gap-1", children: relationTypes.map((relation) => {
                   const hidden = hiddenRelations.has(relation);
                   const color = relationColor(relation, relationColors);
                   return /* @__PURE__ */ jsxs(
