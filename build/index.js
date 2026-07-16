@@ -3809,6 +3809,60 @@ function useEdgesState(initialEdges) {
     return [edges, setEdges, onEdgesChange];
 }
 
+const selector$4 = (options) => (s) => {
+    if (!options.includeHiddenNodes) {
+        return s.nodesInitialized;
+    }
+    if (s.nodeLookup.size === 0) {
+        return false;
+    }
+    for (const [, { internals }] of s.nodeLookup) {
+        if (internals.handleBounds === undefined || !nodeHasDimensions(internals.userNode)) {
+            return false;
+        }
+    }
+    return true;
+};
+/**
+ * This hook tells you whether all the nodes in a flow have been measured and given
+ *a width and height. When you add a node to the flow, this hook will return
+ *`false` and then `true` again once the node has been measured.
+ *
+ * @public
+ * @returns Whether or not the nodes have been initialized by the `<ReactFlow />` component and
+ * given a width and height.
+ *
+ * @example
+ * ```jsx
+ *import { useReactFlow, useNodesInitialized } from '@xyflow/react';
+ *import { useEffect, useState } from 'react';
+ *
+ *const options = {
+ *  includeHiddenNodes: false,
+ *};
+ *
+ *export default function useLayout() {
+ *  const { getNodes } = useReactFlow();
+ *  const nodesInitialized = useNodesInitialized(options);
+ *  const [layoutedNodes, setLayoutedNodes] = useState(getNodes());
+ *
+ *  useEffect(() => {
+ *    if (nodesInitialized) {
+ *      setLayoutedNodes(yourLayoutingFunction(getNodes()));
+ *    }
+ *  }, [nodesInitialized]);
+ *
+ *  return layoutedNodes;
+ *}
+ *```
+ */
+function useNodesInitialized(options = {
+    includeHiddenNodes: false,
+}) {
+    const initialized = useStore(selector$4(options));
+    return initialized;
+}
+
 function LinePattern({ dimensions, lineWidth, variant, className }) {
     return (jsx("path", { strokeWidth: lineWidth, d: `M${dimensions[0] / 2} 0 V${dimensions[1]} M0 ${dimensions[1] / 2} H${dimensions[0]}`, className: cc(['react-flow__background-pattern', variant, className]) }));
 }
@@ -5043,6 +5097,7 @@ const GardenFlow = ({
   const [isSubgardensExpanded, setIsSubgardensExpanded] = useState(expandSubgardens);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
   const [selectedSprout, setSelectedSprout] = useState(null);
+  const [isFitPending, setIsFitPending] = useState(false);
   const [hiddenRelations, setHiddenRelations] = useState(
     /* @__PURE__ */ new Set()
   );
@@ -5098,15 +5153,9 @@ const GardenFlow = ({
       };
       setNodes(result.nodes);
       setEdges(result.edges);
-      requestAnimationFrame(
-        () => fitView({
-          padding: fitViewPadding,
-          minZoom: FIT_MIN_ZOOM,
-          maxZoom: FIT_MAX_ZOOM
-        })
-      );
+      setIsFitPending(true);
     },
-    [layout, fitViewPadding, setEdges, setNodes, fitView]
+    [layout, setEdges, setNodes]
   );
   const handleNodeClick = useCallback(
     (_, node) => {
@@ -5163,6 +5212,16 @@ const GardenFlow = ({
     });
     onLayout(updatedNodes, updatedEdges);
   };
+  const nodesInitialized = useNodesInitialized();
+  useEffect(() => {
+    if (!isFitPending || !nodesInitialized) return;
+    fitView({
+      padding: fitViewPadding,
+      minZoom: FIT_MIN_ZOOM,
+      maxZoom: FIT_MAX_ZOOM
+    });
+    setIsFitPending(false);
+  }, [isFitPending, nodesInitialized, fitView, fitViewPadding]);
   useLayoutEffect(() => {
     onLayout(initialNodes, initialEdges);
   }, [layout]);

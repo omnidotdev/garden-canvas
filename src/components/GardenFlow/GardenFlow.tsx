@@ -7,6 +7,7 @@ import {
   Panel,
   ReactFlow,
   useEdgesState,
+  useNodesInitialized,
   useNodesState,
   useReactFlow,
 } from "@xyflow/react";
@@ -83,6 +84,8 @@ const GardenFlow = ({
     useState(expandSubgardens);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
   const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
+  // Set when a new graph is laid out, cleared once it has been framed.
+  const [isFitPending, setIsFitPending] = useState(false);
   const [hiddenRelations, setHiddenRelations] = useState<Set<string>>(
     new Set(),
   );
@@ -152,15 +155,12 @@ const GardenFlow = ({
       };
       setNodes(result.nodes as Node[]);
       setEdges(result.edges as Edge[]);
-      requestAnimationFrame(() =>
-        fitView({
-          padding: fitViewPadding,
-          minZoom: FIT_MIN_ZOOM,
-          maxZoom: FIT_MAX_ZOOM,
-        }),
-      );
+      // Nodes carry no explicit size, so react-flow only knows their bounds once
+      // it has measured them. Fitting here would frame the *previous* graph's
+      // bounds, so defer to the effect below that waits for the measurement.
+      setIsFitPending(true);
     },
-    [layout, fitViewPadding, setEdges, setNodes, fitView],
+    [layout, setEdges, setNodes],
   );
 
   const handleNodeClick = useCallback(
@@ -227,6 +227,20 @@ const GardenFlow = ({
 
     onLayout(updatedNodes, updatedEdges);
   };
+
+  // Frame a freshly laid-out graph, but only once react-flow has measured the
+  // new nodes; until then their bounds are still the previous graph's, which
+  // would fit the viewport to the wrong region and leave the graph off-screen.
+  const nodesInitialized = useNodesInitialized();
+  useEffect(() => {
+    if (!isFitPending || !nodesInitialized) return;
+    fitView({
+      padding: fitViewPadding,
+      minZoom: FIT_MIN_ZOOM,
+      maxZoom: FIT_MAX_ZOOM,
+    });
+    setIsFitPending(false);
+  }, [isFitPending, nodesInitialized, fitView, fitViewPadding]);
 
   // Lay out on mount and re-lay-out when the layout mode (tree/hex) changes
   // biome-ignore lint/correctness/useExhaustiveDependencies: initial node/edge set is a stable mount snapshot
