@@ -1,6 +1,14 @@
 {
   "name": "@omnidotdev/garden",
   "version": "0.3.0",
+  "description": "Visualize and model an ecosystem of products as an interactive graph",
+  "license": "Apache-2.0",
+  "homepage": "https://garden.omni.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omnidotdev/garden-canvas.git"
+  },
+  "bugs": "https://github.com/omnidotdev/garden-canvas/issues",
   "type": "module",
   "module": "build/index.js",
   "types": "build/index.d.ts",
