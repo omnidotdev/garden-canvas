@@ -23,9 +23,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
+      # registry-url is what writes the .npmrc that reads NODE_AUTH_TOKEN below;
+      # without it the publish reaches npm unauthenticated and fails ENEEDAUTH
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
+          registry-url: "https://registry.npmjs.org"
       - name: Update npm
         run: npm install -g npm@latest
       - name: Install dependencies
@@ -39,6 +42,7 @@ jobs:
           commit: "ci(changesets): version packages"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
           NPM_CONFIG_PROVENANCE: true
       - name: Type check
         run: bunx tsc --noEmit
