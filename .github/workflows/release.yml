@@ -1,8 +1,11 @@
 name: Release 🏗️
 
-# Manual-only: the package is consumed as a git dependency (committed build/),
-# not published to npm, so this no longer runs on push. Trigger by hand only if
-# npm publishing is ever wired up (needs an @omnidotdev NPM_TOKEN).
+# Manual-only. Omni's own apps consume this as a git dependency, pinning a
+# commit (which is why build/ is committed), so a release is not needed to ship
+# them a change and publishing on every push would only churn the registry.
+# Publishing still matters for everyone outside Omni installing from npm, so
+# release by hand once a batch of changes is worth a version. NPM_TOKEN is
+# already configured as a repository secret.
 on:
   workflow_dispatch:
 

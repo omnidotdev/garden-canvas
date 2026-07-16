@@ -1,5 +1,29 @@
 # @omnidotdev/garden
 
+## 0.3.0
+
+### Minor Changes
+
+- Add a layout plugin system, so `layout` accepts any registered plugin name
+  rather than a fixed set. Two layouts ship beyond the default tree:
+
+  - **Beehive** (`layout="hex"`): packs sprouts into a honeycomb of pointy-top
+    hexagonal cells, spiralled out from a centre cell so the hive stays balanced
+    and mirror-symmetric at any count.
+  - **3D** (`layout="3d"`): an orbitable sphere, imported separately via
+    `@omnidotdev/garden/3d` so Three.js never enters the base bundle.
+
+  Sprouts render richer across every layout: emoji and image logos (normalized to
+  a consistent size), taglines, and unreleased products teased from a
+  `coming_soon` flag as a dimmed, non-interactive cell with a badge.
+
+  Typed relation edges are now hidden behind a toggle rather than always drawn.
+  `showRelations` controls it, and the toggle is itself controllable so a host app
+  can drive it.
+
+  The graph keeps itself framed, animating back into view on resize and waiting
+  for its nodes to be measured before framing a new one.
+
 ## 0.2.0
 
 ### Minor Changes
