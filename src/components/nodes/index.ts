@@ -22,6 +22,8 @@ export interface NodeData {
   release_date?: string;
   /** Whether the product can be self-hosted. */
   self_hostable?: boolean;
+  /** Publicly teased but not yet launched; rendered dimmed and non-interactive. */
+  coming_soon?: boolean;
   /** Documentation URL. */
   docs_url?: string;
   url?: string;

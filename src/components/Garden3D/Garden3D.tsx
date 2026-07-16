@@ -9,6 +9,7 @@ import {
 import { useCallback, useMemo, useState } from "react";
 
 import { isImageUrl, relationColor } from "../../lib/utils";
+import { GlyphIcon } from "../GlyphIcon";
 import { SproutDialog } from "../SproutDialog";
 
 import type { GardenRendererProps } from "../../lib/plugins/layout";
@@ -50,6 +51,7 @@ type SproutData = {
   logo?: string;
   homepage_url?: string;
   theme?: { primary_color?: string | null } | null;
+  coming_soon?: boolean;
 };
 
 /**
@@ -157,8 +159,18 @@ const Garden3D = ({
         <ambientLight intensity={0.9} />
         <pointLight position={[12, 12, 12]} intensity={1.2} />
         {/* Manual orbit only; auto-rotation moves click targets and reads as
-            distracting, so the scene stays still until the user drags. */}
-        <OrbitControls enablePan enableZoom enableRotate />
+            distracting, so the scene stays still until the user drags. Damping
+            eases the camera in and out so the first drag glides instead of
+            snapping; makeDefault + an explicit target keep the orbit stable. */}
+        <OrbitControls
+          makeDefault
+          enablePan
+          enableZoom
+          enableRotate
+          enableDamping
+          dampingFactor={0.08}
+          target={[0, 0, 0]}
+        />
 
         {showEdges &&
           relationEdges.map((edge, i) => {
@@ -192,6 +204,7 @@ const Garden3D = ({
             const data = node.data as SproutData;
             const color = data.theme?.primary_color ?? "#14b8a6";
             const icon = data.image || data.logo || "🌱";
+            const comingSoon = Boolean(data.coming_soon);
             return (
               <group key={node.id} position={pos}>
                 <mesh>
@@ -216,7 +229,10 @@ const Garden3D = ({
                 >
                   <button
                     type="button"
+                    disabled={comingSoon}
                     onClick={() => {
+                      // Coming-soon products are teased but not interactive.
+                      if (comingSoon) return;
                       setSelectedSprout(node.data as unknown as NodeData);
                       setIsSproutDialogOpen(true);
                     }}
@@ -227,7 +243,7 @@ const Garden3D = ({
                       gap: 3,
                       width: 150,
                       padding: "8px 10px",
-                      cursor: "pointer",
+                      cursor: comingSoon ? "default" : "pointer",
                       borderRadius: 10,
                       border: `1px solid ${color}`,
                       background: "rgba(10,10,12,0.78)",
@@ -235,6 +251,7 @@ const Garden3D = ({
                       fontSize: 11,
                       textAlign: "center",
                       backdropFilter: "blur(4px)",
+                      opacity: comingSoon ? 0.6 : 1,
                     }}
                   >
                     {isImageUrl(data.image) ? (
@@ -246,25 +263,37 @@ const Garden3D = ({
                         style={{ objectFit: "contain" }}
                       />
                     ) : (
-                      <span style={{ fontSize: 24, lineHeight: 1 }}>
-                        {icon}
-                      </span>
+                      <GlyphIcon glyph={icon} size={28} label={data.label} />
                     )}
                     <span style={{ fontWeight: 600 }}>{data.label}</span>
-                    {data.description && (
+                    {comingSoon ? (
                       <span
                         style={{
                           fontSize: 9,
                           lineHeight: 1.3,
-                          opacity: 0.75,
-                          display: "-webkit-box",
-                          WebkitLineClamp: 2,
-                          WebkitBoxOrient: "vertical",
-                          overflow: "hidden",
+                          textTransform: "uppercase",
+                          letterSpacing: 0.5,
+                          opacity: 0.85,
                         }}
                       >
-                        {data.description}
+                        Coming soon
                       </span>
+                    ) : (
+                      data.description && (
+                        <span
+                          style={{
+                            fontSize: 9,
+                            lineHeight: 1.3,
+                            opacity: 0.75,
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden",
+                          }}
+                        >
+                          {data.description}
+                        </span>
+                      )
                     )}
                   </button>
                 </Html>

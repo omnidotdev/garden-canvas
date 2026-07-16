@@ -1,13 +1,22 @@
 import { Handle, Position } from "@xyflow/react";
-import { ExternalLinkIcon, GitBranchIcon } from "lucide-react";
+import { ClockIcon, ExternalLinkIcon, GitBranchIcon } from "lucide-react";
 
-import { isImageUrl } from "../../../lib/utils";
+import { cn, isImageUrl } from "../../../lib/utils";
+import { GlyphIcon } from "../../GlyphIcon";
 
 import type { NodeProps } from "..";
 
 // Pointy-top hexagon clip used by the honeycomb / "beehive" layout.
 const HEX_CLIP =
   "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
+
+// Small pill marking a product that has not launched yet.
+const ComingSoonBadge = () => (
+  <div className="garden:absolute garden:top-2 garden:right-2 garden:z-10 garden:flex garden:items-center garden:gap-1 garden:rounded-full garden:border garden:border-border garden:bg-muted garden:px-2 garden:py-0.5 garden:font-medium garden:text-[10px] garden:text-muted-foreground garden:uppercase garden:tracking-wide">
+    <ClockIcon className="garden:h-2.5 garden:w-2.5" />
+    Coming soon
+  </div>
+);
 
 const SproutNode = ({ data }: NodeProps) => {
   // check if there are any connections
@@ -18,6 +27,12 @@ const SproutNode = ({ data }: NodeProps) => {
 
   // Use theme colors from garden data if available
   const primaryColor = data.theme?.primary_color || "var(--garden-garden)";
+
+  // Unreleased products are teased but not interactive: dimmed, badged, and
+  // without call-to-action buttons or hover affordances.
+  const comingSoon = Boolean(data.coming_soon);
+
+  const glyph = data.image || data.logo || "🌱";
 
   // Beehive mode: render the product as a hexagonal cell (icon + name).
   if (data.hex) {
@@ -39,6 +54,7 @@ const SproutNode = ({ data }: NodeProps) => {
             isConnectable={false}
           />
         )}
+        {comingSoon && <ComingSoonBadge />}
         {/* A clip-path clips the element's border away, so the outline is
             drawn as a colored outer hexagon showing through a slightly inset
             inner hexagon (the padding is the visible border width). */}
@@ -46,7 +62,12 @@ const SproutNode = ({ data }: NodeProps) => {
             taller than wide by 2/√3 (~1.1547), otherwise the cell looks
             horizontally stretched. 176 x 203 keeps every side equal. */}
         <div
-          className="garden:h-[203px] garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105"
+          className={cn(
+            "garden:h-[203px] garden:w-44 garden:p-[3px] garden:transition-transform",
+            comingSoon
+              ? "garden:cursor-default garden:opacity-60"
+              : "garden:cursor-pointer garden:hover:scale-105",
+          )}
           style={{ clipPath: HEX_CLIP, backgroundColor: primaryColor }}
         >
           <div
@@ -60,9 +81,7 @@ const SproutNode = ({ data }: NodeProps) => {
                 className="garden:h-12 garden:w-12 garden:object-contain"
               />
             ) : (
-              <span className="garden:select-none garden:text-4xl">
-                {data.image || data.logo || "🌱"}
-              </span>
+              <GlyphIcon glyph={glyph} size={44} label={data.label} />
             )}
             <h3 className="garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs">
               {data.label}
@@ -84,7 +103,14 @@ const SproutNode = ({ data }: NodeProps) => {
 
   return (
     // NB: relative positioning is important for `Handle` placement because it uses `absolute` positioning internally
-    <div className="garden:relative garden:cursor-pointer garden:rounded-md garden:border-2 garden:border-border garden:bg-card garden:shadow-lg garden:hover:scale-105 garden:hover:shadow-xl">
+    <div
+      className={cn(
+        "garden:relative garden:rounded-md garden:border-2 garden:border-border garden:bg-card garden:shadow-lg",
+        comingSoon
+          ? "garden:cursor-default garden:opacity-60"
+          : "garden:cursor-pointer garden:hover:scale-105 garden:hover:shadow-xl",
+      )}
+    >
       {hasTopTargets && (
         <Handle
           id="top"
@@ -103,6 +129,8 @@ const SproutNode = ({ data }: NodeProps) => {
         />
       )}
 
+      {comingSoon && <ComingSoonBadge />}
+
       <div className="garden:relative">
         {isImageUrl(data.image) ? (
           <img
@@ -111,12 +139,8 @@ const SproutNode = ({ data }: NodeProps) => {
             className="garden:h-28 garden:w-full garden:object-contain garden:p-5"
           />
         ) : (
-          <div
-            role="img"
-            aria-label={data.label}
-            className="garden:flex garden:h-28 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-6xl"
-          >
-            {data.image || data.logo || "🌱"}
+          <div className="garden:flex garden:h-28 garden:w-full garden:items-center garden:justify-center">
+            <GlyphIcon glyph={glyph} size={64} label={data.label} />
           </div>
         )}
         <div className="garden:bg-muted/60 garden:pt-4 garden:dark:bg-muted/20">
@@ -130,41 +154,52 @@ const SproutNode = ({ data }: NodeProps) => {
               </p>
             )}
           </div>
-          <div className="garden:flex garden:gap-2 garden:p-4">
-            {data.cta?.primary && (
-              <button
-                type="button"
-                className="garden:flex garden:w-full garden:cursor-pointer garden:items-center garden:justify-center garden:rounded-md garden:bg-primary garden:px-3 garden:py-1 garden:font-medium garden:text-primary-foreground garden:text-sm garden:hover:bg-primary/90"
-                onClick={(e) => {
-                  // prevent needlessly opening the dialog
-                  e.stopPropagation();
-                  window.open(data.cta?.primary.url, "_blank");
-                }}
-              >
-                <ExternalLinkIcon size={14} className="garden:mr-1" />
-                {data.cta?.primary.label}
-              </button>
-            )}
+          {/* Launched products get CTAs; coming-soon ones stay non-interactive. */}
+          {comingSoon ? (
+            <div className="garden:p-4">
+              <span className="garden:font-medium garden:text-muted-foreground garden:text-sm">
+                Coming soon
+              </span>
+            </div>
+          ) : (
+            <div className="garden:flex garden:gap-2 garden:p-4">
+              {data.cta?.primary && (
+                <button
+                  type="button"
+                  className="garden:flex garden:w-full garden:cursor-pointer garden:items-center garden:justify-center garden:rounded-md garden:bg-primary garden:px-3 garden:py-1 garden:font-medium garden:text-primary-foreground garden:text-sm garden:hover:bg-primary/90"
+                  onClick={(e) => {
+                    // prevent needlessly opening the dialog
+                    e.stopPropagation();
+                    window.open(data.cta?.primary.url, "_blank");
+                  }}
+                >
+                  <ExternalLinkIcon size={14} className="garden:mr-1" />
+                  {data.cta?.primary.label}
+                </button>
+              )}
 
-            {data.cta?.secondary && (
-              <button
-                type="button"
-                className="garden:rounded-md garden:border garden:px-2 garden:py-1 garden:font-medium garden:text-sm"
-                style={{
-                  borderColor: primaryColor,
-                  color: primaryColor,
-                }}
-                onClick={() => window.open(data.cta?.secondary?.url, "_blank")}
-              >
-                <GitBranchIcon
-                  className="garden:h-4 garden:w-4"
+              {data.cta?.secondary && (
+                <button
+                  type="button"
+                  className="garden:rounded-md garden:border garden:px-2 garden:py-1 garden:font-medium garden:text-sm"
                   style={{
+                    borderColor: primaryColor,
                     color: primaryColor,
                   }}
-                />
-              </button>
-            )}
-          </div>
+                  onClick={() =>
+                    window.open(data.cta?.secondary?.url, "_blank")
+                  }
+                >
+                  <GitBranchIcon
+                    className="garden:h-4 garden:w-4"
+                    style={{
+                      color: primaryColor,
+                    }}
+                  />
+                </button>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </div>

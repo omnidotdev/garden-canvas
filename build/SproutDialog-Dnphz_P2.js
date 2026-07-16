@@ -1,6 +1,6 @@
 "use client";
 import * as React from 'react';
-import React__default, { forwardRef, createElement, useState } from 'react';
+import React__default, { forwardRef, createElement, useMemo, useState } from 'react';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
@@ -17239,6 +17239,7 @@ const processSubgarensRecursively = ({
             license: sprout.license,
             release_date: sprout.release_date,
             self_hostable: sprout.self_hostable,
+            coming_soon: sprout.coming_soon,
             docs_url: sprout.docs_url,
             theme: gardenTheme,
             level,
@@ -17412,6 +17413,7 @@ const gardenToFlow = ({
           license: sprout.license,
           release_date: sprout.release_date,
           self_hostable: sprout.self_hostable,
+          coming_soon: sprout.coming_soon,
           docs_url: sprout.docs_url,
           theme: currentGardenTheme,
           cta: {
@@ -17869,6 +17871,47 @@ const __iconNode = [
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ];
 const X = createLucideIcon("x", __iconNode);
+
+const FONT_STACK = 'system-ui, -apple-system, "Segoe UI", Roboto, "Noto Color Emoji", "Apple Color Emoji", sans-serif';
+const MEASURE_FONT_PX = 100;
+const ratioCache = /* @__PURE__ */ new Map();
+const inkRatio = (glyph) => {
+  const cached = ratioCache.get(glyph);
+  if (cached !== void 0) return cached;
+  if (typeof document === "undefined") return 1;
+  const ctx = document.createElement("canvas").getContext("2d");
+  if (!ctx) return 1;
+  ctx.font = `${MEASURE_FONT_PX}px ${FONT_STACK}`;
+  const m = ctx.measureText(glyph);
+  const w = (m.actualBoundingBoxLeft ?? 0) + (m.actualBoundingBoxRight ?? 0);
+  const h = (m.actualBoundingBoxAscent ?? 0) + (m.actualBoundingBoxDescent ?? 0);
+  const ink = Math.max(w, h);
+  const ratio = ink > 0 ? ink / MEASURE_FONT_PX : 1;
+  ratioCache.set(glyph, ratio);
+  return ratio;
+};
+const GlyphIcon = ({ glyph, size, className, label }) => {
+  const fontSize = useMemo(() => size / inkRatio(glyph), [glyph, size]);
+  return /* @__PURE__ */ jsx(
+    "span",
+    {
+      role: "img",
+      "aria-label": label,
+      className,
+      style: {
+        display: "inline-flex",
+        alignItems: "center",
+        justifyContent: "center",
+        width: size,
+        height: size,
+        fontSize,
+        lineHeight: 1,
+        userSelect: "none"
+      },
+      children: glyph
+    }
+  );
+};
 
 // packages/react/compose-refs/src/compose-refs.tsx
 function setRef(ref, value) {
@@ -20453,5 +20496,5 @@ const SproutDialog = ({ sprout, open, onOpenChange }) => {
   ] }) });
 };
 
-export { calculateNodePosition as $, updateConnectionLookup as A, fitViewport as B, getNodeDimensions as C, ConnectionMode as D, createMarkerIds as E, getSmoothStepPath as F, getBezierPath as G, getEdgePosition as H, getElevatedEdgeZIndex as I, getMarkerId as J, getInternalNodesBounds as K, defaultAriaLabelConfig as L, MarkerType as M, devWarn as N, infiniteExtent as O, Position as P, PanOnScrollMode as Q, ResizeControlVariant as R, SelectionMode as S, ConnectionLineType as T, isMacOs as U, getBoundsOfRects as V, XYResizer as W, XYMinimap as X, XYPanZoom as Y, XYDrag as Z, snapPosition as _, getOverlappingArea as a, getNodesInside as a0, isInputDOMNode as a1, elementSelectionKeys as a2, isNumeric as a3, getStraightPath as a4, isEdgeVisible as a5, getConnectionStatus as a6, mergeAriaLabelConfig as a7, getEventPosition as a8, areSetsEqual as a9, getBezierEdgeCenter as aa, getDimensions as ab, registerLayout as ac, autoLayoutElements as ad, isRelationEdge as ae, hexLayout as af, createLucideIcon as ag, isImageUrl as ah, ExternalLink as ai, GitBranch as aj, getLayout as ak, findGardenByName as al, gardenToFlow as am, Eye as an, EyeOff as ao, relationColor as ap, cn as aq, Flower as ar, SproutDialog as as, listLayouts as at, getDefaultExportFromCjs as au, getElementsToRemove as b, getViewportForBounds as c, errorMessages as d, evaluateAbsolutePosition as e, isNodeBase as f, getNodesBounds as g, isEdgeBase as h, isRectObject as i, getHostForElement as j, XYHandle as k, isMouseEvent as l, addEdge as m, nodeToRect as n, nodeHasDimensions as o, pointToRendererPoint as p, initialConnection as q, rendererPointToPoint as r, panBy as s, adoptUserNodes as t, useSyncExternalStoreExports as u, getHandlePosition as v, withResolvers as w, handleExpandParent as x, updateNodeInternals as y, updateAbsolutePositions as z };
-//# sourceMappingURL=SproutDialog-J7-nFX0A.js.map
+export { calculateNodePosition as $, updateConnectionLookup as A, fitViewport as B, getNodeDimensions as C, ConnectionMode as D, createMarkerIds as E, getSmoothStepPath as F, getBezierPath as G, getEdgePosition as H, getElevatedEdgeZIndex as I, getMarkerId as J, getInternalNodesBounds as K, defaultAriaLabelConfig as L, MarkerType as M, devWarn as N, infiniteExtent as O, Position as P, PanOnScrollMode as Q, ResizeControlVariant as R, SelectionMode as S, ConnectionLineType as T, isMacOs as U, getBoundsOfRects as V, XYResizer as W, XYMinimap as X, XYPanZoom as Y, XYDrag as Z, snapPosition as _, getOverlappingArea as a, getNodesInside as a0, isInputDOMNode as a1, elementSelectionKeys as a2, isNumeric as a3, getStraightPath as a4, isEdgeVisible as a5, getConnectionStatus as a6, mergeAriaLabelConfig as a7, getEventPosition as a8, areSetsEqual as a9, getBezierEdgeCenter as aa, getDimensions as ab, registerLayout as ac, autoLayoutElements as ad, isRelationEdge as ae, hexLayout as af, createLucideIcon as ag, isImageUrl as ah, GlyphIcon as ai, cn as aj, ExternalLink as ak, GitBranch as al, getLayout as am, findGardenByName as an, gardenToFlow as ao, Eye as ap, EyeOff as aq, relationColor as ar, Flower as as, SproutDialog as at, listLayouts as au, getDefaultExportFromCjs as av, getElementsToRemove as b, getViewportForBounds as c, errorMessages as d, evaluateAbsolutePosition as e, isNodeBase as f, getNodesBounds as g, isEdgeBase as h, isRectObject as i, getHostForElement as j, XYHandle as k, isMouseEvent as l, addEdge as m, nodeToRect as n, nodeHasDimensions as o, pointToRendererPoint as p, initialConnection as q, rendererPointToPoint as r, panBy as s, adoptUserNodes as t, useSyncExternalStoreExports as u, getHandlePosition as v, withResolvers as w, handleExpandParent as x, updateNodeInternals as y, updateAbsolutePositions as z };
+//# sourceMappingURL=SproutDialog-Dnphz_P2.js.map

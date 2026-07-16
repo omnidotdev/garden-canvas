@@ -2,7 +2,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { u as useSyncExternalStoreExports, au as getDefaultExportFromCjs, ar as Flower, an as Eye, ao as EyeOff, ai as ExternalLink, ap as relationColor, ah as isImageUrl, as as SproutDialog, ac as registerLayout } from './SproutDialog-J7-nFX0A.js';
+import { u as useSyncExternalStoreExports, av as getDefaultExportFromCjs, as as Flower, ap as Eye, aq as EyeOff, ak as ExternalLink, ar as relationColor, ah as isImageUrl, ai as GlyphIcon, at as SproutDialog, ac as registerLayout } from './SproutDialog-Dnphz_P2.js';
 import * as ReactDOM from 'react-dom/client';
 
 function _extends() {
@@ -96888,7 +96888,18 @@ const Garden3D = ({
         /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
           /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
           /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
-          /* @__PURE__ */ jsx(OrbitControls, { enablePan: true, enableZoom: true, enableRotate: true }),
+          /* @__PURE__ */ jsx(
+            OrbitControls,
+            {
+              makeDefault: true,
+              enablePan: true,
+              enableZoom: true,
+              enableRotate: true,
+              enableDamping: true,
+              dampingFactor: 0.08,
+              target: [0, 0, 0]
+            }
+          ),
           showEdges && relationEdges.map((edge, i) => {
             const a = posById.get(edge.source);
             const b = posById.get(edge.target);
@@ -96910,6 +96921,7 @@ const Garden3D = ({
             const data = node.data;
             const color = data.theme?.primary_color ?? "#14b8a6";
             const icon = data.image || data.logo || "🌱";
+            const comingSoon = Boolean(data.coming_soon);
             return /* @__PURE__ */ jsxs("group", { position: pos, children: [
               /* @__PURE__ */ jsxs("mesh", { children: [
                 /* @__PURE__ */ jsx("sphereGeometry", { args: [0.22, 24, 24] }),
@@ -96933,7 +96945,9 @@ const Garden3D = ({
                     "button",
                     {
                       type: "button",
+                      disabled: comingSoon,
                       onClick: () => {
+                        if (comingSoon) return;
                         setSelectedSprout(node.data);
                         setIsSproutDialogOpen(true);
                       },
@@ -96944,14 +96958,15 @@ const Garden3D = ({
                         gap: 3,
                         width: 150,
                         padding: "8px 10px",
-                        cursor: "pointer",
+                        cursor: comingSoon ? "default" : "pointer",
                         borderRadius: 10,
                         border: `1px solid ${color}`,
                         background: "rgba(10,10,12,0.78)",
                         color: "#fff",
                         fontSize: 11,
                         textAlign: "center",
-                        backdropFilter: "blur(4px)"
+                        backdropFilter: "blur(4px)",
+                        opacity: comingSoon ? 0.6 : 1
                       },
                       children: [
                         isImageUrl(data.image) ? /* @__PURE__ */ jsx(
@@ -96963,9 +96978,21 @@ const Garden3D = ({
                             height: 28,
                             style: { objectFit: "contain" }
                           }
-                        ) : /* @__PURE__ */ jsx("span", { style: { fontSize: 24, lineHeight: 1 }, children: icon }),
+                        ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph: icon, size: 28, label: data.label }),
                         /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label }),
-                        data.description && /* @__PURE__ */ jsx(
+                        comingSoon ? /* @__PURE__ */ jsx(
+                          "span",
+                          {
+                            style: {
+                              fontSize: 9,
+                              lineHeight: 1.3,
+                              textTransform: "uppercase",
+                              letterSpacing: 0.5,
+                              opacity: 0.85
+                            },
+                            children: "Coming soon"
+                          }
+                        ) : data.description && /* @__PURE__ */ jsx(
                           "span",
                           {
                             style: {

@@ -53,6 +53,12 @@ interface GardenFlowProps extends GardenVisualizationProps {
   initialEdges: Edge[];
 }
 
+// Auto-fit stays within a legible zoom band. Large graphs would otherwise
+// shrink every node past readability; the fit is clamped and the user pans to
+// explore. Manual zoom (ReactFlow min/maxZoom) stays unrestricted.
+const FIT_MIN_ZOOM = 0.6;
+const FIT_MAX_ZOOM = 1.2;
+
 const GardenFlow = ({
   schema,
   initialNodes,
@@ -146,7 +152,13 @@ const GardenFlow = ({
       };
       setNodes(result.nodes as Node[]);
       setEdges(result.edges as Edge[]);
-      requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+      requestAnimationFrame(() =>
+        fitView({
+          padding: fitViewPadding,
+          minZoom: FIT_MIN_ZOOM,
+          maxZoom: FIT_MAX_ZOOM,
+        }),
+      );
     },
     [layout, fitViewPadding, setEdges, setNodes, fitView],
   );
@@ -154,6 +166,8 @@ const GardenFlow = ({
   const handleNodeClick = useCallback(
     (_: MouseEvent, node: Node) => {
       if (node.type === "sprout") {
+        // Coming-soon products are teased but not interactive.
+        if ((node.data as NodeData)?.coming_soon) return;
         setSelectedSprout(node.data as unknown as NodeData);
         setIsSproutDialogOpen(true);
       } else {
@@ -234,7 +248,13 @@ const GardenFlow = ({
     const observer = new ResizeObserver(() => {
       clearTimeout(timeout);
       timeout = setTimeout(
-        () => fitView({ padding: fitViewPadding, duration: 200 }),
+        () =>
+          fitView({
+            padding: fitViewPadding,
+            minZoom: FIT_MIN_ZOOM,
+            maxZoom: FIT_MAX_ZOOM,
+            duration: 200,
+          }),
         150,
       );
     });
@@ -291,7 +311,11 @@ const GardenFlow = ({
         nodesDraggable={false}
         nodesConnectable={false}
         elementsSelectable
-        fitViewOptions={{ padding: fitViewPadding }}
+        fitViewOptions={{
+          padding: fitViewPadding,
+          minZoom: FIT_MIN_ZOOM,
+          maxZoom: FIT_MAX_ZOOM,
+        }}
         proOptions={{ hideAttribution: true }}
         zoomOnScroll
         panOnScroll={false}

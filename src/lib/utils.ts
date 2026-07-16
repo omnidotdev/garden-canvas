@@ -407,6 +407,7 @@ const processSubgarensRecursively = ({
             license: sprout.license,
             release_date: sprout.release_date,
             self_hostable: sprout.self_hostable,
+            coming_soon: sprout.coming_soon,
             docs_url: sprout.docs_url,
             theme: gardenTheme,
             level: level, // Track the nesting level for styling
@@ -626,6 +627,7 @@ export const gardenToFlow = ({
           license: sprout.license,
           release_date: sprout.release_date,
           self_hostable: sprout.self_hostable,
+          coming_soon: sprout.coming_soon,
           docs_url: sprout.docs_url,
           theme: currentGardenTheme,
           cta: {

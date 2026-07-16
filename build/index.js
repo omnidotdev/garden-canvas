@@ -1,6 +1,6 @@
 "use client";
-import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as ExternalLink, aj as GitBranch, ak as getLayout, al as findGardenByName, am as gardenToFlow, an as Eye, ao as EyeOff, ap as relationColor, aq as cn, ar as Flower, as as SproutDialog } from './SproutDialog-J7-nFX0A.js';
-export { at as listLayouts } from './SproutDialog-J7-nFX0A.js';
+import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as GlyphIcon, aj as cn, ak as ExternalLink, al as GitBranch, am as getLayout, an as findGardenByName, ao as gardenToFlow, ap as Eye, aq as EyeOff, ar as relationColor, as as Flower, at as SproutDialog } from './SproutDialog-Dnphz_P2.js';
+export { au as listLayouts } from './SproutDialog-Dnphz_P2.js';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React__default, { useState, createContext, useCallback, useMemo, memo, forwardRef, useContext, useRef, useEffect, useLayoutEffect } from 'react';
 import 'react-dom';
@@ -4570,6 +4570,20 @@ const typeMap = {
  */
 
 
+const __iconNode$4 = [
+  ["path", { d: "M12 6v6l4 2", key: "mmk7yg" }],
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$4);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
 const __iconNode$3 = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
@@ -4736,10 +4750,16 @@ const GardenNode = ({ data }) => {
 };
 
 const HEX_CLIP = "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
+const ComingSoonBadge = () => /* @__PURE__ */ jsxs("div", { className: "garden:absolute garden:top-2 garden:right-2 garden:z-10 garden:flex garden:items-center garden:gap-1 garden:rounded-full garden:border garden:border-border garden:bg-muted garden:px-2 garden:py-0.5 garden:font-medium garden:text-[10px] garden:text-muted-foreground garden:uppercase garden:tracking-wide", children: [
+  /* @__PURE__ */ jsx(Clock, { className: "garden:h-2.5 garden:w-2.5" }),
+  "Coming soon"
+] });
 const SproutNode = ({ data }) => {
   const hasTopTargets = data.targetConnections && data.targetConnections.length > 0;
   const hasBottomSources = data.sourceConnections && data.sourceConnections.length > 0;
   const primaryColor = data.theme?.primary_color || "var(--garden-garden)";
+  const comingSoon = Boolean(data.coming_soon);
+  const glyph = data.image || data.logo || "🌱";
   if (data.hex) {
     return /* @__PURE__ */ jsxs("div", { className: "garden:relative", children: [
       hasTopTargets && /* @__PURE__ */ jsx(
@@ -4760,10 +4780,14 @@ const SproutNode = ({ data }) => {
           isConnectable: false
         }
       ),
+      comingSoon && /* @__PURE__ */ jsx(ComingSoonBadge, {}),
       /* @__PURE__ */ jsx(
         "div",
         {
-          className: "garden:h-[203px] garden:w-44 garden:cursor-pointer garden:p-[3px] garden:transition-transform garden:hover:scale-105",
+          className: cn(
+            "garden:h-[203px] garden:w-44 garden:p-[3px] garden:transition-transform",
+            comingSoon ? "garden:cursor-default garden:opacity-60" : "garden:cursor-pointer garden:hover:scale-105"
+          ),
           style: { clipPath: HEX_CLIP, backgroundColor: primaryColor },
           children: /* @__PURE__ */ jsxs(
             "div",
@@ -4778,7 +4802,7 @@ const SproutNode = ({ data }) => {
                     alt: data.label,
                     className: "garden:h-12 garden:w-12 garden:object-contain"
                   }
-                ) : /* @__PURE__ */ jsx("span", { className: "garden:select-none garden:text-4xl", children: data.image || data.logo || "🌱" }),
+                ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph, size: 44, label: data.label }),
                 /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:px-2 garden:font-medium garden:text-foreground garden:text-xs", children: data.label }),
                 (data.tagline || data.description) && /* @__PURE__ */ jsx("p", { className: "garden:line-clamp-2 garden:max-w-[8rem] garden:text-[10px] garden:text-foreground/60 garden:leading-tight", children: data.tagline || data.description })
               ]
@@ -4790,88 +4814,90 @@ const SproutNode = ({ data }) => {
   }
   return (
     // NB: relative positioning is important for `Handle` placement because it uses `absolute` positioning internally
-    /* @__PURE__ */ jsxs("div", { className: "garden:relative garden:cursor-pointer garden:rounded-md garden:border-2 garden:border-border garden:bg-card garden:shadow-lg garden:hover:scale-105 garden:hover:shadow-xl", children: [
-      hasTopTargets && /* @__PURE__ */ jsx(
-        Handle,
-        {
-          id: "top",
-          type: "target",
-          position: Position.Top,
-          isConnectable: false
-        }
-      ),
-      hasBottomSources && /* @__PURE__ */ jsx(
-        Handle,
-        {
-          id: "bottom",
-          type: "source",
-          position: Position.Bottom,
-          isConnectable: false
-        }
-      ),
-      /* @__PURE__ */ jsxs("div", { className: "garden:relative", children: [
-        isImageUrl(data.image) ? /* @__PURE__ */ jsx(
-          "img",
-          {
-            src: data.image,
-            alt: data.label,
-            className: "garden:h-28 garden:w-full garden:object-contain garden:p-5"
-          }
-        ) : /* @__PURE__ */ jsx(
-          "div",
-          {
-            role: "img",
-            "aria-label": data.label,
-            className: "garden:flex garden:h-28 garden:w-full garden:select-none garden:items-center garden:justify-center garden:text-6xl",
-            children: data.image || data.logo || "🌱"
-          }
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        className: cn(
+          "garden:relative garden:rounded-md garden:border-2 garden:border-border garden:bg-card garden:shadow-lg",
+          comingSoon ? "garden:cursor-default garden:opacity-60" : "garden:cursor-pointer garden:hover:scale-105 garden:hover:shadow-xl"
         ),
-        /* @__PURE__ */ jsxs("div", { className: "garden:bg-muted/60 garden:pt-4 garden:dark:bg-muted/20", children: [
-          /* @__PURE__ */ jsxs("div", { className: "garden:px-4", children: [
-            /* @__PURE__ */ jsx("h3", { className: "garden:font-medium garden:text-foreground", children: data.label }),
-            data.description && /* @__PURE__ */ jsx("p", { className: "garden:mt-0.5 garden:line-clamp-2 garden:text-foreground/70 garden:text-sm", children: data.description })
-          ] }),
-          /* @__PURE__ */ jsxs("div", { className: "garden:flex garden:gap-2 garden:p-4", children: [
-            data.cta?.primary && /* @__PURE__ */ jsxs(
-              "button",
+        children: [
+          hasTopTargets && /* @__PURE__ */ jsx(
+            Handle,
+            {
+              id: "top",
+              type: "target",
+              position: Position.Top,
+              isConnectable: false
+            }
+          ),
+          hasBottomSources && /* @__PURE__ */ jsx(
+            Handle,
+            {
+              id: "bottom",
+              type: "source",
+              position: Position.Bottom,
+              isConnectable: false
+            }
+          ),
+          comingSoon && /* @__PURE__ */ jsx(ComingSoonBadge, {}),
+          /* @__PURE__ */ jsxs("div", { className: "garden:relative", children: [
+            isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+              "img",
               {
-                type: "button",
-                className: "garden:flex garden:w-full garden:cursor-pointer garden:items-center garden:justify-center garden:rounded-md garden:bg-primary garden:px-3 garden:py-1 garden:font-medium garden:text-primary-foreground garden:text-sm garden:hover:bg-primary/90",
-                onClick: (e) => {
-                  e.stopPropagation();
-                  window.open(data.cta?.primary.url, "_blank");
-                },
-                children: [
-                  /* @__PURE__ */ jsx(ExternalLink, { size: 14, className: "garden:mr-1" }),
-                  data.cta?.primary.label
-                ]
+                src: data.image,
+                alt: data.label,
+                className: "garden:h-28 garden:w-full garden:object-contain garden:p-5"
               }
-            ),
-            data.cta?.secondary && /* @__PURE__ */ jsx(
-              "button",
-              {
-                type: "button",
-                className: "garden:rounded-md garden:border garden:px-2 garden:py-1 garden:font-medium garden:text-sm",
-                style: {
-                  borderColor: primaryColor,
-                  color: primaryColor
-                },
-                onClick: () => window.open(data.cta?.secondary?.url, "_blank"),
-                children: /* @__PURE__ */ jsx(
-                  GitBranch,
+            ) : /* @__PURE__ */ jsx("div", { className: "garden:flex garden:h-28 garden:w-full garden:items-center garden:justify-center", children: /* @__PURE__ */ jsx(GlyphIcon, { glyph, size: 64, label: data.label }) }),
+            /* @__PURE__ */ jsxs("div", { className: "garden:bg-muted/60 garden:pt-4 garden:dark:bg-muted/20", children: [
+              /* @__PURE__ */ jsxs("div", { className: "garden:px-4", children: [
+                /* @__PURE__ */ jsx("h3", { className: "garden:font-medium garden:text-foreground", children: data.label }),
+                data.description && /* @__PURE__ */ jsx("p", { className: "garden:mt-0.5 garden:line-clamp-2 garden:text-foreground/70 garden:text-sm", children: data.description })
+              ] }),
+              comingSoon ? /* @__PURE__ */ jsx("div", { className: "garden:p-4", children: /* @__PURE__ */ jsx("span", { className: "garden:font-medium garden:text-muted-foreground garden:text-sm", children: "Coming soon" }) }) : /* @__PURE__ */ jsxs("div", { className: "garden:flex garden:gap-2 garden:p-4", children: [
+                data.cta?.primary && /* @__PURE__ */ jsxs(
+                  "button",
                   {
-                    className: "garden:h-4 garden:w-4",
+                    type: "button",
+                    className: "garden:flex garden:w-full garden:cursor-pointer garden:items-center garden:justify-center garden:rounded-md garden:bg-primary garden:px-3 garden:py-1 garden:font-medium garden:text-primary-foreground garden:text-sm garden:hover:bg-primary/90",
+                    onClick: (e) => {
+                      e.stopPropagation();
+                      window.open(data.cta?.primary.url, "_blank");
+                    },
+                    children: [
+                      /* @__PURE__ */ jsx(ExternalLink, { size: 14, className: "garden:mr-1" }),
+                      data.cta?.primary.label
+                    ]
+                  }
+                ),
+                data.cta?.secondary && /* @__PURE__ */ jsx(
+                  "button",
+                  {
+                    type: "button",
+                    className: "garden:rounded-md garden:border garden:px-2 garden:py-1 garden:font-medium garden:text-sm",
                     style: {
+                      borderColor: primaryColor,
                       color: primaryColor
-                    }
+                    },
+                    onClick: () => window.open(data.cta?.secondary?.url, "_blank"),
+                    children: /* @__PURE__ */ jsx(
+                      GitBranch,
+                      {
+                        className: "garden:h-4 garden:w-4",
+                        style: {
+                          color: primaryColor
+                        }
+                      }
+                    )
                   }
                 )
-              }
-            )
+              ] })
+            ] })
           ] })
-        ] })
-      ] })
-    ] })
+        ]
+      }
+    )
   );
 };
 
@@ -4992,6 +5018,8 @@ const customNodes = {
   default: DefaultNode
 };
 
+const FIT_MIN_ZOOM = 0.6;
+const FIT_MAX_ZOOM = 1.2;
 const GardenFlow = ({
   schema,
   initialNodes,
@@ -5070,13 +5098,20 @@ const GardenFlow = ({
       };
       setNodes(result.nodes);
       setEdges(result.edges);
-      requestAnimationFrame(() => fitView({ padding: fitViewPadding }));
+      requestAnimationFrame(
+        () => fitView({
+          padding: fitViewPadding,
+          minZoom: FIT_MIN_ZOOM,
+          maxZoom: FIT_MAX_ZOOM
+        })
+      );
     },
     [layout, fitViewPadding, setEdges, setNodes, fitView]
   );
   const handleNodeClick = useCallback(
     (_, node) => {
       if (node.type === "sprout") {
+        if (node.data?.coming_soon) return;
         setSelectedSprout(node.data);
         setIsSproutDialogOpen(true);
       } else {
@@ -5139,7 +5174,12 @@ const GardenFlow = ({
     const observer = new ResizeObserver(() => {
       clearTimeout(timeout);
       timeout = setTimeout(
-        () => fitView({ padding: fitViewPadding, duration: 200 }),
+        () => fitView({
+          padding: fitViewPadding,
+          minZoom: FIT_MIN_ZOOM,
+          maxZoom: FIT_MAX_ZOOM,
+          duration: 200
+        }),
         150
       );
     });
@@ -5197,7 +5237,11 @@ const GardenFlow = ({
             nodesDraggable: false,
             nodesConnectable: false,
             elementsSelectable: true,
-            fitViewOptions: { padding: fitViewPadding },
+            fitViewOptions: {
+              padding: fitViewPadding,
+              minZoom: FIT_MIN_ZOOM,
+              maxZoom: FIT_MAX_ZOOM
+            },
             proOptions: { hideAttribution: true },
             zoomOnScroll: true,
             panOnScroll: false,
