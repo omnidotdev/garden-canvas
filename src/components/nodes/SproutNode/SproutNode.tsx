@@ -11,8 +11,13 @@ const HEX_CLIP =
   "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
 
 // Small pill marking a product that has not launched yet.
-const ComingSoonBadge = () => (
-  <div className="garden:absolute garden:top-2 garden:right-2 garden:z-10 garden:flex garden:items-center garden:gap-1 garden:rounded-full garden:border garden:border-border garden:bg-muted garden:px-2 garden:py-0.5 garden:font-medium garden:text-[10px] garden:text-muted-foreground garden:uppercase garden:tracking-wide">
+const ComingSoonBadge = ({ className }: { className?: string }) => (
+  <div
+    className={cn(
+      "garden:flex garden:items-center garden:gap-1 garden:whitespace-nowrap garden:rounded-full garden:border garden:border-border garden:bg-muted garden:px-2 garden:py-0.5 garden:font-medium garden:text-[10px] garden:text-muted-foreground garden:uppercase garden:tracking-wide",
+      className,
+    )}
+  >
     <ClockIcon className="garden:h-2.5 garden:w-2.5" />
     Coming soon
   </div>
@@ -54,7 +59,6 @@ const SproutNode = ({ data }: NodeProps) => {
             isConnectable={false}
           />
         )}
-        {comingSoon && <ComingSoonBadge />}
         {/* A clip-path clips the element's border away, so the outline is
             drawn as a colored outer hexagon showing through a slightly inset
             inner hexagon (the padding is the visible border width). */}
@@ -74,6 +78,11 @@ const SproutNode = ({ data }: NodeProps) => {
             className="garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:bg-card garden:p-4 garden:text-center"
             style={{ clipPath: HEX_CLIP }}
           >
+            {/* Rides in the centered column rather than pinned to a corner: a
+                hexagon's corners are clipped away, so a corner-pinned badge
+                floats in the seam outside the cell. In flow it also sits low
+                enough that the sloped edges have opened up to full width. */}
+            {comingSoon && <ComingSoonBadge />}
             {isImageUrl(data.image) ? (
               <img
                 src={data.image}
@@ -129,7 +138,9 @@ const SproutNode = ({ data }: NodeProps) => {
         />
       )}
 
-      {comingSoon && <ComingSoonBadge />}
+      {comingSoon && (
+        <ComingSoonBadge className="garden:absolute garden:top-2 garden:right-2 garden:z-10" />
+      )}
 
       <div className="garden:relative">
         {isImageUrl(data.image) ? (

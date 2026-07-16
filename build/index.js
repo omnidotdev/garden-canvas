@@ -4804,10 +4804,19 @@ const GardenNode = ({ data }) => {
 };
 
 const HEX_CLIP = "polygon(50% 0%, 100% 25%, 100% 75%, 50% 100%, 0% 75%, 0% 25%)";
-const ComingSoonBadge = () => /* @__PURE__ */ jsxs("div", { className: "garden:absolute garden:top-2 garden:right-2 garden:z-10 garden:flex garden:items-center garden:gap-1 garden:rounded-full garden:border garden:border-border garden:bg-muted garden:px-2 garden:py-0.5 garden:font-medium garden:text-[10px] garden:text-muted-foreground garden:uppercase garden:tracking-wide", children: [
-  /* @__PURE__ */ jsx(Clock, { className: "garden:h-2.5 garden:w-2.5" }),
-  "Coming soon"
-] });
+const ComingSoonBadge = ({ className }) => /* @__PURE__ */ jsxs(
+  "div",
+  {
+    className: cn(
+      "garden:flex garden:items-center garden:gap-1 garden:whitespace-nowrap garden:rounded-full garden:border garden:border-border garden:bg-muted garden:px-2 garden:py-0.5 garden:font-medium garden:text-[10px] garden:text-muted-foreground garden:uppercase garden:tracking-wide",
+      className
+    ),
+    children: [
+      /* @__PURE__ */ jsx(Clock, { className: "garden:h-2.5 garden:w-2.5" }),
+      "Coming soon"
+    ]
+  }
+);
 const SproutNode = ({ data }) => {
   const hasTopTargets = data.targetConnections && data.targetConnections.length > 0;
   const hasBottomSources = data.sourceConnections && data.sourceConnections.length > 0;
@@ -4834,7 +4843,6 @@ const SproutNode = ({ data }) => {
           isConnectable: false
         }
       ),
-      comingSoon && /* @__PURE__ */ jsx(ComingSoonBadge, {}),
       /* @__PURE__ */ jsx(
         "div",
         {
@@ -4849,6 +4857,7 @@ const SproutNode = ({ data }) => {
               className: "garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:bg-card garden:p-4 garden:text-center",
               style: { clipPath: HEX_CLIP },
               children: [
+                comingSoon && /* @__PURE__ */ jsx(ComingSoonBadge, {}),
                 isImageUrl(data.image) ? /* @__PURE__ */ jsx(
                   "img",
                   {
@@ -4894,7 +4903,7 @@ const SproutNode = ({ data }) => {
               isConnectable: false
             }
           ),
-          comingSoon && /* @__PURE__ */ jsx(ComingSoonBadge, {}),
+          comingSoon && /* @__PURE__ */ jsx(ComingSoonBadge, { className: "garden:absolute garden:top-2 garden:right-2 garden:z-10" }),
           /* @__PURE__ */ jsxs("div", { className: "garden:relative", children: [
             isImageUrl(data.image) ? /* @__PURE__ */ jsx(
               "img",
