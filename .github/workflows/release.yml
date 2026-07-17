@@ -4,8 +4,17 @@ name: Release 🏗️
 # commit (which is why build/ is committed), so a release is not needed to ship
 # them a change and publishing on every push would only churn the registry.
 # Publishing still matters for everyone outside Omni installing from npm, so
-# release by hand once a batch of changes is worth a version. NPM_TOKEN is
-# already configured as a repository secret.
+# release by hand once a batch of changes is worth a version.
+#
+# NPM_TOKEN is a repository secret, mirroring the Bitwarden item "NPM Omni
+# Changesets publish token". It EXPIRES 2026-10-11, and npm is phasing out
+# tokens that bypass 2FA (which this one does), so a release failing here with
+# ENEEDAUTH or a 404 on PUT most likely means the token lapsed rather than
+# anything wrong with the package. Configuring npm trusted publishing (OIDC)
+# for @omnidotdev/garden retires the token entirely and is the durable fix:
+# npmjs.com -> the package -> Settings -> Trusted Publisher -> GitHub Actions,
+# naming this repo and release.yml. The id-token permission below is already
+# what OIDC needs.
 on:
   workflow_dispatch:
 
