@@ -1,4 +1,4 @@
-import { Html, Line, OrbitControls } from "@react-three/drei";
+import { Html, Line, TrackballControls } from "@react-three/drei";
 import { Canvas } from "@react-three/fiber";
 import {
   ExternalLinkIcon,
@@ -158,18 +158,22 @@ const Garden3D = ({
       <Canvas camera={{ position: [0, 0, 18], fov: 50 }}>
         <ambientLight intensity={0.9} />
         <pointLight position={[12, 12, 12]} intensity={1.2} />
-        {/* Manual orbit only; auto-rotation moves click targets and reads as
-            distracting, so the scene stays still until the user drags. Damping
-            eases the camera in and out so the first drag glides instead of
-            snapping; makeDefault + an explicit target keep the orbit stable. */}
-        <OrbitControls
+        {/* Trackball (arcball) rotation so the sphere spins freely in any
+            direction, unlike orbit which locks a world-up and stops at the
+            poles. The product labels are screen-space <Html>, so they stay
+            upright and readable at any camera roll; only the layout rotates.
+            Panning is disabled so the constellation can't be dragged off-screen
+            and lost, and zoom is bounded to keep it framed. dynamicDampingFactor
+            gives a light glide (the old orbit damping of 0.08 was so low the
+            camera coasted ~100px past release, reading as a jump). */}
+        <TrackballControls
           makeDefault
-          enablePan
-          enableZoom
-          enableRotate
-          enableDamping
-          dampingFactor={0.08}
-          target={[0, 0, 0]}
+          noPan
+          rotateSpeed={3.5}
+          zoomSpeed={1.2}
+          dynamicDampingFactor={0.2}
+          minDistance={11}
+          maxDistance={28}
         />
 
         {showEdges &&
