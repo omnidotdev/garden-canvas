@@ -1,12 +1,12 @@
-import { Html, Line, OrbitControls } from "@react-three/drei";
-import { Canvas } from "@react-three/fiber";
+import { Html, Line, TrackballControls } from "@react-three/drei";
+import { Canvas, useFrame, useThree } from "@react-three/fiber";
 import {
   ExternalLinkIcon,
   EyeIcon,
   EyeOffIcon,
   FlowerIcon,
 } from "lucide-react";
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import { isImageUrl, relationColor } from "../../lib/utils";
 import { GlyphIcon } from "../GlyphIcon";
@@ -17,8 +17,8 @@ import type { NodeData } from "../nodes";
 
 type Vec3 = [number, number, number];
 
-const RADIUS = 6;
-const CAMERA_POSITION: Vec3 = [0, 0, 18];
+const RADIUS = 9;
+const CAMERA_POSITION: Vec3 = [0, 0, 21];
 
 /** Squared distance from a point to the (static) camera, for depth sorting. */
 const distanceToCameraSq = ([x, y, z]: Vec3): number =>
@@ -55,6 +55,29 @@ type SproutData = {
 };
 
 /**
+ * Gentle idle rotation of the camera around the sphere. Besides the "living"
+ * feel, this is what keeps the scene readable as 3D: drei's <Html> only writes
+ * its distance-based depth scale when a label's projected position changes, so
+ * a perfectly still camera leaves every label at 1x (the scene looks flat and
+ * the cards clump) until the first drag. Continuous motion means the depth
+ * scale is always applied, from first paint. It pauses while the user is
+ * actively dragging (see `paused`) so it never fights their input.
+ */
+const IdleRotate = ({ paused }: { paused: boolean }) => {
+  const camera = useThree((state) => state.camera);
+  useFrame((_, delta) => {
+    if (paused) return;
+    // ~3 degrees/second, framerate-independent
+    const angle = 0.05 * delta;
+    const { x, z } = camera.position;
+    camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
+    camera.position.z = x * Math.sin(angle) + z * Math.cos(angle);
+    camera.lookAt(0, 0, 0);
+  });
+  return null;
+};
+
+/**
  * 3D garden renderer (the first opt-in layout plugin). Places the products on
  * a sphere with their typed connections drawn between them, orbit-controllable.
  * Lives in the `@omnidotdev/garden/3d` entry so Three.js stays out of the base
@@ -71,6 +94,17 @@ const Garden3D = ({
 }: GardenRendererProps) => {
   const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
+  // Idle rotation pauses while the user is actively dragging so it never fights
+  // their input, then stays still for a beat after release so the reader can
+  // settle before the drift resumes.
+  const [isInteracting, setIsInteracting] = useState(false);
+  const resumeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  useEffect(
+    () => () => {
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    },
+    [],
+  );
   // Typed connections start hidden (they read as clutter over the sphere) and
   // the user reveals them, mirroring the 2D views. Controlled when `showEdges`
   // is provided (e.g. bound to URL state), otherwise tracked internally.
@@ -155,21 +189,39 @@ const Garden3D = ({
         </a>
       )}
 
-      <Canvas camera={{ position: [0, 0, 18], fov: 50 }}>
+      <Canvas camera={{ position: [0, 0, 21], fov: 50 }}>
+        <IdleRotate paused={isInteracting} />
         <ambientLight intensity={0.9} />
         <pointLight position={[12, 12, 12]} intensity={1.2} />
-        {/* Manual orbit only; auto-rotation moves click targets and reads as
-            distracting, so the scene stays still until the user drags. Damping
-            eases the camera in and out so the first drag glides instead of
-            snapping; makeDefault + an explicit target keep the orbit stable. */}
-        <OrbitControls
+        {/* Trackball (arcball) rotation so the sphere spins freely in any
+            direction, unlike orbit which locks a world-up and stops at the
+            poles. The product labels are screen-space <Html>, so they stay
+            upright and readable at any camera roll; only the layout rotates.
+            Panning is disabled so the constellation can't be dragged off-screen
+            and lost, and zoom is bounded to keep it framed. dynamicDampingFactor
+            gives a light glide (the old orbit damping of 0.08 was so low the
+            camera coasted ~100px past release, reading as a jump). */}
+        <TrackballControls
           makeDefault
-          enablePan
-          enableZoom
-          enableRotate
-          enableDamping
-          dampingFactor={0.08}
-          target={[0, 0, 0]}
+          noPan
+          rotateSpeed={3.5}
+          zoomSpeed={1.2}
+          dynamicDampingFactor={0.2}
+          minDistance={11}
+          maxDistance={28}
+          onStart={() => {
+            if (resumeTimer.current) clearTimeout(resumeTimer.current);
+            setIsInteracting(true);
+          }}
+          onEnd={() => {
+            if (resumeTimer.current) clearTimeout(resumeTimer.current);
+            // hold still for a few seconds after the last drag so the layout is
+            // easy to read before the idle drift starts again
+            resumeTimer.current = setTimeout(
+              () => setIsInteracting(false),
+              4000,
+            );
+          }}
         />
 
         {showEdges &&
