@@ -96413,8 +96413,8 @@ const TrackballControls = /* @__PURE__ */React.forwardRef(({
   }, restProps));
 });
 
-const RADIUS = 6;
-const CAMERA_POSITION = [0, 0, 18];
+const RADIUS = 9;
+const CAMERA_POSITION = [0, 0, 21];
 const distanceToCameraSq = ([x, y, z]) => (x - CAMERA_POSITION[0]) ** 2 + (y - CAMERA_POSITION[1]) ** 2 + (z - CAMERA_POSITION[2]) ** 2;
 const spherePositions = (count, radius) => {
   if (count === 1) return [[0, 0, 0]];
@@ -96432,6 +96432,18 @@ const spherePositions = (count, radius) => {
   }
   return points;
 };
+const IdleRotate = ({ paused }) => {
+  const camera = useThree((state) => state.camera);
+  useFrame((_, delta) => {
+    if (paused) return;
+    const angle = 0.05 * delta;
+    const { x, z } = camera.position;
+    camera.position.x = x * Math.cos(angle) - z * Math.sin(angle);
+    camera.position.z = x * Math.sin(angle) + z * Math.cos(angle);
+    camera.lookAt(0, 0, 0);
+  });
+  return null;
+};
 const Garden3D = ({
   schema,
   nodes,
@@ -96443,6 +96455,14 @@ const Garden3D = ({
 }) => {
   const [selectedSprout, setSelectedSprout] = useState(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
+  const [isInteracting, setIsInteracting] = useState(false);
+  const resumeTimer = useRef(null);
+  useEffect(
+    () => () => {
+      if (resumeTimer.current) clearTimeout(resumeTimer.current);
+    },
+    []
+  );
   const [internalShowEdges, setInternalShowEdges] = useState(false);
   const showEdges = controlledShowEdges ?? internalShowEdges;
   const setShowEdges = useCallback(
@@ -96509,7 +96529,8 @@ const Garden3D = ({
             ]
           }
         ),
-        /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 18], fov: 50 }, children: [
+        /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 21], fov: 50 }, children: [
+          /* @__PURE__ */ jsx(IdleRotate, { paused: isInteracting }),
           /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
           /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
           /* @__PURE__ */ jsx(
@@ -96521,7 +96542,18 @@ const Garden3D = ({
               zoomSpeed: 1.2,
               dynamicDampingFactor: 0.2,
               minDistance: 11,
-              maxDistance: 28
+              maxDistance: 28,
+              onStart: () => {
+                if (resumeTimer.current) clearTimeout(resumeTimer.current);
+                setIsInteracting(true);
+              },
+              onEnd: () => {
+                if (resumeTimer.current) clearTimeout(resumeTimer.current);
+                resumeTimer.current = setTimeout(
+                  () => setIsInteracting(false),
+                  4e3
+                );
+              }
             }
           ),
           showEdges && relationEdges.map((edge, i) => {
