@@ -11,6 +11,14 @@ export interface GardenVisualizationProps {
      */
     expandSubgardens?: boolean;
     /**
+     * Whether the view responds to pointer/touch input. When false, the 3D
+     * layout's orbit controls are disabled so the controls never preventDefault
+     * touch gestures (which otherwise trap page scroll when the garden is
+     * embedded in a scrollable page). The idle rotation still runs.
+     * @default true
+     */
+    interactive?: boolean;
+    /**
      * Whether to show controls.
      * @default true
      */
