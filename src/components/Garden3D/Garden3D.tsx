@@ -146,11 +146,14 @@ const Garden3D = ({
       // `isolation: isolate` gives the in-scene HTML labels their own stacking
       // context, so their depth-sorted z-indices stay contained beneath page
       // chrome and the teaser dialog without flattening the depth ordering.
+      // The in-scene labels stack up to `zIndexRange[0]` (16777271) within this
+      // context, so the overlay chrome below sits at 16777272 to stay above them
+      // (a plain z-10 was getting covered by nearer nodes).
       style={{ isolation: "isolate" }}
       className="garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background"
     >
       {/* Persistent garden-name badge, mirroring the 2D views. */}
-      <div className="garden:absolute garden:top-3 garden:right-3 garden:z-10 garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm">
+      <div className="garden:absolute garden:top-3 garden:right-3 garden:z-[16777272] garden:flex garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm">
         <FlowerIcon className="garden:h-4 garden:w-4" />
         {schema.name}
         {schema.icon && (
@@ -165,7 +168,7 @@ const Garden3D = ({
           type="button"
           onClick={() => setShowEdges(!showEdges)}
           title={showEdges ? "Hide connections" : "Show connections"}
-          className="garden:absolute garden:top-3 garden:left-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground"
+          className="garden:absolute garden:top-3 garden:left-3 garden:z-[16777272] garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground"
         >
           {showEdges ? (
             <EyeIcon className="garden:h-3 garden:w-3" />
@@ -181,7 +184,7 @@ const Garden3D = ({
           href="https://garden.omni.dev"
           target="_blank"
           rel="noopener noreferrer"
-          className="garden:absolute garden:right-3 garden:bottom-3 garden:z-10 garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100"
+          className="garden:absolute garden:right-3 garden:bottom-3 garden:z-[16777272] garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100"
         >
           <FlowerIcon className="garden:h-3 garden:w-3" />
           Powered by Garden
