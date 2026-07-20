@@ -96451,7 +96451,8 @@ const Garden3D = ({
   relationColors,
   showEdges: controlledShowEdges,
   onShowEdgesChange,
-  showPoweredBy = true
+  showPoweredBy = true,
+  interactive = true
 }) => {
   const [selectedSprout, setSelectedSprout] = useState(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
@@ -96537,6 +96538,7 @@ const Garden3D = ({
             TrackballControls,
             {
               makeDefault: true,
+              enabled: interactive,
               noPan: true,
               rotateSpeed: 3.5,
               zoomSpeed: 1.2,

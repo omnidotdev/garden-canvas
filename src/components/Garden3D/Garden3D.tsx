@@ -91,6 +91,7 @@ const Garden3D = ({
   showEdges: controlledShowEdges,
   onShowEdgesChange,
   showPoweredBy = true,
+  interactive = true,
 }: GardenRendererProps) => {
   const [selectedSprout, setSelectedSprout] = useState<NodeData | null>(null);
   const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
@@ -206,6 +207,7 @@ const Garden3D = ({
             camera coasted ~100px past release, reading as a jump). */}
         <TrackballControls
           makeDefault
+          enabled={interactive}
           noPan
           rotateSpeed={3.5}
           zoomSpeed={1.2}
