@@ -78,6 +78,32 @@ const IdleRotate = ({ paused }: { paused: boolean }) => {
 };
 
 /**
+ * Pulls the camera to whatever distance fits the whole sphere (plus room for
+ * the node cards) within the current viewport on both axes. On a wide desktop
+ * this is the usual close-in framing; on a narrow phone it pulls back so the
+ * constellation fits instead of spilling off the sides ("nodes too far apart"),
+ * and since the labels scale with distance they shrink to match, keeping the
+ * layout dense and readable at any size. Re-runs on resize.
+ */
+const FitCamera = () => {
+  const camera = useThree((state) => state.camera);
+  const size = useThree((state) => state.size);
+  useEffect(() => {
+    // Matches the Canvas camera fov (50); half-angle in radians
+    const halfFov = (50 * Math.PI) / 360;
+    const aspect = size.width / Math.max(1, size.height);
+    const radiusWithCards = RADIUS + 1;
+    const fitVertical = radiusWithCards / Math.tan(halfFov);
+    const fitHorizontal = fitVertical / Math.max(0.001, aspect);
+    const distance = Math.max(fitVertical, fitHorizontal);
+    const direction = camera.position.clone().normalize();
+    camera.position.copy(direction.multiplyScalar(distance));
+    camera.lookAt(0, 0, 0);
+  }, [camera, size.width, size.height]);
+  return null;
+};
+
+/**
  * 3D garden renderer (the first opt-in layout plugin). Places the products on
  * a sphere with their typed connections drawn between them, orbit-controllable.
  * Lives in the `@omnidotdev/garden/3d` entry so Three.js stays out of the base
@@ -194,6 +220,7 @@ const Garden3D = ({
       )}
 
       <Canvas camera={{ position: [0, 0, 21], fov: 50 }}>
+        <FitCamera />
         <IdleRotate paused={isInteracting} />
         <ambientLight intensity={0.9} />
         <pointLight position={[12, 12, 12]} intensity={1.2} />
@@ -209,11 +236,11 @@ const Garden3D = ({
           makeDefault
           enabled={interactive}
           noPan
-          rotateSpeed={3.5}
-          zoomSpeed={1.2}
+          rotateSpeed={2.6}
+          zoomSpeed={0.6}
           dynamicDampingFactor={0.2}
           minDistance={11}
-          maxDistance={28}
+          maxDistance={60}
           onStart={() => {
             if (resumeTimer.current) clearTimeout(resumeTimer.current);
             setIsInteracting(true);

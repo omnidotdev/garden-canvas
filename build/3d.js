@@ -96444,6 +96444,22 @@ const IdleRotate = ({ paused }) => {
   });
   return null;
 };
+const FitCamera = () => {
+  const camera = useThree((state) => state.camera);
+  const size = useThree((state) => state.size);
+  useEffect(() => {
+    const halfFov = 50 * Math.PI / 360;
+    const aspect = size.width / Math.max(1, size.height);
+    const radiusWithCards = RADIUS + 1;
+    const fitVertical = radiusWithCards / Math.tan(halfFov);
+    const fitHorizontal = fitVertical / Math.max(1e-3, aspect);
+    const distance = Math.max(fitVertical, fitHorizontal);
+    const direction = camera.position.clone().normalize();
+    camera.position.copy(direction.multiplyScalar(distance));
+    camera.lookAt(0, 0, 0);
+  }, [camera, size.width, size.height]);
+  return null;
+};
 const Garden3D = ({
   schema,
   nodes,
@@ -96531,6 +96547,7 @@ const Garden3D = ({
           }
         ),
         /* @__PURE__ */ jsxs(Canvas, { camera: { position: [0, 0, 21], fov: 50 }, children: [
+          /* @__PURE__ */ jsx(FitCamera, {}),
           /* @__PURE__ */ jsx(IdleRotate, { paused: isInteracting }),
           /* @__PURE__ */ jsx("ambientLight", { intensity: 0.9 }),
           /* @__PURE__ */ jsx("pointLight", { position: [12, 12, 12], intensity: 1.2 }),
@@ -96540,11 +96557,11 @@ const Garden3D = ({
               makeDefault: true,
               enabled: interactive,
               noPan: true,
-              rotateSpeed: 3.5,
-              zoomSpeed: 1.2,
+              rotateSpeed: 2.6,
+              zoomSpeed: 0.6,
               dynamicDampingFactor: 0.2,
               minDistance: 11,
-              maxDistance: 28,
+              maxDistance: 60,
               onStart: () => {
                 if (resumeTimer.current) clearTimeout(resumeTimer.current);
                 setIsInteracting(true);
