@@ -49,24 +49,33 @@ interface GlyphIconProps {
 const GlyphIcon = ({ glyph, size, className, label }: GlyphIconProps) => {
   const fontSize = useMemo(() => size / inkRatio(glyph), [glyph, size]);
 
+  // Render the glyph as SVG text centered by `dominant-baseline: central`
+  // rather than an HTML flex box. Emoji have no reliable line-box centering in
+  // HTML (with `line-height: 1` the glyph rides high off the baseline, and each
+  // engine places it differently, e.g. Firefox's bundled emoji font sat it flush
+  // with the card's top edge and looked clipped). SVG central baseline centers
+  // the glyph the same way in every engine.
   return (
-    <span
+    <svg
       role="img"
       aria-label={label}
       className={className}
-      style={{
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: size,
-        height: size,
-        fontSize,
-        lineHeight: 1,
-        userSelect: "none",
-      }}
+      width={size}
+      height={size}
+      viewBox={`0 0 ${size} ${size}`}
+      style={{ userSelect: "none", overflow: "visible", display: "block" }}
     >
-      {glyph}
-    </span>
+      <text
+        x="50%"
+        y="50%"
+        textAnchor="middle"
+        dominantBaseline="central"
+        fontSize={fontSize}
+        fontFamily={FONT_STACK}
+      >
+        {glyph}
+      </text>
+    </svg>
   );
 };
 

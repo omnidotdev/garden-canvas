@@ -17890,22 +17890,27 @@ const inkRatio = (glyph) => {
 const GlyphIcon = ({ glyph, size, className, label }) => {
   const fontSize = useMemo(() => size / inkRatio(glyph), [glyph, size]);
   return /* @__PURE__ */ jsx(
-    "span",
+    "svg",
     {
       role: "img",
       "aria-label": label,
       className,
-      style: {
-        display: "inline-flex",
-        alignItems: "center",
-        justifyContent: "center",
-        width: size,
-        height: size,
-        fontSize,
-        lineHeight: 1,
-        userSelect: "none"
-      },
-      children: glyph
+      width: size,
+      height: size,
+      viewBox: `0 0 ${size} ${size}`,
+      style: { userSelect: "none", overflow: "visible", display: "block" },
+      children: /* @__PURE__ */ jsx(
+        "text",
+        {
+          x: "50%",
+          y: "50%",
+          textAnchor: "middle",
+          dominantBaseline: "central",
+          fontSize,
+          fontFamily: FONT_STACK,
+          children: glyph
+        }
+      )
     }
   );
 };
@@ -20501,4 +20506,4 @@ const getLayout = (name) => registry.get(name);
 const listLayouts = () => [...registry.values()];
 
 export { snapPosition as $, updateAbsolutePositions as A, updateConnectionLookup as B, fitViewport as C, getNodeDimensions as D, ConnectionMode as E, createMarkerIds as F, getSmoothStepPath as G, getBezierPath as H, getEdgePosition as I, getElevatedEdgeZIndex as J, getMarkerId as K, getInternalNodesBounds as L, MarkerType as M, defaultAriaLabelConfig as N, devWarn as O, Position as P, infiniteExtent as Q, ResizeControlVariant as R, PanOnScrollMode as S, SelectionMode as T, ConnectionLineType as U, isMacOs as V, getBoundsOfRects as W, XYMinimap as X, XYResizer as Y, XYPanZoom as Z, XYDrag as _, getOverlappingArea as a, calculateNodePosition as a0, getNodesInside as a1, isInputDOMNode as a2, elementSelectionKeys as a3, isNumeric as a4, getStraightPath as a5, isEdgeVisible as a6, getConnectionStatus as a7, mergeAriaLabelConfig as a8, getEventPosition as a9, areSetsEqual as aa, getBezierEdgeCenter as ab, getDimensions as ac, Flower as ad, ExternalLink as ae, SproutDialog as af, isImageUrl as ag, GlyphIcon as ah, cn as ai, registerLayout as aj, autoLayoutElements as ak, isRelationEdge as al, hexLayout as am, GitBranch as an, getLayout as ao, findGardenByName as ap, gardenToFlow as aq, Eye as ar, EyeOff as as, relationColor as at, listLayouts as au, getDefaultExportFromCjs as av, getElementsToRemove as b, createLucideIcon as c, getViewportForBounds as d, evaluateAbsolutePosition as e, errorMessages as f, getNodesBounds as g, isNodeBase as h, isRectObject as i, isEdgeBase as j, getHostForElement as k, XYHandle as l, isMouseEvent as m, nodeToRect as n, addEdge as o, pointToRendererPoint as p, nodeHasDimensions as q, rendererPointToPoint as r, initialConnection as s, panBy as t, useSyncExternalStoreExports as u, adoptUserNodes as v, withResolvers as w, getHandlePosition as x, handleExpandParent as y, updateNodeInternals as z };
-//# sourceMappingURL=layout-BiKKVeEh.js.map
+//# sourceMappingURL=layout-BCBxTiXf.js.map
