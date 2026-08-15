@@ -409,7 +409,9 @@ const processSubgarensRecursively = ({
             self_hostable: sprout.self_hostable,
             coming_soon: sprout.coming_soon,
             docs_url: sprout.docs_url,
-            theme: gardenTheme,
+            // A sprout's own theme (e.g. a product brand color) wins over the
+            // containing garden's theme, so tiles can render per-product color
+            theme: sprout.theme ?? gardenTheme,
             level: level, // Track the nesting level for styling
             sourceConnections: [],
             targetConnections: [],
@@ -629,7 +631,9 @@ export const gardenToFlow = ({
           self_hostable: sprout.self_hostable,
           coming_soon: sprout.coming_soon,
           docs_url: sprout.docs_url,
-          theme: currentGardenTheme,
+          // A sprout's own theme (e.g. a product brand color) wins over the
+          // containing garden's theme, so tiles can render per-product color
+          theme: sprout.theme ?? currentGardenTheme,
           cta: {
             primary: sprout.homepage_url
               ? {

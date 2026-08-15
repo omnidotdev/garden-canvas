@@ -1,6 +1,7 @@
 import "./lib/plugins/builtin";
 
 export { Garden, type GardenProps } from "./components/Garden";
+export { GardenBento } from "./components/GardenBento";
 export * from "./generated/garden.types";
 export {
   type GardenLayout,

@@ -2,7 +2,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { u as useSyncExternalStoreExports, av as getDefaultExportFromCjs, as as Flower, ap as Eye, aq as EyeOff, ak as ExternalLink, ar as relationColor, ah as isImageUrl, ai as GlyphIcon, at as SproutDialog, ac as registerLayout } from './SproutDialog-Dnphz_P2.js';
+import { u as useSyncExternalStoreExports, av as getDefaultExportFromCjs, ad as Flower, ar as Eye, as as EyeOff, ae as ExternalLink, at as relationColor, ag as isImageUrl, ah as GlyphIcon, af as SproutDialog, aj as registerLayout } from './layout-BiKKVeEh.js';
 import * as ReactDOM from 'react-dom/client';
 
 function _extends() {
@@ -96597,97 +96597,86 @@ const Garden3D = ({
             const color = data.theme?.primary_color ?? "#14b8a6";
             const icon = data.image || data.logo || "🌱";
             const comingSoon = Boolean(data.coming_soon);
-            return /* @__PURE__ */ jsxs("group", { position: pos, children: [
-              /* @__PURE__ */ jsxs("mesh", { children: [
-                /* @__PURE__ */ jsx("sphereGeometry", { args: [0.22, 24, 24] }),
-                /* @__PURE__ */ jsx(
-                  "meshStandardMaterial",
+            return /* @__PURE__ */ jsx("group", { position: pos, children: /* @__PURE__ */ jsx(
+              Html,
+              {
+                center: true,
+                distanceFactor: 11,
+                zIndexRange: [16777271, 0],
+                style: { pointerEvents: "auto" },
+                children: /* @__PURE__ */ jsxs(
+                  "button",
                   {
-                    color,
-                    emissive: color,
-                    emissiveIntensity: 0.25
+                    type: "button",
+                    disabled: comingSoon,
+                    onClick: () => {
+                      if (comingSoon) return;
+                      setSelectedSprout(node.data);
+                      setIsSproutDialogOpen(true);
+                    },
+                    style: {
+                      display: "flex",
+                      flexDirection: "column",
+                      alignItems: "center",
+                      gap: 3,
+                      width: 150,
+                      padding: "8px 10px",
+                      cursor: comingSoon ? "default" : "pointer",
+                      borderRadius: 10,
+                      border: `1px solid ${color}`,
+                      background: "rgba(10,10,12,0.78)",
+                      color: "#fff",
+                      fontSize: 11,
+                      textAlign: "center",
+                      backdropFilter: "blur(4px)",
+                      opacity: comingSoon ? 0.6 : 1,
+                      // Quiet the unreleased nodes: dimmed and slightly desaturated
+                      filter: comingSoon ? "grayscale(0.55)" : void 0
+                    },
+                    children: [
+                      isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+                        "img",
+                        {
+                          src: data.image,
+                          alt: data.label,
+                          width: 28,
+                          height: 28,
+                          style: { objectFit: "contain" }
+                        }
+                      ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph: icon, size: 28, label: data.label }),
+                      /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label }),
+                      comingSoon ? /* @__PURE__ */ jsx(
+                        "span",
+                        {
+                          style: {
+                            fontSize: 9,
+                            lineHeight: 1.3,
+                            textTransform: "uppercase",
+                            letterSpacing: 0.5,
+                            opacity: 0.85
+                          },
+                          children: "Coming soon"
+                        }
+                      ) : data.description && /* @__PURE__ */ jsx(
+                        "span",
+                        {
+                          style: {
+                            fontSize: 9,
+                            lineHeight: 1.3,
+                            opacity: 0.75,
+                            display: "-webkit-box",
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: "vertical",
+                            overflow: "hidden"
+                          },
+                          children: data.description
+                        }
+                      )
+                    ]
                   }
                 )
-              ] }),
-              /* @__PURE__ */ jsx(
-                Html,
-                {
-                  center: true,
-                  distanceFactor: 11,
-                  zIndexRange: [16777271, 0],
-                  style: { pointerEvents: "auto" },
-                  children: /* @__PURE__ */ jsxs(
-                    "button",
-                    {
-                      type: "button",
-                      disabled: comingSoon,
-                      onClick: () => {
-                        if (comingSoon) return;
-                        setSelectedSprout(node.data);
-                        setIsSproutDialogOpen(true);
-                      },
-                      style: {
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        gap: 3,
-                        width: 150,
-                        padding: "8px 10px",
-                        cursor: comingSoon ? "default" : "pointer",
-                        borderRadius: 10,
-                        border: `1px solid ${color}`,
-                        background: "rgba(10,10,12,0.78)",
-                        color: "#fff",
-                        fontSize: 11,
-                        textAlign: "center",
-                        backdropFilter: "blur(4px)",
-                        opacity: comingSoon ? 0.6 : 1
-                      },
-                      children: [
-                        isImageUrl(data.image) ? /* @__PURE__ */ jsx(
-                          "img",
-                          {
-                            src: data.image,
-                            alt: data.label,
-                            width: 28,
-                            height: 28,
-                            style: { objectFit: "contain" }
-                          }
-                        ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph: icon, size: 28, label: data.label }),
-                        /* @__PURE__ */ jsx("span", { style: { fontWeight: 600 }, children: data.label }),
-                        comingSoon ? /* @__PURE__ */ jsx(
-                          "span",
-                          {
-                            style: {
-                              fontSize: 9,
-                              lineHeight: 1.3,
-                              textTransform: "uppercase",
-                              letterSpacing: 0.5,
-                              opacity: 0.85
-                            },
-                            children: "Coming soon"
-                          }
-                        ) : data.description && /* @__PURE__ */ jsx(
-                          "span",
-                          {
-                            style: {
-                              fontSize: 9,
-                              lineHeight: 1.3,
-                              opacity: 0.75,
-                              display: "-webkit-box",
-                              WebkitLineClamp: 2,
-                              WebkitBoxOrient: "vertical",
-                              overflow: "hidden"
-                            },
-                            children: data.description
-                          }
-                        )
-                      ]
-                    }
-                  )
-                }
-              )
-            ] }, node.id);
+              }
+            ) }, node.id);
           })
         ] }),
         /* @__PURE__ */ jsx(

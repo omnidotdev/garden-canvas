@@ -1,5 +1,9 @@
 @import "tailwindcss" prefix(garden);
 @import "@xyflow/react/dist/style.css";
+/* Enter/exit animation utilities (animate-in, fade-in-*, zoom-in-*) used by the
+   dialog. Tailwind v4 has no built-in animate-in, so without this the dialog's
+   animation classes are inert and it pops in with no motion. */
+@import "tw-animate-css";
 
 @custom-variant dark (&:is(.dark *));
 

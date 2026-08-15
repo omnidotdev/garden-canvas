@@ -291,14 +291,10 @@ const Garden3D = ({
             const comingSoon = Boolean(data.coming_soon);
             return (
               <group key={node.id} position={pos}>
-                <mesh>
-                  <sphereGeometry args={[0.22, 24, 24]} />
-                  <meshStandardMaterial
-                    color={color}
-                    emissive={color}
-                    emissiveIntensity={0.25}
-                  />
-                </mesh>
+                {/* The node is represented by its <Html> label card alone; the
+                    relation lines terminate at the group position, so no anchor
+                    sphere is needed and it only read as an odd dot behind the
+                    card. */}
                 <Html
                   center
                   distanceFactor={11}
@@ -336,6 +332,8 @@ const Garden3D = ({
                       textAlign: "center",
                       backdropFilter: "blur(4px)",
                       opacity: comingSoon ? 0.6 : 1,
+                      // Quiet the unreleased nodes: dimmed and slightly desaturated
+                      filter: comingSoon ? "grayscale(0.55)" : undefined,
                     }}
                   >
                     {isImageUrl(data.image) ? (
