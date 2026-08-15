@@ -33,6 +33,12 @@ export interface NodeData {
     };
     sourceConnections?: string[];
     targetConnections?: string[];
+    /**
+     * Whether typed connections ("edges") are currently revealed. Injected by the
+     * flow so a node can hide its connection handles while connections are off,
+     * rather than leaving stray handle dots on the cell borders.
+     */
+    showEdges?: boolean;
     isExpandedSubgarden?: boolean;
     [key: string]: any;
 }

@@ -1,8 +1,8 @@
 "use client";
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React__default, { useState, createContext, useCallback, useMemo, memo, forwardRef, useContext, useRef, useEffect, useLayoutEffect } from 'react';
-import { c as createLucideIcon, u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, d as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, f as errorMessages, h as isNodeBase, j as isEdgeBase, P as Position, k as getHostForElement, l as XYHandle, m as isMouseEvent, o as addEdge, q as nodeHasDimensions, M as MarkerType, s as initialConnection, t as panBy, v as adoptUserNodes, x as getHandlePosition, y as handleExpandParent, z as updateNodeInternals, A as updateAbsolutePositions, B as updateConnectionLookup, C as fitViewport, D as getNodeDimensions, R as ResizeControlVariant, E as ConnectionMode, F as createMarkerIds, G as getSmoothStepPath, H as getBezierPath, I as getEdgePosition, J as getElevatedEdgeZIndex, K as getMarkerId, L as getInternalNodesBounds, N as defaultAriaLabelConfig, O as devWarn, Q as infiniteExtent, S as PanOnScrollMode, T as SelectionMode, U as ConnectionLineType, V as isMacOs, W as getBoundsOfRects, Y as XYResizer, Z as XYPanZoom, _ as XYDrag, $ as snapPosition, a0 as calculateNodePosition, a1 as getNodesInside, a2 as isInputDOMNode, a3 as elementSelectionKeys, a4 as isNumeric, a5 as getStraightPath, a6 as isEdgeVisible, a7 as getConnectionStatus, a8 as mergeAriaLabelConfig, a9 as getEventPosition, aa as areSetsEqual, ab as getBezierEdgeCenter, ac as getDimensions, ad as Flower, ae as ExternalLink, af as SproutDialog, ag as isImageUrl, ah as GlyphIcon, ai as cn, aj as registerLayout, ak as autoLayoutElements, al as isRelationEdge, am as hexLayout, an as GitBranch, ao as getLayout, ap as findGardenByName, aq as gardenToFlow, ar as Eye, as as EyeOff, at as relationColor } from './layout-CVfXD8s-.js';
-export { au as listLayouts } from './layout-CVfXD8s-.js';
+import { c as createLucideIcon, u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, d as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, f as errorMessages, h as isNodeBase, j as isEdgeBase, P as Position, k as getHostForElement, l as XYHandle, m as isMouseEvent, o as addEdge, q as nodeHasDimensions, M as MarkerType, s as initialConnection, t as panBy, v as adoptUserNodes, x as getHandlePosition, y as handleExpandParent, z as updateNodeInternals, A as updateAbsolutePositions, B as updateConnectionLookup, C as fitViewport, D as getNodeDimensions, R as ResizeControlVariant, E as ConnectionMode, F as createMarkerIds, G as getSmoothStepPath, H as getBezierPath, I as getEdgePosition, J as getElevatedEdgeZIndex, K as getMarkerId, L as getInternalNodesBounds, N as defaultAriaLabelConfig, O as devWarn, Q as infiniteExtent, S as PanOnScrollMode, T as SelectionMode, U as ConnectionLineType, V as isMacOs, W as getBoundsOfRects, Y as XYResizer, Z as XYPanZoom, _ as XYDrag, $ as snapPosition, a0 as calculateNodePosition, a1 as getNodesInside, a2 as isInputDOMNode, a3 as elementSelectionKeys, a4 as isNumeric, a5 as getStraightPath, a6 as isEdgeVisible, a7 as getConnectionStatus, a8 as mergeAriaLabelConfig, a9 as getEventPosition, aa as areSetsEqual, ab as getBezierEdgeCenter, ac as getDimensions, ad as Flower, ae as ExternalLink, af as SproutDialog, ag as isImageUrl, ah as GlyphIcon, ai as cn, aj as registerLayout, ak as autoLayoutElements, al as isRelationEdge, am as hexLayout, an as GitBranch, ao as getLayout, ap as findGardenByName, aq as gardenToFlow, ar as Eye, as as EyeOff, at as relationColor } from './layout-BiKKVeEh.js';
+export { au as listLayouts } from './layout-BiKKVeEh.js';
 import 'react-dom';
 
 /**
@@ -4550,26 +4550,86 @@ const BentoTile = ({ data, size, onOpen }) => {
   const color = productColor(data);
   const glyph = data.image || data.logo || data.icon || "🌱";
   const teaser = data.tagline || data.description;
+  const preview = isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+    "img",
+    {
+      src: data.image,
+      alt: data.label,
+      className: "garden:object-contain",
+      style: { height: "62%", width: "62%", maxHeight: "8rem" }
+    }
+  ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph, size: ICON_SIZE[size], label: data.label });
   const content = /* @__PURE__ */ jsxs(Fragment, { children: [
-    isImageUrl(data.image) ? /* @__PURE__ */ jsx(
-      "img",
+    /* @__PURE__ */ jsxs(
+      "div",
       {
-        src: data.image,
-        alt: data.label,
-        className: "garden:h-14 garden:w-14 garden:object-contain"
+        style: {
+          position: "relative",
+          display: "flex",
+          flex: "1 1 auto",
+          minHeight: 0,
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "var(--garden-card)",
+          borderBottom: `1px solid color-mix(in oklab, ${color} 42%, transparent)`
+        },
+        children: [
+          preview,
+          comingSoon && /* @__PURE__ */ jsx(
+            "span",
+            {
+              style: {
+                position: "absolute",
+                top: "0.5rem",
+                right: "0.5rem",
+                borderRadius: "9999px",
+                padding: "0.125rem 0.5rem",
+                fontSize: "0.625rem",
+                fontWeight: 600,
+                textTransform: "uppercase",
+                letterSpacing: "0.05em",
+                color,
+                backgroundColor: "color-mix(in oklab, var(--garden-card) 82%, transparent)",
+                border: `1px solid color-mix(in oklab, ${color} 45%, transparent)`
+              },
+              children: "Coming soon"
+            }
+          )
+        ]
       }
-    ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph, size: ICON_SIZE[size], label: data.label }),
-    /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:font-medium garden:text-foreground", children: data.label }),
-    teaser && /* @__PURE__ */ jsx("p", { className: "garden:line-clamp-3 garden:max-w-[22rem] garden:text-foreground/70 garden:text-sm garden:leading-snug", children: teaser }),
-    comingSoon && /* @__PURE__ */ jsx("span", { className: "garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide", children: "Coming soon" })
+    ),
+    /* @__PURE__ */ jsxs(
+      "div",
+      {
+        style: {
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.125rem",
+          padding: "0.625rem 0.75rem",
+          width: "100%",
+          textAlign: "center",
+          backgroundColor: "var(--garden-card)"
+        },
+        children: [
+          /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:font-medium garden:text-foreground", children: data.label }),
+          teaser && /* @__PURE__ */ jsx("p", { className: "garden:line-clamp-2 garden:text-foreground/70 garden:text-sm garden:leading-snug", children: teaser })
+        ]
+      }
+    )
   ] });
-  const cardClass = "garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-2 garden:rounded-xl garden:border-2 garden:bg-card garden:p-4 garden:text-center garden:shadow-sm garden:transition-transform";
+  const cardClass = "garden:flex garden:h-full garden:w-full garden:flex-col garden:rounded-xl garden:border-[3px] garden:shadow-sm garden:transition-transform";
   const cardStyle = {
     borderColor: color,
-    backgroundColor: `color-mix(in oklab, ${color} 6%, var(--garden-card))`
+    overflow: "hidden",
+    backgroundColor: "var(--garden-card)",
+    boxShadow: `0 1px 2px rgba(0, 0, 0, 0.06), 0 0 0 1px color-mix(in oklab, ${color} 20%, transparent)`,
+    // Coming-soon tiles read as quiet/inactive: dimmed and slightly desaturated
+    // so the launched products stay the focus.
+    ...comingSoon ? { opacity: 0.72, filter: "grayscale(0.55)" } : {}
   };
   if (comingSoon) {
-    return /* @__PURE__ */ jsx("div", { className: SPAN_CLASS[size], children: /* @__PURE__ */ jsx("div", { className: cn(cardClass, "garden:opacity-60"), style: cardStyle, children: content }) });
+    return /* @__PURE__ */ jsx("div", { className: SPAN_CLASS[size], children: /* @__PURE__ */ jsx("div", { className: cardClass, style: cardStyle, children: content }) });
   }
   return /* @__PURE__ */ jsx("div", { className: SPAN_CLASS[size], children: /* @__PURE__ */ jsx(
     "button",
@@ -4969,7 +5029,8 @@ const SproutNode = ({ data }) => {
           id: "top",
           type: "target",
           position: Position.Top,
-          isConnectable: false
+          isConnectable: false,
+          style: data.showEdges ? void 0 : { opacity: 0 }
         }
       ),
       hasBottomSources && /* @__PURE__ */ jsx(
@@ -4978,7 +5039,8 @@ const SproutNode = ({ data }) => {
           id: "bottom",
           type: "source",
           position: Position.Bottom,
-          isConnectable: false
+          isConnectable: false,
+          style: data.showEdges ? void 0 : { opacity: 0 }
         }
       ),
       /* @__PURE__ */ jsx(
@@ -4988,7 +5050,12 @@ const SproutNode = ({ data }) => {
             "garden:h-[203px] garden:w-44 garden:p-[3px] garden:transition-transform",
             comingSoon ? "garden:cursor-default garden:opacity-60" : "garden:cursor-pointer garden:hover:scale-105"
           ),
-          style: { clipPath: HEX_CLIP, backgroundColor: primaryColor },
+          style: {
+            clipPath: HEX_CLIP,
+            backgroundColor: primaryColor,
+            // Quiet the unreleased cells: dimmed (above) and slightly desaturated
+            filter: comingSoon ? "grayscale(0.55)" : void 0
+          },
           children: /* @__PURE__ */ jsxs(
             "div",
             {
@@ -5022,6 +5089,7 @@ const SproutNode = ({ data }) => {
           "garden:relative garden:rounded-md garden:border-2 garden:border-border garden:bg-card garden:shadow-lg",
           comingSoon ? "garden:cursor-default garden:opacity-60" : "garden:cursor-pointer garden:hover:scale-105 garden:hover:shadow-xl"
         ),
+        style: comingSoon ? { filter: "grayscale(0.55)" } : void 0,
         children: [
           hasTopTargets && /* @__PURE__ */ jsx(
             Handle,
@@ -5412,6 +5480,10 @@ const GardenFlow = ({
             nodes: nodes.map((node) => ({
               ...node,
               className: "!garden:bg-background",
+              // Thread the connections toggle into each node so it can hide its
+              // handles while connections are off (the beehive keeps no hierarchy
+              // edges, so an always-on handle just leaves a stray dot on the cell).
+              data: { ...node.data, showEdges },
               style: {
                 ...node.style,
                 cursor: node.type === "garden" ? "grab" : "pointer"

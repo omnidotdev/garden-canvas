@@ -5,6 +5,7 @@ import { cn, isImageUrl } from "../../lib/utils";
 import { GlyphIcon } from "../GlyphIcon";
 import { SproutDialog } from "../SproutDialog";
 
+import type { CSSProperties } from "react";
 import type { GardenRendererProps } from "../../lib/plugins/layout";
 import type { NodeData } from "../nodes";
 
@@ -88,47 +89,107 @@ const BentoTile = ({ data, size, onOpen }: BentoTileProps) => {
   const glyph = data.image || data.logo || data.icon || "🌱";
   const teaser = data.tagline || data.description;
 
+  // The preview glyph: a real product image if the catalog carries one,
+  // otherwise the emoji/logo rendered by GlyphIcon
+  const preview = isImageUrl(data.image) ? (
+    <img
+      src={data.image}
+      alt={data.label}
+      className="garden:object-contain"
+      style={{ height: "62%", width: "62%", maxHeight: "8rem" }}
+    />
+  ) : (
+    <GlyphIcon glyph={glyph} size={ICON_SIZE[size]} label={data.label} />
+  );
+
   const content = (
     <>
-      {isImageUrl(data.image) ? (
-        <img
-          src={data.image}
-          alt={data.label}
-          className="garden:h-14 garden:w-14 garden:object-contain"
-        />
-      ) : (
-        <GlyphIcon glyph={glyph} size={ICON_SIZE[size]} label={data.label} />
-      )}
-      <h3 className="garden:line-clamp-2 garden:font-medium garden:text-foreground">
-        {data.label}
-      </h3>
-      {teaser && (
-        <p className="garden:line-clamp-3 garden:max-w-[22rem] garden:text-foreground/70 garden:text-sm garden:leading-snug">
-          {teaser}
-        </p>
-      )}
-      {comingSoon && (
-        <span className="garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide">
-          Coming soon
-        </span>
-      )}
+      {/* Preview hero: the glyph/image sits on the plain card surface, so the
+          product's color reads from the tile's border alone rather than a fill.
+          A brand-colored hairline still divides the hero from the footer, and
+          the coming-soon state rides here as a corner pill. */}
+      <div
+        style={{
+          position: "relative",
+          display: "flex",
+          flex: "1 1 auto",
+          minHeight: 0,
+          width: "100%",
+          alignItems: "center",
+          justifyContent: "center",
+          backgroundColor: "var(--garden-card)",
+          borderBottom: `1px solid color-mix(in oklab, ${color} 42%, transparent)`,
+        }}
+      >
+        {preview}
+        {comingSoon && (
+          <span
+            style={{
+              position: "absolute",
+              top: "0.5rem",
+              right: "0.5rem",
+              borderRadius: "9999px",
+              padding: "0.125rem 0.5rem",
+              fontSize: "0.625rem",
+              fontWeight: 600,
+              textTransform: "uppercase",
+              letterSpacing: "0.05em",
+              color,
+              backgroundColor:
+                "color-mix(in oklab, var(--garden-card) 82%, transparent)",
+              border: `1px solid color-mix(in oklab, ${color} 45%, transparent)`,
+            }}
+          >
+            Coming soon
+          </span>
+        )}
+      </div>
+
+      {/* Footer: label + tagline on the plain card surface, so the copy stays
+          legible against the tinted hero above. */}
+      <div
+        style={{
+          display: "flex",
+          flexDirection: "column",
+          gap: "0.125rem",
+          padding: "0.625rem 0.75rem",
+          width: "100%",
+          textAlign: "center",
+          backgroundColor: "var(--garden-card)",
+        }}
+      >
+        <h3 className="garden:line-clamp-2 garden:font-medium garden:text-foreground">
+          {data.label}
+        </h3>
+        {teaser && (
+          <p className="garden:line-clamp-2 garden:text-foreground/70 garden:text-sm garden:leading-snug">
+            {teaser}
+          </p>
+        )}
+      </div>
     </>
   );
 
   // Full border in the product's own color, so the wall reads as each app's
-  // brand at a glance. A faint same-color wash lifts the tile off the canvas
-  // without fighting the card contents.
+  // brand at a glance. A same-color ring shadow keeps even light brand colors
+  // legible against the card, and `overflow: hidden` clips the hero gradient
+  // to the rounded corners.
   const cardClass =
-    "garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-2 garden:rounded-xl garden:border-2 garden:bg-card garden:p-4 garden:text-center garden:shadow-sm garden:transition-transform";
-  const cardStyle = {
+    "garden:flex garden:h-full garden:w-full garden:flex-col garden:rounded-xl garden:border-[3px] garden:shadow-sm garden:transition-transform";
+  const cardStyle: CSSProperties = {
     borderColor: color,
-    backgroundColor: `color-mix(in oklab, ${color} 6%, var(--garden-card))`,
+    overflow: "hidden",
+    backgroundColor: "var(--garden-card)",
+    boxShadow: `0 1px 2px rgba(0, 0, 0, 0.06), 0 0 0 1px color-mix(in oklab, ${color} 20%, transparent)`,
+    // Coming-soon tiles read as quiet/inactive: dimmed and slightly desaturated
+    // so the launched products stay the focus.
+    ...(comingSoon ? { opacity: 0.72, filter: "grayscale(0.55)" } : {}),
   };
 
   if (comingSoon) {
     return (
       <div className={SPAN_CLASS[size]}>
-        <div className={cn(cardClass, "garden:opacity-60")} style={cardStyle}>
+        <div className={cardClass} style={cardStyle}>
           {content}
         </div>
       </div>

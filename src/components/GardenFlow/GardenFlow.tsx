@@ -294,6 +294,10 @@ const GardenFlow = ({
         nodes={nodes.map((node) => ({
           ...node,
           className: "!garden:bg-background",
+          // Thread the connections toggle into each node so it can hide its
+          // handles while connections are off (the beehive keeps no hierarchy
+          // edges, so an always-on handle just leaves a stray dot on the cell).
+          data: { ...node.data, showEdges },
           style: {
             ...node.style,
             cursor: node.type === "garden" ? "grab" : "pointer",

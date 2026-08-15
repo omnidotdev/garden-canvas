@@ -43,12 +43,18 @@ const SproutNode = ({ data }: NodeProps) => {
   if (data.hex) {
     return (
       <div className="garden:relative">
+        {/* The beehive draws no hierarchy edges, so a handle only ever anchors a
+            typed connection. Keep the handles mounted (React Flow measures their
+            position once, so edges can attach the moment connections are shown)
+            but hide the dot while connections are off, otherwise it reads as a
+            stray mark on the cell border. */}
         {hasTopTargets && (
           <Handle
             id="top"
             type="target"
             position={Position.Top}
             isConnectable={false}
+            style={data.showEdges ? undefined : { opacity: 0 }}
           />
         )}
         {hasBottomSources && (
@@ -57,6 +63,7 @@ const SproutNode = ({ data }: NodeProps) => {
             type="source"
             position={Position.Bottom}
             isConnectable={false}
+            style={data.showEdges ? undefined : { opacity: 0 }}
           />
         )}
         {/* A clip-path clips the element's border away, so the outline is
@@ -72,7 +79,12 @@ const SproutNode = ({ data }: NodeProps) => {
               ? "garden:cursor-default garden:opacity-60"
               : "garden:cursor-pointer garden:hover:scale-105",
           )}
-          style={{ clipPath: HEX_CLIP, backgroundColor: primaryColor }}
+          style={{
+            clipPath: HEX_CLIP,
+            backgroundColor: primaryColor,
+            // Quiet the unreleased cells: dimmed (above) and slightly desaturated
+            filter: comingSoon ? "grayscale(0.55)" : undefined,
+          }}
         >
           <div
             className="garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-1 garden:bg-card garden:p-4 garden:text-center"
@@ -119,6 +131,8 @@ const SproutNode = ({ data }: NodeProps) => {
           ? "garden:cursor-default garden:opacity-60"
           : "garden:cursor-pointer garden:hover:scale-105 garden:hover:shadow-xl",
       )}
+      // Quiet the unreleased cards: dimmed (above) and slightly desaturated
+      style={comingSoon ? { filter: "grayscale(0.55)" } : undefined}
     >
       {hasTopTargets && (
         <Handle
