@@ -38,13 +38,13 @@ export interface GardenVisualizationProps {
   edgeType?: "default" | "straight" | "step" | "smoothstep" | "simplebezier";
   /**
    * Layout plugin name. Built-ins: `"tree"` (hierarchical, default), `"hex"`
-   * (honeycomb / "beehive"), and `"3d"` (from `@omnidotdev/garden/3d`). Any
-   * registered plugin name is accepted, so the type stays open for the
-   * ecosystem.
+   * (honeycomb / "beehive"), `"bento"` (masonry wall of product tiles), and
+   * `"3d"` (from `@omnidotdev/garden/3d`). Any registered plugin name is
+   * accepted, so the type stays open for the ecosystem.
    * @default "tree"
    */
   // (string & {}) keeps literal autocomplete while accepting any plugin name
-  layout?: "tree" | "hex" | "3d" | (string & {});
+  layout?: "tree" | "hex" | "bento" | "3d" | (string & {});
   /**
    * Whether to enable edge animations.
    * @default true

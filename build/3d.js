@@ -2,7 +2,7 @@
 import { jsx, jsxs } from 'react/jsx-runtime';
 import * as React from 'react';
 import React__default, { useState, useRef, useEffect, useMemo, useCallback } from 'react';
-import { u as useSyncExternalStoreExports, av as getDefaultExportFromCjs, as as Flower, ap as Eye, aq as EyeOff, ak as ExternalLink, ar as relationColor, ah as isImageUrl, ai as GlyphIcon, at as SproutDialog, ac as registerLayout } from './SproutDialog-Dnphz_P2.js';
+import { u as useSyncExternalStoreExports, av as getDefaultExportFromCjs, ad as Flower, ar as Eye, as as EyeOff, ae as ExternalLink, at as relationColor, ag as isImageUrl, ah as GlyphIcon, af as SproutDialog, aj as registerLayout } from './layout-CVfXD8s-.js';
 import * as ReactDOM from 'react-dom/client';
 
 function _extends() {

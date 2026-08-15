@@ -5,6 +5,305 @@ import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import * as ReactDOM from 'react-dom';
 import ReactDOM__default from 'react-dom';
 
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
+const toCamelCase = (string) => string.replace(
+  /^([A-Z])|[\s-_]+(\w)/g,
+  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
+);
+const toPascalCase = (string) => {
+  const camelCase = toCamelCase(string);
+  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
+};
+const mergeClasses = (...classes) => classes.filter((className, index, array) => {
+  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
+}).join(" ").trim();
+const hasA11yProp = (props) => {
+  for (const prop in props) {
+    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
+      return true;
+    }
+  }
+};
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+var defaultAttributes = {
+  xmlns: "http://www.w3.org/2000/svg",
+  width: 24,
+  height: 24,
+  viewBox: "0 0 24 24",
+  fill: "none",
+  stroke: "currentColor",
+  strokeWidth: 2,
+  strokeLinecap: "round",
+  strokeLinejoin: "round"
+};
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const Icon = forwardRef(
+  ({
+    color = "currentColor",
+    size = 24,
+    strokeWidth = 2,
+    absoluteStrokeWidth,
+    className = "",
+    children,
+    iconNode,
+    ...rest
+  }, ref) => createElement(
+    "svg",
+    {
+      ref,
+      ...defaultAttributes,
+      width: size,
+      height: size,
+      stroke: color,
+      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
+      className: mergeClasses("lucide", className),
+      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
+      ...rest
+    },
+    [
+      ...iconNode.map(([tag, attrs]) => createElement(tag, attrs)),
+      ...Array.isArray(children) ? children : [children]
+    ]
+  )
+);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const createLucideIcon = (iconName, iconNode) => {
+  const Component = forwardRef(
+    ({ className, ...props }, ref) => createElement(Icon, {
+      ref,
+      iconNode,
+      className: mergeClasses(
+        `lucide-${toKebabCase(toPascalCase(iconName))}`,
+        `lucide-${iconName}`,
+        className
+      ),
+      ...props
+    })
+  );
+  Component.displayName = toPascalCase(iconName);
+  return Component;
+};
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$9 = [
+  ["path", { d: "M12 7v14", key: "1akyts" }],
+  [
+    "path",
+    {
+      d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
+      key: "ruj8y"
+    }
+  ]
+];
+const BookOpen = createLucideIcon("book-open", __iconNode$9);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$8 = [
+  ["path", { d: "M8 2v4", key: "1cmpym" }],
+  ["path", { d: "M16 2v4", key: "4m81vk" }],
+  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
+  ["path", { d: "M3 10h18", key: "8toen8" }]
+];
+const Calendar = createLucideIcon("calendar", __iconNode$8);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$7 = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+];
+const ExternalLink = createLucideIcon("external-link", __iconNode$7);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$6 = [
+  [
+    "path",
+    {
+      d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",
+      key: "ct8e1f"
+    }
+  ],
+  ["path", { d: "M14.084 14.158a3 3 0 0 1-4.242-4.242", key: "151rxh" }],
+  [
+    "path",
+    {
+      d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",
+      key: "13bj9a"
+    }
+  ],
+  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
+];
+const EyeOff = createLucideIcon("eye-off", __iconNode$6);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$5 = [
+  [
+    "path",
+    {
+      d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",
+      key: "1nclc0"
+    }
+  ],
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
+];
+const Eye = createLucideIcon("eye", __iconNode$5);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$4 = [
+  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }],
+  [
+    "path",
+    {
+      d: "M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5",
+      key: "14wa3c"
+    }
+  ],
+  ["path", { d: "M12 7.5V9", key: "1oy5b0" }],
+  ["path", { d: "M7.5 12H9", key: "eltsq1" }],
+  ["path", { d: "M16.5 12H15", key: "vk5kw4" }],
+  ["path", { d: "M12 16.5V15", key: "k7eayi" }],
+  ["path", { d: "m8 8 1.88 1.88", key: "nxy4qf" }],
+  ["path", { d: "M14.12 9.88 16 8", key: "1lst6k" }],
+  ["path", { d: "m8 16 1.88-1.88", key: "h2eex1" }],
+  ["path", { d: "M14.12 14.12 16 16", key: "uqkrx3" }]
+];
+const Flower = createLucideIcon("flower", __iconNode$4);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$3 = [
+  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
+  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
+  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
+  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
+];
+const GitBranch = createLucideIcon("git-branch", __iconNode$3);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$2 = [
+  ["path", { d: "M12 3v18", key: "108xh3" }],
+  ["path", { d: "m19 8 3 8a5 5 0 0 1-6 0zV7", key: "zcdpyk" }],
+  ["path", { d: "M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1", key: "1yorad" }],
+  ["path", { d: "m5 8 3 8a5 5 0 0 1-6 0zV7", key: "eua70x" }],
+  ["path", { d: "M7 21h10", key: "1b0cd5" }]
+];
+const Scale = createLucideIcon("scale", __iconNode$2);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$1 = [
+  ["rect", { width: "20", height: "8", x: "2", y: "2", rx: "2", ry: "2", key: "ngkwjq" }],
+  ["rect", { width: "20", height: "8", x: "2", y: "14", rx: "2", ry: "2", key: "iecqi9" }],
+  ["line", { x1: "6", x2: "6.01", y1: "6", y2: "6", key: "16zg32" }],
+  ["line", { x1: "6", x2: "6.01", y1: "18", y2: "18", key: "nzw8ys" }]
+];
+const Server = createLucideIcon("server", __iconNode$1);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode = [
+  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
+  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
+];
+const X = createLucideIcon("x", __iconNode);
+
 var noop = {value: () => {}};
 
 function dispatch() {
@@ -17566,312 +17865,6 @@ const gardenToFlow = ({
   return { nodes: nodesWithConnections, edges };
 };
 
-const registry = /* @__PURE__ */ new Map();
-const registerLayout = (layout) => {
-  registry.set(layout.name, layout);
-};
-const getLayout = (name) => registry.get(name);
-const listLayouts = () => [...registry.values()];
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-const toKebabCase = (string) => string.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase();
-const toCamelCase = (string) => string.replace(
-  /^([A-Z])|[\s-_]+(\w)/g,
-  (match, p1, p2) => p2 ? p2.toUpperCase() : p1.toLowerCase()
-);
-const toPascalCase = (string) => {
-  const camelCase = toCamelCase(string);
-  return camelCase.charAt(0).toUpperCase() + camelCase.slice(1);
-};
-const mergeClasses = (...classes) => classes.filter((className, index, array) => {
-  return Boolean(className) && className.trim() !== "" && array.indexOf(className) === index;
-}).join(" ").trim();
-const hasA11yProp = (props) => {
-  for (const prop in props) {
-    if (prop.startsWith("aria-") || prop === "role" || prop === "title") {
-      return true;
-    }
-  }
-};
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-var defaultAttributes = {
-  xmlns: "http://www.w3.org/2000/svg",
-  width: 24,
-  height: 24,
-  viewBox: "0 0 24 24",
-  fill: "none",
-  stroke: "currentColor",
-  strokeWidth: 2,
-  strokeLinecap: "round",
-  strokeLinejoin: "round"
-};
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const Icon = forwardRef(
-  ({
-    color = "currentColor",
-    size = 24,
-    strokeWidth = 2,
-    absoluteStrokeWidth,
-    className = "",
-    children,
-    iconNode,
-    ...rest
-  }, ref) => createElement(
-    "svg",
-    {
-      ref,
-      ...defaultAttributes,
-      width: size,
-      height: size,
-      stroke: color,
-      strokeWidth: absoluteStrokeWidth ? Number(strokeWidth) * 24 / Number(size) : strokeWidth,
-      className: mergeClasses("lucide", className),
-      ...!children && !hasA11yProp(rest) && { "aria-hidden": "true" },
-      ...rest
-    },
-    [
-      ...iconNode.map(([tag, attrs]) => createElement(tag, attrs)),
-      ...Array.isArray(children) ? children : [children]
-    ]
-  )
-);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const createLucideIcon = (iconName, iconNode) => {
-  const Component = forwardRef(
-    ({ className, ...props }, ref) => createElement(Icon, {
-      ref,
-      iconNode,
-      className: mergeClasses(
-        `lucide-${toKebabCase(toPascalCase(iconName))}`,
-        `lucide-${iconName}`,
-        className
-      ),
-      ...props
-    })
-  );
-  Component.displayName = toPascalCase(iconName);
-  return Component;
-};
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$9 = [
-  ["path", { d: "M12 7v14", key: "1akyts" }],
-  [
-    "path",
-    {
-      d: "M3 18a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h5a4 4 0 0 1 4 4 4 4 0 0 1 4-4h5a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1h-6a3 3 0 0 0-3 3 3 3 0 0 0-3-3z",
-      key: "ruj8y"
-    }
-  ]
-];
-const BookOpen = createLucideIcon("book-open", __iconNode$9);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$8 = [
-  ["path", { d: "M8 2v4", key: "1cmpym" }],
-  ["path", { d: "M16 2v4", key: "4m81vk" }],
-  ["rect", { width: "18", height: "18", x: "3", y: "4", rx: "2", key: "1hopcy" }],
-  ["path", { d: "M3 10h18", key: "8toen8" }]
-];
-const Calendar = createLucideIcon("calendar", __iconNode$8);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$7 = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
-];
-const ExternalLink = createLucideIcon("external-link", __iconNode$7);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$6 = [
-  [
-    "path",
-    {
-      d: "M10.733 5.076a10.744 10.744 0 0 1 11.205 6.575 1 1 0 0 1 0 .696 10.747 10.747 0 0 1-1.444 2.49",
-      key: "ct8e1f"
-    }
-  ],
-  ["path", { d: "M14.084 14.158a3 3 0 0 1-4.242-4.242", key: "151rxh" }],
-  [
-    "path",
-    {
-      d: "M17.479 17.499a10.75 10.75 0 0 1-15.417-5.151 1 1 0 0 1 0-.696 10.75 10.75 0 0 1 4.446-5.143",
-      key: "13bj9a"
-    }
-  ],
-  ["path", { d: "m2 2 20 20", key: "1ooewy" }]
-];
-const EyeOff = createLucideIcon("eye-off", __iconNode$6);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$5 = [
-  [
-    "path",
-    {
-      d: "M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0",
-      key: "1nclc0"
-    }
-  ],
-  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }]
-];
-const Eye = createLucideIcon("eye", __iconNode$5);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$4 = [
-  ["circle", { cx: "12", cy: "12", r: "3", key: "1v7zrd" }],
-  [
-    "path",
-    {
-      d: "M12 16.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 1 1 12 7.5a4.5 4.5 0 1 1 4.5 4.5 4.5 4.5 0 1 1-4.5 4.5",
-      key: "14wa3c"
-    }
-  ],
-  ["path", { d: "M12 7.5V9", key: "1oy5b0" }],
-  ["path", { d: "M7.5 12H9", key: "eltsq1" }],
-  ["path", { d: "M16.5 12H15", key: "vk5kw4" }],
-  ["path", { d: "M12 16.5V15", key: "k7eayi" }],
-  ["path", { d: "m8 8 1.88 1.88", key: "nxy4qf" }],
-  ["path", { d: "M14.12 9.88 16 8", key: "1lst6k" }],
-  ["path", { d: "m8 16 1.88-1.88", key: "h2eex1" }],
-  ["path", { d: "M14.12 14.12 16 16", key: "uqkrx3" }]
-];
-const Flower = createLucideIcon("flower", __iconNode$4);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$3 = [
-  ["line", { x1: "6", x2: "6", y1: "3", y2: "15", key: "17qcm7" }],
-  ["circle", { cx: "18", cy: "6", r: "3", key: "1h7g24" }],
-  ["circle", { cx: "6", cy: "18", r: "3", key: "fqmcym" }],
-  ["path", { d: "M18 9a9 9 0 0 1-9 9", key: "n2h4wq" }]
-];
-const GitBranch = createLucideIcon("git-branch", __iconNode$3);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$2 = [
-  ["path", { d: "M12 3v18", key: "108xh3" }],
-  ["path", { d: "m19 8 3 8a5 5 0 0 1-6 0zV7", key: "zcdpyk" }],
-  ["path", { d: "M3 7h1a17 17 0 0 0 8-2 17 17 0 0 0 8 2h1", key: "1yorad" }],
-  ["path", { d: "m5 8 3 8a5 5 0 0 1-6 0zV7", key: "eua70x" }],
-  ["path", { d: "M7 21h10", key: "1b0cd5" }]
-];
-const Scale = createLucideIcon("scale", __iconNode$2);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$1 = [
-  ["rect", { width: "20", height: "8", x: "2", y: "2", rx: "2", ry: "2", key: "ngkwjq" }],
-  ["rect", { width: "20", height: "8", x: "2", y: "14", rx: "2", ry: "2", key: "iecqi9" }],
-  ["line", { x1: "6", x2: "6.01", y1: "6", y2: "6", key: "16zg32" }],
-  ["line", { x1: "6", x2: "6.01", y1: "18", y2: "18", key: "nzw8ys" }]
-];
-const Server = createLucideIcon("server", __iconNode$1);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode = [
-  ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
-  ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
-];
-const X = createLucideIcon("x", __iconNode);
-
 const FONT_STACK = 'system-ui, -apple-system, "Segoe UI", Roboto, "Noto Color Emoji", "Apple Color Emoji", sans-serif';
 const MEASURE_FONT_PX = 100;
 const ratioCache = /* @__PURE__ */ new Map();
@@ -20496,5 +20489,12 @@ const SproutDialog = ({ sprout, open, onOpenChange }) => {
   ] }) });
 };
 
-export { calculateNodePosition as $, updateConnectionLookup as A, fitViewport as B, getNodeDimensions as C, ConnectionMode as D, createMarkerIds as E, getSmoothStepPath as F, getBezierPath as G, getEdgePosition as H, getElevatedEdgeZIndex as I, getMarkerId as J, getInternalNodesBounds as K, defaultAriaLabelConfig as L, MarkerType as M, devWarn as N, infiniteExtent as O, Position as P, PanOnScrollMode as Q, ResizeControlVariant as R, SelectionMode as S, ConnectionLineType as T, isMacOs as U, getBoundsOfRects as V, XYResizer as W, XYMinimap as X, XYPanZoom as Y, XYDrag as Z, snapPosition as _, getOverlappingArea as a, getNodesInside as a0, isInputDOMNode as a1, elementSelectionKeys as a2, isNumeric as a3, getStraightPath as a4, isEdgeVisible as a5, getConnectionStatus as a6, mergeAriaLabelConfig as a7, getEventPosition as a8, areSetsEqual as a9, getBezierEdgeCenter as aa, getDimensions as ab, registerLayout as ac, autoLayoutElements as ad, isRelationEdge as ae, hexLayout as af, createLucideIcon as ag, isImageUrl as ah, GlyphIcon as ai, cn as aj, ExternalLink as ak, GitBranch as al, getLayout as am, findGardenByName as an, gardenToFlow as ao, Eye as ap, EyeOff as aq, relationColor as ar, Flower as as, SproutDialog as at, listLayouts as au, getDefaultExportFromCjs as av, getElementsToRemove as b, getViewportForBounds as c, errorMessages as d, evaluateAbsolutePosition as e, isNodeBase as f, getNodesBounds as g, isEdgeBase as h, isRectObject as i, getHostForElement as j, XYHandle as k, isMouseEvent as l, addEdge as m, nodeToRect as n, nodeHasDimensions as o, pointToRendererPoint as p, initialConnection as q, rendererPointToPoint as r, panBy as s, adoptUserNodes as t, useSyncExternalStoreExports as u, getHandlePosition as v, withResolvers as w, handleExpandParent as x, updateNodeInternals as y, updateAbsolutePositions as z };
-//# sourceMappingURL=SproutDialog-Dnphz_P2.js.map
+const registry = /* @__PURE__ */ new Map();
+const registerLayout = (layout) => {
+  registry.set(layout.name, layout);
+};
+const getLayout = (name) => registry.get(name);
+const listLayouts = () => [...registry.values()];
+
+export { snapPosition as $, updateAbsolutePositions as A, updateConnectionLookup as B, fitViewport as C, getNodeDimensions as D, ConnectionMode as E, createMarkerIds as F, getSmoothStepPath as G, getBezierPath as H, getEdgePosition as I, getElevatedEdgeZIndex as J, getMarkerId as K, getInternalNodesBounds as L, MarkerType as M, defaultAriaLabelConfig as N, devWarn as O, Position as P, infiniteExtent as Q, ResizeControlVariant as R, PanOnScrollMode as S, SelectionMode as T, ConnectionLineType as U, isMacOs as V, getBoundsOfRects as W, XYMinimap as X, XYResizer as Y, XYPanZoom as Z, XYDrag as _, getOverlappingArea as a, calculateNodePosition as a0, getNodesInside as a1, isInputDOMNode as a2, elementSelectionKeys as a3, isNumeric as a4, getStraightPath as a5, isEdgeVisible as a6, getConnectionStatus as a7, mergeAriaLabelConfig as a8, getEventPosition as a9, areSetsEqual as aa, getBezierEdgeCenter as ab, getDimensions as ac, Flower as ad, ExternalLink as ae, SproutDialog as af, isImageUrl as ag, GlyphIcon as ah, cn as ai, registerLayout as aj, autoLayoutElements as ak, isRelationEdge as al, hexLayout as am, GitBranch as an, getLayout as ao, findGardenByName as ap, gardenToFlow as aq, Eye as ar, EyeOff as as, relationColor as at, listLayouts as au, getDefaultExportFromCjs as av, getElementsToRemove as b, createLucideIcon as c, getViewportForBounds as d, evaluateAbsolutePosition as e, errorMessages as f, getNodesBounds as g, isNodeBase as h, isRectObject as i, isEdgeBase as j, getHostForElement as k, XYHandle as l, isMouseEvent as m, nodeToRect as n, addEdge as o, pointToRendererPoint as p, nodeHasDimensions as q, rendererPointToPoint as r, initialConnection as s, panBy as t, useSyncExternalStoreExports as u, adoptUserNodes as v, withResolvers as w, getHandlePosition as x, handleExpandParent as y, updateNodeInternals as z };
+//# sourceMappingURL=layout-CVfXD8s-.js.map

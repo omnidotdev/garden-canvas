@@ -1,9 +1,118 @@
 "use client";
-import { u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, c as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, d as errorMessages, f as isNodeBase, h as isEdgeBase, P as Position, j as getHostForElement, k as XYHandle, l as isMouseEvent, m as addEdge, o as nodeHasDimensions, M as MarkerType, q as initialConnection, s as panBy, t as adoptUserNodes, v as getHandlePosition, x as handleExpandParent, y as updateNodeInternals, z as updateAbsolutePositions, A as updateConnectionLookup, B as fitViewport, C as getNodeDimensions, R as ResizeControlVariant, D as ConnectionMode, E as createMarkerIds, F as getSmoothStepPath, G as getBezierPath, H as getEdgePosition, I as getElevatedEdgeZIndex, J as getMarkerId, K as getInternalNodesBounds, L as defaultAriaLabelConfig, N as devWarn, O as infiniteExtent, Q as PanOnScrollMode, S as SelectionMode, T as ConnectionLineType, U as isMacOs, V as getBoundsOfRects, W as XYResizer, Y as XYPanZoom, Z as XYDrag, _ as snapPosition, $ as calculateNodePosition, a0 as getNodesInside, a1 as isInputDOMNode, a2 as elementSelectionKeys, a3 as isNumeric, a4 as getStraightPath, a5 as isEdgeVisible, a6 as getConnectionStatus, a7 as mergeAriaLabelConfig, a8 as getEventPosition, a9 as areSetsEqual, aa as getBezierEdgeCenter, ab as getDimensions, ac as registerLayout, ad as autoLayoutElements, ae as isRelationEdge, af as hexLayout, ag as createLucideIcon, ah as isImageUrl, ai as GlyphIcon, aj as cn, ak as ExternalLink, al as GitBranch, am as getLayout, an as findGardenByName, ao as gardenToFlow, ap as Eye, aq as EyeOff, ar as relationColor, as as Flower, at as SproutDialog } from './SproutDialog-Dnphz_P2.js';
-export { au as listLayouts } from './SproutDialog-Dnphz_P2.js';
 import { jsx, jsxs, Fragment } from 'react/jsx-runtime';
 import React__default, { useState, createContext, useCallback, useMemo, memo, forwardRef, useContext, useRef, useEffect, useLayoutEffect } from 'react';
+import { c as createLucideIcon, u as useSyncExternalStoreExports, w as withResolvers, g as getNodesBounds, i as isRectObject, a as getOverlappingArea, n as nodeToRect, b as getElementsToRemove, r as rendererPointToPoint, p as pointToRendererPoint, d as getViewportForBounds, e as evaluateAbsolutePosition, X as XYMinimap, f as errorMessages, h as isNodeBase, j as isEdgeBase, P as Position, k as getHostForElement, l as XYHandle, m as isMouseEvent, o as addEdge, q as nodeHasDimensions, M as MarkerType, s as initialConnection, t as panBy, v as adoptUserNodes, x as getHandlePosition, y as handleExpandParent, z as updateNodeInternals, A as updateAbsolutePositions, B as updateConnectionLookup, C as fitViewport, D as getNodeDimensions, R as ResizeControlVariant, E as ConnectionMode, F as createMarkerIds, G as getSmoothStepPath, H as getBezierPath, I as getEdgePosition, J as getElevatedEdgeZIndex, K as getMarkerId, L as getInternalNodesBounds, N as defaultAriaLabelConfig, O as devWarn, Q as infiniteExtent, S as PanOnScrollMode, T as SelectionMode, U as ConnectionLineType, V as isMacOs, W as getBoundsOfRects, Y as XYResizer, Z as XYPanZoom, _ as XYDrag, $ as snapPosition, a0 as calculateNodePosition, a1 as getNodesInside, a2 as isInputDOMNode, a3 as elementSelectionKeys, a4 as isNumeric, a5 as getStraightPath, a6 as isEdgeVisible, a7 as getConnectionStatus, a8 as mergeAriaLabelConfig, a9 as getEventPosition, aa as areSetsEqual, ab as getBezierEdgeCenter, ac as getDimensions, ad as Flower, ae as ExternalLink, af as SproutDialog, ag as isImageUrl, ah as GlyphIcon, ai as cn, aj as registerLayout, ak as autoLayoutElements, al as isRelationEdge, am as hexLayout, an as GitBranch, ao as getLayout, ap as findGardenByName, aq as gardenToFlow, ar as Eye, as as EyeOff, at as relationColor } from './layout-CVfXD8s-.js';
+export { au as listLayouts } from './layout-CVfXD8s-.js';
 import 'react-dom';
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$4 = [
+  ["path", { d: "M12 6v6l4 2", key: "mmk7yg" }],
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
+];
+const Clock = createLucideIcon("clock", __iconNode$4);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$3 = [
+  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
+  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
+  ["path", { d: "M2 12h20", key: "9i4pu4" }]
+];
+const Globe = createLucideIcon("globe", __iconNode$3);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$2 = [
+  [
+    "path",
+    {
+      d: "M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z",
+      key: "15q6uc"
+    }
+  ],
+  [
+    "path",
+    {
+      d: "m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845",
+      key: "byia6g"
+    }
+  ]
+];
+const Layers2 = createLucideIcon("layers-2", __iconNode$2);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode$1 = [
+  [
+    "path",
+    {
+      d: "M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z",
+      key: "zw3jo"
+    }
+  ],
+  [
+    "path",
+    {
+      d: "M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12",
+      key: "1wduqc"
+    }
+  ],
+  [
+    "path",
+    {
+      d: "M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17",
+      key: "kqbvx6"
+    }
+  ]
+];
+const Layers = createLucideIcon("layers", __iconNode$1);
+
+/**
+ * @license lucide-react v0.562.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+
+
+const __iconNode = [
+  [
+    "path",
+    {
+      d: "M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3",
+      key: "139s4v"
+    }
+  ],
+  ["path", { d: "M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4", key: "1dlkgp" }],
+  ["path", { d: "M5 21h14", key: "11awu3" }]
+];
+const Sprout = createLucideIcon("sprout", __iconNode);
 
 function cc(names) {
   if (typeof names === "string" || typeof names === "number") return "" + names
@@ -4405,6 +4514,139 @@ function ResizeControl({ nodeId, position, variant = ResizeControlVariant.Handle
  */
 memo(ResizeControl);
 
+const SPAN_CLASS = {
+  small: "garden:col-span-1 garden:row-span-1",
+  wide: "garden:col-span-2 garden:row-span-1",
+  tall: "garden:col-span-1 garden:row-span-2",
+  big: "garden:col-span-2 garden:row-span-2"
+};
+const ICON_SIZE = {
+  small: 44,
+  wide: 52,
+  tall: 56,
+  big: 72
+};
+const SIZE_CYCLE = [
+  "big",
+  "small",
+  "small",
+  "wide",
+  "small",
+  "tall",
+  "small",
+  "small"
+];
+const bentoSize = (index, comingSoon) => comingSoon ? "small" : SIZE_CYCLE[index % SIZE_CYCLE.length];
+const hashHue = (value) => {
+  let hash = 0;
+  for (let i = 0; i < value.length; i++) {
+    hash = (hash * 31 + value.charCodeAt(i)) % 360;
+  }
+  return hash;
+};
+const productColor = (data) => data.theme?.primary_color || `hsl(${hashHue(data.label)} 65% 55%)`;
+const BentoTile = ({ data, size, onOpen }) => {
+  const comingSoon = Boolean(data.coming_soon);
+  const color = productColor(data);
+  const glyph = data.image || data.logo || data.icon || "🌱";
+  const teaser = data.tagline || data.description;
+  const content = /* @__PURE__ */ jsxs(Fragment, { children: [
+    isImageUrl(data.image) ? /* @__PURE__ */ jsx(
+      "img",
+      {
+        src: data.image,
+        alt: data.label,
+        className: "garden:h-14 garden:w-14 garden:object-contain"
+      }
+    ) : /* @__PURE__ */ jsx(GlyphIcon, { glyph, size: ICON_SIZE[size], label: data.label }),
+    /* @__PURE__ */ jsx("h3", { className: "garden:line-clamp-2 garden:font-medium garden:text-foreground", children: data.label }),
+    teaser && /* @__PURE__ */ jsx("p", { className: "garden:line-clamp-3 garden:max-w-[22rem] garden:text-foreground/70 garden:text-sm garden:leading-snug", children: teaser }),
+    comingSoon && /* @__PURE__ */ jsx("span", { className: "garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide", children: "Coming soon" })
+  ] });
+  const cardClass = "garden:flex garden:h-full garden:w-full garden:flex-col garden:items-center garden:justify-center garden:gap-2 garden:rounded-xl garden:border-2 garden:bg-card garden:p-4 garden:text-center garden:shadow-sm garden:transition-transform";
+  const cardStyle = {
+    borderColor: color,
+    backgroundColor: `color-mix(in oklab, ${color} 6%, var(--garden-card))`
+  };
+  if (comingSoon) {
+    return /* @__PURE__ */ jsx("div", { className: SPAN_CLASS[size], children: /* @__PURE__ */ jsx("div", { className: cn(cardClass, "garden:opacity-60"), style: cardStyle, children: content }) });
+  }
+  return /* @__PURE__ */ jsx("div", { className: SPAN_CLASS[size], children: /* @__PURE__ */ jsx(
+    "button",
+    {
+      type: "button",
+      onClick: onOpen,
+      style: cardStyle,
+      className: cn(
+        cardClass,
+        "garden:cursor-pointer garden:hover:scale-[1.02] garden:hover:shadow-lg"
+      ),
+      children: content
+    }
+  ) });
+};
+const GardenBento = ({
+  schema,
+  nodes,
+  showPoweredBy = true
+}) => {
+  const [selectedSprout, setSelectedSprout] = useState(null);
+  const [isSproutDialogOpen, setIsSproutDialogOpen] = useState(false);
+  const sprouts = useMemo(
+    () => nodes.filter((node) => node.type === "sprout"),
+    [nodes]
+  );
+  return /* @__PURE__ */ jsxs("div", { className: "garden:relative garden:h-full garden:w-full garden:overflow-auto garden:rounded-lg garden:border garden:border-border garden:bg-background", children: [
+    /* @__PURE__ */ jsxs("div", { className: "garden:sticky garden:top-3 garden:z-10 garden:mr-3 garden:ml-auto garden:flex garden:w-fit garden:items-center garden:gap-2 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-sm garden:shadow-sm garden:backdrop-blur-sm", children: [
+      /* @__PURE__ */ jsx(Flower, { className: "garden:h-4 garden:w-4" }),
+      schema.name,
+      schema.icon && /* @__PURE__ */ jsx("span", { className: "garden:ml-1", children: schema.icon })
+    ] }),
+    /* @__PURE__ */ jsx("div", { className: "garden:-mt-9 garden:grid garden:grid-flow-row-dense garden:auto-rows-[13rem] garden:grid-cols-[repeat(auto-fill,minmax(15rem,1fr))] garden:gap-3 garden:p-4 garden:pb-16 garden:sm:p-6", children: sprouts.map((node, index) => {
+      const data = node.data;
+      return /* @__PURE__ */ jsx(
+        BentoTile,
+        {
+          data,
+          size: bentoSize(index, Boolean(data.coming_soon)),
+          onOpen: () => {
+            setSelectedSprout(data);
+            setIsSproutDialogOpen(true);
+          }
+        },
+        node.id
+      );
+    }) }),
+    showPoweredBy && /* @__PURE__ */ jsxs(
+      "a",
+      {
+        href: "https://garden.omni.dev",
+        target: "_blank",
+        rel: "noopener noreferrer",
+        className: "garden:sticky garden:bottom-3 garden:z-10 garden:ml-3 garden:flex garden:w-fit garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-2.5 garden:py-1 garden:text-xs garden:opacity-80 garden:shadow-sm garden:backdrop-blur-sm garden:transition-opacity garden:hover:opacity-100",
+        children: [
+          /* @__PURE__ */ jsx(Flower, { className: "garden:h-3 garden:w-3" }),
+          "Powered by Garden",
+          /* @__PURE__ */ jsx(ExternalLink, { className: "garden:h-3 garden:w-3" })
+        ]
+      }
+    ),
+    /* @__PURE__ */ jsx(
+      SproutDialog,
+      {
+        sprout: selectedSprout,
+        open: isSproutDialogOpen,
+        onOpenChange: (open) => {
+          setIsSproutDialogOpen(open);
+          if (!open) {
+            setTimeout(() => setSelectedSprout(null), 200);
+          }
+        }
+      }
+    )
+  ] });
+};
+
 registerLayout({
   name: "tree",
   label: "Tree",
@@ -4420,6 +4662,11 @@ registerLayout({
     // bury the labels.
     edges: edges.filter(isRelationEdge).map((edge) => ({ ...edge, zIndex: 1e3 }))
   })
+});
+registerLayout({
+  name: "bento",
+  label: "Bento",
+  Renderer: GardenBento
 });
 
 class Convert {
@@ -4615,115 +4862,6 @@ const typeMap = {
     { json: "text_color", js: "text_color", typ: u(void 0, u(null, "")) }
   ], "any")
 };
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$4 = [
-  ["path", { d: "M12 6v6l4 2", key: "mmk7yg" }],
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }]
-];
-const Clock = createLucideIcon("clock", __iconNode$4);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$3 = [
-  ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
-  ["path", { d: "M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20", key: "13o1zl" }],
-  ["path", { d: "M2 12h20", key: "9i4pu4" }]
-];
-const Globe = createLucideIcon("globe", __iconNode$3);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$2 = [
-  [
-    "path",
-    {
-      d: "M13 13.74a2 2 0 0 1-2 0L2.5 8.87a1 1 0 0 1 0-1.74L11 2.26a2 2 0 0 1 2 0l8.5 4.87a1 1 0 0 1 0 1.74z",
-      key: "15q6uc"
-    }
-  ],
-  [
-    "path",
-    {
-      d: "m20 14.285 1.5.845a1 1 0 0 1 0 1.74L13 21.74a2 2 0 0 1-2 0l-8.5-4.87a1 1 0 0 1 0-1.74l1.5-.845",
-      key: "byia6g"
-    }
-  ]
-];
-const Layers2 = createLucideIcon("layers-2", __iconNode$2);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode$1 = [
-  [
-    "path",
-    {
-      d: "M12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83z",
-      key: "zw3jo"
-    }
-  ],
-  [
-    "path",
-    {
-      d: "M2 12a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 12",
-      key: "1wduqc"
-    }
-  ],
-  [
-    "path",
-    {
-      d: "M2 17a1 1 0 0 0 .58.91l8.6 3.91a2 2 0 0 0 1.65 0l8.58-3.9A1 1 0 0 0 22 17",
-      key: "kqbvx6"
-    }
-  ]
-];
-const Layers = createLucideIcon("layers", __iconNode$1);
-
-/**
- * @license lucide-react v0.562.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-
-
-const __iconNode = [
-  [
-    "path",
-    {
-      d: "M14 9.536V7a4 4 0 0 1 4-4h1.5a.5.5 0 0 1 .5.5V5a4 4 0 0 1-4 4 4 4 0 0 0-4 4c0 2 1 3 1 5a5 5 0 0 1-1 3",
-      key: "139s4v"
-    }
-  ],
-  ["path", { d: "M4 9a5 5 0 0 1 8 4 5 5 0 0 1-8-4", key: "1dlkgp" }],
-  ["path", { d: "M5 21h14", key: "11awu3" }]
-];
-const Sprout = createLucideIcon("sprout", __iconNode);
 
 const DefaultNode = ({ data }) => {
   const hasTopTargets = data.targetConnections?.some(
@@ -5513,5 +5651,5 @@ const Garden = ({
   ) });
 };
 
-export { Convert, Garden, getLayout, registerLayout };
+export { Convert, Garden, GardenBento, getLayout, registerLayout };
 //# sourceMappingURL=index.js.map

@@ -1,10 +1,12 @@
+import GardenBento from "../../components/GardenBento/GardenBento";
 import { autoLayoutElements, hexLayout, isRelationEdge } from "../utils";
 import { registerLayout } from "./layout";
 
 /**
  * First-party layouts, registered through the same public API third-party
  * plugins use. The 3D layout lives in the optional `@omnidotdev/garden/3d`
- * entry so its Three.js dependency never weighs down the base bundle.
+ * entry so its Three.js dependency never weighs down the base bundle; the
+ * bento renderer draws plain HTML cards, so it stays here in the base entry.
  */
 
 registerLayout({
@@ -25,4 +27,10 @@ registerLayout({
       .filter(isRelationEdge)
       .map((edge) => ({ ...edge, zIndex: 1000 })),
   }),
+});
+
+registerLayout({
+  name: "bento",
+  label: "Bento",
+  Renderer: GardenBento,
 });
