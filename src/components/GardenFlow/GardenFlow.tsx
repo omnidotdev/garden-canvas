@@ -359,7 +359,7 @@ const GardenFlow = ({
                 type="button"
                 onClick={() => setShowEdges(!showEdges)}
                 title={showEdges ? "Hide connections" : "Show connections"}
-                className="garden:flex garden:items-center garden:gap-1.5 garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:transition-colors garden:hover:text-foreground"
+                className="garden:flex garden:cursor-pointer garden:items-center garden:gap-1.5 garden:px-1 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:transition-colors garden:hover:text-foreground"
               >
                 {showEdges ? (
                   <EyeIcon className="garden:h-3 garden:w-3" />

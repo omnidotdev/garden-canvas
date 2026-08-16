@@ -132,6 +132,21 @@ const Garden3D = ({
     },
     [],
   );
+
+  // While interactive, the wheel zooms the constellation, so swallow the page
+  // scroll to keep spinning the wheel over the garden from scrolling the page
+  // behind it. This covers the overlay chrome and in-scene labels too, which sit
+  // above the canvas and would otherwise let the wheel through. Only when
+  // interactive, so an ambient (non-interactive) embed still lets the page
+  // scroll past it. Non-passive because React's onWheel cannot preventDefault
+  const rootRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || !interactive) return;
+    const onWheel = (event: WheelEvent) => event.preventDefault();
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [interactive]);
   // Typed connections start hidden (they read as clutter over the sphere) and
   // the user reveals them, mirroring the 2D views. Controlled when `showEdges`
   // is provided (e.g. bound to URL state), otherwise tracked internally.
@@ -170,6 +185,7 @@ const Garden3D = ({
 
   return (
     <div
+      ref={rootRef}
       // `isolation: isolate` gives the in-scene HTML labels their own stacking
       // context, so their depth-sorted z-indices stay contained beneath page
       // chrome and the teaser dialog without flattening the depth ordering.
@@ -195,7 +211,7 @@ const Garden3D = ({
           type="button"
           onClick={() => setShowEdges(!showEdges)}
           title={showEdges ? "Hide connections" : "Show connections"}
-          className="garden:absolute garden:top-3 garden:left-3 garden:z-[16777272] garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground"
+          className="garden:absolute garden:top-3 garden:left-3 garden:z-[16777272] garden:flex garden:cursor-pointer garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground"
         >
           {showEdges ? (
             <EyeIcon className="garden:h-3 garden:w-3" />

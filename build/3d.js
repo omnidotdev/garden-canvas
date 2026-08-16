@@ -96480,6 +96480,14 @@ const Garden3D = ({
     },
     []
   );
+  const rootRef = useRef(null);
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el || !interactive) return;
+    const onWheel = (event) => event.preventDefault();
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [interactive]);
   const [internalShowEdges, setInternalShowEdges] = useState(false);
   const showEdges = controlledShowEdges ?? internalShowEdges;
   const setShowEdges = useCallback(
@@ -96511,6 +96519,7 @@ const Garden3D = ({
   return /* @__PURE__ */ jsxs(
     "div",
     {
+      ref: rootRef,
       style: { isolation: "isolate" },
       className: "garden:relative garden:h-full garden:w-full garden:overflow-hidden garden:rounded-lg garden:border garden:border-border garden:bg-background",
       children: [
@@ -96525,7 +96534,7 @@ const Garden3D = ({
             type: "button",
             onClick: () => setShowEdges(!showEdges),
             title: showEdges ? "Hide connections" : "Show connections",
-            className: "garden:absolute garden:top-3 garden:left-3 garden:z-[16777272] garden:flex garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground",
+            className: "garden:absolute garden:top-3 garden:left-3 garden:z-[16777272] garden:flex garden:cursor-pointer garden:items-center garden:gap-1.5 garden:rounded-md garden:border garden:border-border garden:bg-background/80 garden:px-3 garden:py-1.5 garden:font-medium garden:text-muted-foreground garden:text-xs garden:uppercase garden:tracking-wide garden:shadow-sm garden:backdrop-blur-sm garden:transition-colors garden:hover:text-foreground",
             children: [
               showEdges ? /* @__PURE__ */ jsx(Eye, { className: "garden:h-3 garden:w-3" }) : /* @__PURE__ */ jsx(EyeOff, { className: "garden:h-3 garden:w-3" }),
               "Connections"
