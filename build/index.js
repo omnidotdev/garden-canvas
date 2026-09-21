@@ -5437,9 +5437,16 @@ const GardenFlow = ({
     });
     setIsFitPending(false);
   }, [isFitPending, nodesInitialized, fitView, fitViewPadding]);
+  const graphSignature = useMemo(
+    () => JSON.stringify([
+      initialNodes.map((node) => [node.id, node.type, node.data]),
+      initialEdges.map((edge) => [edge.id, edge.type, edge.data])
+    ]),
+    [initialNodes, initialEdges]
+  );
   useLayoutEffect(() => {
     onLayout(initialNodes, initialEdges);
-  }, [layout]);
+  }, [layout, graphSignature]);
   const wrapperRef = useRef(null);
   useEffect(() => {
     const el = wrapperRef.current;

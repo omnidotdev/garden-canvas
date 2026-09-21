@@ -242,11 +242,31 @@ const GardenFlow = ({
     setIsFitPending(false);
   }, [isFitPending, nodesInitialized, fitView, fitViewPadding]);
 
-  // Lay out on mount and re-lay-out when the layout mode (tree/hex) changes
-  // biome-ignore lint/correctness/useExhaustiveDependencies: initial node/edge set is a stable mount snapshot
+  // A content signature of the incoming graph. `initialNodes`/`initialEdges` are
+  // rebuilt on every parent render (fresh refs, usually identical content), so
+  // they cannot drive the layout effect directly without re-laying-out on every
+  // render. Keying on the serialized node/edge data re-lays-out only when the
+  // graph's content actually changes, e.g. when a live catalog refetch flips a
+  // product from coming-soon to launched. Connection arrays hold id strings, not
+  // node refs, so the data is safe to serialize.
+  const graphSignature = useMemo(
+    () =>
+      JSON.stringify([
+        initialNodes.map((node) => [node.id, node.type, node.data]),
+        initialEdges.map((edge) => [edge.id, edge.type, edge.data]),
+      ]),
+    [initialNodes, initialEdges],
+  );
+
+  // Lay out on mount, when the layout mode (tree/hex) changes, and when the
+  // graph content changes (see `graphSignature`). A content-driven re-layout
+  // resets a drilled-in subgarden back to the top level, an acceptable tradeoff
+  // since content changes are rare (a background catalog refetch) and the
+  // alternative is rendering stale data.
+  // biome-ignore lint/correctness/useExhaustiveDependencies: keyed on graphSignature/layout, not the per-render node/edge refs
   useLayoutEffect(() => {
     onLayout(initialNodes, initialEdges);
-  }, [layout]);
+  }, [layout, graphSignature]);
 
   // Auto-fit the graph to the container whenever it resizes, so the whole
   // ecosystem always stays framed (window resize, sidebar toggles, etc.). The
