@@ -1,3 +1,4 @@
+// thornberry-shadow-audit-ignore: garden-canvas is a published library that builds its own CSS under a `garden:` Tailwind prefix, so host apps need no Tailwind setup; thornberry primitives ship unprefixed classes that would render unstyled here
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import { XIcon } from "lucide-react";
 
